@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!--
 
-    Copyright (C) 2009 eXo Platform SAS.
+    Copyright (C) 2020 eXo Platform SAS.
     
     This is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as
@@ -19,48 +19,20 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-
 <gatein-resources
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.exoplatform.org/xml/ns/gatein_resources_1_4 http://www.exoplatform.org/xml/ns/gatein_resources_1_4"
     xmlns="http://www.exoplatform.org/xml/ns/gatein_resources_1_4">
 
-
-  <!-- OrganizationPortlet skins -->
-
-  <portlet-skin>
-    <application-name>exoadmin</application-name>
-    <portlet-name>OrganizationPortlet</portlet-name>
-    <skin-name>Default</skin-name>
-    <css-path>/skin/organization/webui/component/UIOrganizationPortlet/DefaultStylesheet.css</css-path>
-  </portlet-skin>
-
-  <!-- AccountPortlet skins -->
-
-  <portlet-skin>
-    <application-name>exoadmin</application-name>
-    <portlet-name>AccountPortlet</portlet-name>
-    <skin-name>Default</skin-name>
-    <css-path>/skin/account/webui/component/UIAccountPortlet/DefaultStylesheet.css</css-path>
-  </portlet-skin>
-
-  <!-- ApplicationRegistryPortlet skins -->
-
-  <portlet-skin>
-    <application-name>exoadmin</application-name>
-    <portlet-name>ApplicationRegistryPortlet</portlet-name>
-    <skin-name>Default</skin-name>
-    <css-path>/skin/applicationregistry/webui/component/UIApplicationRegistryPortlet/DefaultStylesheet.css</css-path>
-  </portlet-skin>
-
-
-  <!-- AdminToolbarPortlet skins -->
-
-
   <!-- PortalNavigationPortlet skins -->
-
   <portlet-skin>
-    <application-name>exoadmin</application-name>
+    <application-name>layout-management</application-name>
+    <portlet-name>PortalNavigationPortlet</portlet-name>
+    <skin-name>Enterprise</skin-name>
+    <css-path>/skin/navigation/webui/component/DefaultStylesheet.css</css-path>
+  </portlet-skin>
+  <portlet-skin>
+    <application-name>layout-management</application-name>
     <portlet-name>PortalNavigationPortlet</portlet-name>
     <skin-name>Default</skin-name>
     <css-path>/skin/navigation/webui/component/DefaultStylesheet.css</css-path>
@@ -69,89 +41,23 @@
   <!-- GroupNavigationPortlet skins -->
 
   <portlet-skin>
-    <application-name>exoadmin</application-name>
+    <application-name>layout-management</application-name>
     <portlet-name>GroupNavigationPortlet</portlet-name>
     <skin-name>Default</skin-name>
     <css-path>/skin/navigation/webui/component/DefaultStylesheet.css</css-path>
   </portlet-skin>
-
-  <!-- Register Portlet skins -->
-
   <portlet-skin>
-    <application-name>exoadmin</application-name>
-    <portlet-name>RegisterPortlet</portlet-name>
-    <skin-name>Default</skin-name>
-    <css-path>/skin/register/webui/component/DefaultStylesheet.css</css-path>
+    <application-name>layout-management</application-name>
+    <portlet-name>GroupNavigationPortlet</portlet-name>
+    <skin-name>Enterprise</skin-name>
+    <css-path>/skin/navigation/webui/component/DefaultStylesheet.css</css-path>
   </portlet-skin>
 
   <portlet>
-    <name>RegisterPortlet</name>
+    <name>QuickEditLayoutPortlet</name>
     <module>
       <depends>
-        <module>uiForm</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>StarToolbarPortlet</name>
-    <module>
-      <depends>
-        <module>navigation</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>UserToolbarSitePortlet</name>
-    <module>
-      <depends>
-        <module>navigation</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>UserToolbarGroupPortlet</name>
-    <module>
-      <depends>
-        <module>navigation</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>AdminToolbarPortlet</name>
-    <module>
-      <depends>
-        <module>navigation</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>ApplicationRegistryPortlet</name>
-    <module>
-      <depends>
-        <module>uiForm</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>OrganizationPortlet</name>
-    <module>
-      <depends>
-        <module>uiForm</module>
-      </depends>
-    </module>
-  </portlet>
-
-  <portlet>
-    <name>AccountPortlet</name>
-    <module>
-      <depends>
-        <module>uiForm</module>
+        <module>bts_dropdown</module>
       </depends>
     </module>
   </portlet>

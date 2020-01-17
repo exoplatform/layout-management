@@ -24,14 +24,13 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-  <!--If define the Portlet Application name MUST end with .par-->
-  <display-name>exoadmin</display-name>
+  <display-name>layout-management</display-name>
 
-  <description>
-    This application is a portlet. It can not be used outside a portal.
-    This web.xml file is mandatory in each .par archive file.
-  </description>
+  <absolute-ordering/>
 
+  <listener>
+    <listener-class>org.exoplatform.container.web.PortalContainerConfigOwner</listener-class>
+  </listener>
 
   <filter>
     <filter-name>ResourceRequestFilter</filter-name>
@@ -48,21 +47,10 @@
     <servlet-class>org.gatein.wci.api.GateInServlet</servlet-class>
     <load-on-startup>0</load-on-startup>
   </servlet>
+  
   <servlet-mapping>
     <servlet-name>GateInServlet</servlet-name>
     <url-pattern>/gateinservlet</url-pattern>
   </servlet-mapping>
-
-  <security-role>
-    <description>a simple user role</description>
-    <role-name>user</role-name>
-  </security-role>
-
-  <security-role>
-    <description>the admin role</description>
-    <role-name>admin</role-name>
-  </security-role>
-
-  <absolute-ordering/>
 
 </web-app>
