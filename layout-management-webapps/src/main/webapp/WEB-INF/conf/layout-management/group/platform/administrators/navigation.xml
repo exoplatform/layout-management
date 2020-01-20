@@ -28,9 +28,13 @@
 
   <page-nodes>
     <node>
-      <name>pageManagement</name>
-      <label>#{administration.pageManagement}</label>
-      <page-reference>group::/platform/administrators::pageManagement</page-reference>
+      <name>administration</name>
+      <label>#{administration.title}</label>
+      <node>
+        <name>pageManagement</name>
+        <label>#{administration.pageManagement}</label>
+        <page-reference>group::/platform/administrators::pageManagement</page-reference>
+      </node>
     </node>
     <node>
       <name>groupnavigation</name>

@@ -3,7 +3,7 @@
   <priority>3</priority>
   <page-nodes>
     <node>
-      <name>portal</name>
+      <name>administration</name>
       <label>#{UISetupPlatformToolBarPortlet.label.portal}</label>
       <page-reference>group::platform/administrators::pageManagement</page-reference>
       <node>
@@ -12,7 +12,7 @@
         <page-reference>group::platform/administrators::pageManagement</page-reference>
       </node>
       <node>
-        <name>pages</name>
+        <name>portal</name>
         <label>#{UISetupPlatformToolBarPortlet.label.portalnavigation}</label>
         <page-reference>group::platform/administrators::portalnavigation</page-reference>
       </node>

@@ -21,6 +21,11 @@ package org.exoplatform.toolbar.portlet;
 
 import java.util.List;
 
+import org.exoplatform.navigation.webui.TreeNode;
+import org.exoplatform.navigation.webui.Utils;
+import org.exoplatform.navigation.webui.component.UINavigationManagement;
+import org.exoplatform.navigation.webui.component.UINavigationNodeSelector;
+import org.exoplatform.navigation.webui.component.UIPageNodeForm;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.*;
 import org.exoplatform.portal.config.model.PortalConfig;
@@ -32,7 +37,6 @@ import org.exoplatform.portal.webui.page.UIPage;
 import org.exoplatform.portal.webui.util.NavigationURLUtils;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication;
-import org.exoplatform.toolbar.portlet.navigation.*;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;

@@ -1,4 +1,4 @@
-package org.exoplatform.toolbar.portlet.navigation;
+package org.exoplatform.navigation.webui;
 
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
