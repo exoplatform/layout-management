@@ -26,6 +26,5 @@
     xmlns="http://www.exoplaform.org/xml/ns/kernel_1_2.xsd">
 
   <import>war:/conf/layout-management/portal-configuration.xml</import>
-  <import>war:/conf/layout-management/dynamic-container-configuration.xml</import>
 
 </configuration>
