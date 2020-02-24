@@ -6,11 +6,14 @@
   import org.gatein.common.text.EntityEncoder;
   import org.exoplatform.commons.utils.HTMLEntityEncoder;
   
+  import org.apache.commons.lang.StringUtils;
+
   String[] actions =  uicomponent.getActions();
   uicomponent.loadPortalConfigs();
   def rcontext = _ctx.getRequestContext();
   def userPortalConfigService = uicomponent.getApplicationComponent(UserPortalConfigService.class);
   def defaultPortalName = userPortalConfigService.getDefaultPortal();
+  String systemPortalName = userPortalConfigService.getSystemPortal();
   EntityEncoder encoder = HTMLEntityEncoder.getInstance();
   
   String editLayoutLabel = _ctx.appRes("UISiteManagement.label.editLayout");
@@ -60,20 +63,23 @@
 								   %>
 								</td>
 								<td width="140">
+                    <% if(!StringUtils.equals(systemPortalName, portalConfig.getName())) {%>
 										<a href="javascript:void(0);" onclick="<%=uicomponent.event("EditPortalLayout", portalConfig.getName());%>" class="actionIcon">
 											<i class="uiIconEditLayout uiIconLightGray"></i>$editLayoutLabel</a>
+                    <% } %>
 								 </td>
 								  <td width="140">
 										<a href="javascript:void(0);" onclick="<%=uicomponent.event("EditNavigation", portalConfig.getName());%>" class="actionIcon">
 											<i class="uiIconNavigation uiIconLightGray"></i>$editNavigationLabel</a>
 								 </td>
 								  <td width="180">
+                    <% if(!StringUtils.equals(systemPortalName, portalConfig.getName())) {%>
 										<a href="javascript:void(0);" onclick="javascript:ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'EditPortalProperties', true, [{name:'portalName',value:'<%=portalConfig.getName()%>'}]))" class="actionIcon">
 											<i class="uiIconEditPortalConfig uiIconLightGray"></i>$editPortalPropLabel</a>
+                    <% } %>
 								 </td>  
 								<td width="80">	
-										<% if(defaultPortalName != null && !defaultPortalName.equals(portalConfig.getName())) {%>
-								 
+										<% if(!StringUtils.equals(defaultPortalName, portalConfig.getName()) && !StringUtils.equals(systemPortalName, portalConfig.getName())) {%>
 											<a href="<%=uicomponent.url("DeletePortal", portalConfig.getName());%>" class="actionIcon">
 											<i class="uiIconTrash uiIconLightGray"></i>$deletePortalLabel</a>
 										<% } %>
