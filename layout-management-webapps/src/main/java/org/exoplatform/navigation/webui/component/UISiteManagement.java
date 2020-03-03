@@ -24,6 +24,8 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.exoplatform.commons.utils.LazyPageList;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.navigation.webui.TreeNode;
@@ -183,6 +185,7 @@ public class UISiteManagement extends UIContainer {
 
             UserPortalConfigService service = uicomp.getApplicationComponent(UserPortalConfigService.class);
             String defaultPortalName = service.getDefaultPortal();
+            String globalPortalName = service.getGlobalPortal();
 
             PortalRequestContext prContext = Util.getPortalRequestContext();
             UIPortalApplication uiPortalApp = Util.getUIPortalApplication();
@@ -191,6 +194,12 @@ public class UISiteManagement extends UIContainer {
                 uiPortalApp.addMessage(new ApplicationMessage("UISiteManagement.msg.delete-default-portal",
                         new String[] { defaultPortalName }, ApplicationMessage.WARNING));
                 return;
+            }
+
+            if (StringUtils.equals(globalPortalName, portalName)) {
+              uiPortalApp.addMessage(new ApplicationMessage("UISiteManagement.msg.delete-global-portal",
+                                                            new String[] { portalName }, ApplicationMessage.WARNING));
+              return;
             }
 
             DataStorage dataStorage = uicomp.getApplicationComponent(DataStorage.class);
