@@ -21,9 +21,14 @@ package org.exoplatform.navigation.webui.component;
 
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.navigation.webui.TreeNode;
 import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.config.DataStorage;
 import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.mop.navigation.*;
@@ -31,6 +36,7 @@ import org.exoplatform.portal.mop.user.UserNavigation;
 import org.exoplatform.portal.mop.user.UserPortal;
 import org.exoplatform.portal.webui.navigation.UIAddGroupNavigation;
 import org.exoplatform.portal.webui.navigation.UIPageNavigationForm;
+import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.*;
 import org.exoplatform.services.organization.OrganizationService;
@@ -53,6 +59,8 @@ import org.exoplatform.webui.event.EventListener;
         @ComponentConfig(template = "app:/groovy/navigation/webui/component/UIGroupNavigationManagement.gtmpl", events = {
                 @EventConfig(listeners = UIGroupNavigationManagement.EditNavigationActionListener.class),
                 @EventConfig(listeners = UIGroupNavigationManagement.EditPropertiesActionListener.class),
+                @EventConfig(listeners = UIGroupNavigationManagement.ChangeDynamicLayoutActionListener.class),
+                @EventConfig(listeners = UIGroupNavigationManagement.ChangeDynamicLayoutForAllActionListener.class, confirm = "UIGroupNavigationManagement.ChangeDynamicLayoutForAll.Confirm"),
                 @EventConfig(listeners = UIGroupNavigationManagement.AddNavigationActionListener.class),
                 @EventConfig(listeners = UIGroupNavigationManagement.DeleteNavigationActionListener.class, confirm = "UIGroupNavigationManagement.Delete.Confirm") }),
         @ComponentConfig(id = "UIGroupNavigationGrid", type = UIRepeater.class, template = "app:/groovy/navigation/webui/component/UINavigationGrid.gtmpl"),
@@ -134,6 +142,30 @@ public class UIGroupNavigationManagement extends UIContainer {
         virtualList.setAutoAdjustHeight(true);
     }
 
+    private List<UserNavigation> getAllGroupNavigations() {
+      UserPortal userPortal = Util.getPortalRequestContext().getUserPortalConfig().getUserPortal();
+      return userPortal.getNavigations();
+    }
+
+    public void changeSiteDynamicLayout(DataStorage dataStorage,
+                                        UserNavigation navigation,
+                                        boolean useDynamicLayout) throws Exception {
+      SiteKey siteKey = navigation.getKey();
+      if (siteKey.getType() != SiteType.GROUP) {
+        return;
+      }
+      PortalConfig portalConfig = dataStorage.getPortalConfig(siteKey.getTypeName(), siteKey.getName());
+      if (portalConfig != null) {
+        if (useDynamicLayout) {
+          portalConfig.useDefaultPortalLayout();
+        } else {
+          portalConfig.setDefaultLayout(false);
+        }
+        dataStorage.save(portalConfig);
+        Util.getUIPortalApplication().removeCachedUIPortal(siteKey.getTypeName(), siteKey.getName());
+      }
+    }
+
     public void setScope(Scope scope) {
         this.navigationScope = scope;
     }
@@ -171,6 +203,15 @@ public class UIGroupNavigationManagement extends UIContainer {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    public boolean isUseDynamicLayout(String groupSiteName) throws Exception {
+      DataStorage dataStorage = ExoContainerContext.getService(DataStorage.class);
+      PortalConfig portalConfig = dataStorage.getPortalConfig(SiteType.GROUP.getName(), groupSiteName);
+      if (portalConfig != null) {
+        return portalConfig.isDefaultLayout();
+      }
+      return false;
     }
 
     public abstract static class BaseEditAction extends EventListener<UIGroupNavigationManagement> {
@@ -252,6 +293,37 @@ public class UIGroupNavigationManagement extends UIContainer {
             popUp.setShowMask(true);
             popUp.setShow(true);
         }
+    }
+
+    public static class ChangeDynamicLayoutForAllActionListener extends EventListener<UIGroupNavigationManagement> {
+      @Override
+      public void execute(Event<UIGroupNavigationManagement> event) throws Exception {
+        String useDynamicLayoutString = event.getRequestContext().getRequestParameter(OBJECTID);
+        boolean useDynamicLayout = StringUtils.isNotBlank(useDynamicLayoutString) && Boolean.parseBoolean(useDynamicLayoutString);
+        DataStorage dataStorage = ExoContainerContext.getService(DataStorage.class);
+
+        UIGroupNavigationManagement uiComp = event.getSource();
+        List<UserNavigation> allNavigations = uiComp.getAllGroupNavigations();
+        for (UserNavigation navigation : allNavigations) {
+          uiComp.changeSiteDynamicLayout(dataStorage, navigation, useDynamicLayout);
+        }
+
+        UIGroupNavigationManagement uicomp = event.getSource();
+        event.getRequestContext().addUIComponentToUpdateByAjax(uicomp);
+      }
+    }
+
+    public static class ChangeDynamicLayoutActionListener extends BaseEditAction {
+      @Override
+      protected void doEdit(UserNavigation navigation, Event<UIGroupNavigationManagement> event) throws Exception {
+        String useDynamicLayoutString = event.getRequestContext().getRequestParameter("useDynamicLayout");
+        boolean useDynamicLayout = StringUtils.isNotBlank(useDynamicLayoutString) && Boolean.parseBoolean(useDynamicLayoutString);
+        DataStorage dataStorage = ExoContainerContext.getService(DataStorage.class);
+
+        UIGroupNavigationManagement uicomp = event.getSource();
+        uicomp.changeSiteDynamicLayout(dataStorage, navigation, useDynamicLayout);
+        event.getRequestContext().addUIComponentToUpdateByAjax(uicomp);
+      }
     }
 
     public static class DeleteNavigationActionListener extends BaseEditAction {
