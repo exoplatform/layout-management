@@ -21,6 +21,8 @@ package org.exoplatform.toolbar.portlet;
 
 import java.util.List;
 
+import javax.portlet.PortletPreferences;
+
 import org.exoplatform.navigation.webui.TreeNode;
 import org.exoplatform.navigation.webui.Utils;
 import org.exoplatform.navigation.webui.component.UINavigationManagement;
@@ -38,8 +40,10 @@ import org.exoplatform.portal.webui.util.NavigationURLUtils;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.*;
 import org.exoplatform.webui.core.*;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -50,7 +54,7 @@ import org.exoplatform.webui.ext.UIExtension;
 import org.exoplatform.webui.ext.UIExtensionManager;
 
 @ComponentConfigs({
-    @ComponentConfig(template = "app:/groovy/navigation/webui/component/UIAdminToolbarContainer.gtmpl", events = {
+    @ComponentConfig(events = {
         @EventConfig(listeners = UIAdminToolbarContainer.ChangeEditingActionListener.class),
         @EventConfig(listeners = UIAdminToolbarContainer.EditNavigationActionListener.class) }),
     @ComponentConfig(type = UIPageNodeForm.class, lifecycle = UIFormLifecycle.class, template = "system:/groovy/webui/form/UIFormTabPane.gtmpl", events = {
@@ -82,6 +86,8 @@ public class UIAdminToolbarContainer extends UIPortletApplication {
 
   protected UIExtension            seoExtension;
 
+  protected boolean                useDrawer;
+
   public UIAdminToolbarContainer() throws Exception {
     PortalRequestContext context = Util.getPortalRequestContext();
     Boolean quickEdit = (Boolean) context.getRequest().getSession().getAttribute(TURN_ON_QUICK_EDIT);
@@ -93,6 +99,19 @@ public class UIAdminToolbarContainer extends UIPortletApplication {
     seoExtension = getApplicationComponent(UIExtensionManager.class).getUIExtension(UIAdminToolbarContainer.class.getName(), SEO_COMPONENT_ID);
     if (seoExtension != null) {
       uiExtensionManager.addUIExtension(seoExtension, null, this);
+    }
+
+    PortletRequestContext pcontext = RequestContext.getCurrentInstance();
+    PortletPreferences pref = pcontext.getRequest().getPreferences();
+    this.useDrawer = Boolean.parseBoolean(pref.getValue("useDrawer", "false"));
+  }
+
+  @Override
+  public String getTemplate() {
+    if (useDrawer) {
+      return "app:/groovy/navigation/webui/component/UIAdminToolbarDrawerContainer.gtmpl";
+    } else {
+      return "app:/groovy/navigation/webui/component/UIAdminToolbarContainer.gtmpl";
     }
   }
 

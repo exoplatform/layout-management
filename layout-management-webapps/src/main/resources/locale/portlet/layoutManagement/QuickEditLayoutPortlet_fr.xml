@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Ajouter</AddPage>
          <EditNavigation>Navigation</EditNavigation>
