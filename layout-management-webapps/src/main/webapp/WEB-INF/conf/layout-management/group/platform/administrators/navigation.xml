@@ -35,6 +35,11 @@
         <label>#{administration.pageManagement}</label>
         <page-reference>group::/platform/administrators::pageManagement</page-reference>
       </node>
+      <node>
+        <name>registry</name>
+        <label>#{administration.application-registry}</label>
+        <page-reference>group::/platform/administrators::registry</page-reference>
+      </node>
     </node>
     <node>
       <name>groupnavigation</name>
