@@ -37,13 +37,15 @@
           quiEditClass = "quickEditChecked"
         }
       %>
-			<li>
-				<a href="javascript:void(0);" onclick="<%=uicomponent.event("ChangeEditing")%>">
-					$quickEditLabel
-					<i class="$quiEditClass"></i>
-				</a>
-			</li>
-			<li class="divider">&nbsp;</li>
+      <% if(uicomponent.getSEOClass() != null) { %>
+  			<li>
+  				<a href="javascript:void(0);" onclick="<%=uicomponent.event("ChangeEditing")%>">
+  					$quickEditLabel
+  					<i class="$quiEditClass"></i>
+  				</a>
+  			</li>
+  			<li class="divider">&nbsp;</li>
+      <% } %>
 			<li class="dropdown-submenu">
 				<a href="#" tabindex="-1">
 					<%=_ctx.appRes("UIAdminToolbarPortlet.action.Page")%>

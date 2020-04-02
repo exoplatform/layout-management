@@ -92,6 +92,7 @@
         </v-list-item>
     <ul class="editAdministrationMenu">
       <% if(userCouldEditPage) { %>
+      <% if(uicomponent.getSEOClass() != null) { %>
       <li class="editonLineItem">
         <a href="javascript:void(0);" onclick="<%=uicomponent.event("ChangeEditing")%>" class="editOnline">
           <span>$quickEditLabel</span>
@@ -100,7 +101,6 @@
       </li>
       <li class="divider">&nbsp;</li>
       <% } %>
-      <% if(userCouldEditPage){ %>
       <li class="editItemsTitle">
         <a href="#" tabindex="-1">
           <i class="uiPageIcon"></i>
@@ -115,11 +115,13 @@
               $editPageLabel
             </a>
           </li>
-          <li class="editSubItemListItem seoItem">
-            <div class="seoImgBlock">
-            <%uicomponent.renderChild(uicomponent.getSEOClass());%>
-            </div>
-          </li>
+          <% if (uicomponent.getSEOClass() != null) { %>
+            <li class="editSubItemListItem seoItem">
+              <div class="seoImgBlock">
+              <%uicomponent.renderChild(uicomponent.getSEOClass());%>
+              </div>
+            </li>
+          <% } %>
           <li class="editSubItemListItem">
             <a href="javascript:void(0);" onclick="ajaxGet(eXo.env.server.createPortalURL('UIWorkingWorkspace', 'PageCreationWizard', true))">
               $addPageLabel
