@@ -60,6 +60,7 @@
             this.editDrawer = false;
           }
         });
+        jq('#DrawerEditAdministration .editDrawer').removeClass('hidden');
       },
       methods: {
         closeDrawer() {
@@ -74,7 +75,7 @@
     <v-icon class="uiIcon uiEditAdminIcon"></v-icon>
   </v-btn>
    <v-navigation-drawer
-      class="editDrawer"
+      class="editDrawer hidden"
       v-model="editDrawer"
       absolute
       temporary
