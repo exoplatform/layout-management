@@ -154,6 +154,10 @@ public class UIGroupNavigationManagement extends UIContainer {
       if (siteKey.getType() != SiteType.GROUP) {
         return;
       }
+      changeSiteDynamicLayout(dataStorage, siteKey, useDynamicLayout);
+    }
+
+    public void changeSiteDynamicLayout(DataStorage dataStorage, SiteKey siteKey, boolean useDynamicLayout) throws Exception {
       PortalConfig portalConfig = dataStorage.getPortalConfig(siteKey.getTypeName(), siteKey.getName());
       if (portalConfig != null) {
         if (useDynamicLayout) {
@@ -303,13 +307,22 @@ public class UIGroupNavigationManagement extends UIContainer {
         DataStorage dataStorage = ExoContainerContext.getService(DataStorage.class);
 
         UIGroupNavigationManagement uiComp = event.getSource();
-        List<UserNavigation> allNavigations = uiComp.getAllGroupNavigations();
-        for (UserNavigation navigation : allNavigations) {
-          uiComp.changeSiteDynamicLayout(dataStorage, navigation, useDynamicLayout);
+
+        UserACL userACL = uiComp.getApplicationComponent(UserACL.class);
+
+        if (userACL.isSuperUser() || userACL.isUserInGroup(userACL.getAdminGroups())) {
+          List<String> groupNames = dataStorage.getAllGroupNames();
+          for (String groupName : groupNames) {
+            uiComp.changeSiteDynamicLayout(dataStorage, SiteKey.group(groupName), useDynamicLayout);
+          }
+        } else {
+          List<UserNavigation> allNavigations = uiComp.getAllGroupNavigations();
+          for (UserNavigation navigation : allNavigations) {
+            uiComp.changeSiteDynamicLayout(dataStorage, navigation, useDynamicLayout);
+          }
         }
 
-        UIGroupNavigationManagement uicomp = event.getSource();
-        event.getRequestContext().addUIComponentToUpdateByAjax(uicomp);
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiComp);
       }
     }
 
