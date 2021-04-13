@@ -217,8 +217,9 @@
   padding: 0;
 }
 .uiPopup .uiPageSearch {
-  margin: 0 0 10px 0;
-  padding-left: 20px;
+  margin: 0 0 10px;
+  padding-left: 20px; /* orientation=lt */
+  padding-right: 20px; /* orientation=rt */
 }
 .uiPopup .uiPageSearch input[type="text"] {
   width: 216px;
@@ -237,7 +238,8 @@
   color: #333333;
 }
 .uiManagementSite .managementBlock a [class^="uiIcon"] {
-  margin-right: 5px;
+  margin-right: 5px; /* orientation=lt */
+  margin-left: 5px; /* orientation=rt */
 }
 .uiManagementSite .managementBlock td {
   padding: 10px;
@@ -317,12 +319,13 @@
   color: #578dc9;
 }
 .uiGroupsNavigationPortlet .title .uiIconGroupNavigation {
-  margin-right: 8px;
+  margin-right: 8px; /* orientation=lt */
+  margin-left: 8px; /* orientation=rt */
 }
 .uiGroupsNavigationPortlet .groupNavigation {
   list-style: none;
   margin: 0;
-  padding: 5px 0 15px 0;
+  padding: 5px 0 15px;
 }
 .uiGroupsNavigationPortlet .groupNavigation .groupItem > div {
   padding: 8px 10px 0;
@@ -332,20 +335,23 @@
   text-overflow: ellipsis;
 }
 .uiGroupsNavigationPortlet .groupNavigation .groupItem > div .groupIcon {
-  margin-left: 20px;
+  margin-left: 20px; /* orientation=lt */
+  margin-right: 20px; /* orientation=rt */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .uiGroupsNavigationPortlet .groupNavigation .groupItem > div i + .groupIcon {
-  margin-left: 4px;
+  margin-left: 4px; /* orientation=lt */
+  margin-right: 4px; /* orientation=rt */
 }
 .uiGroupsNavigationPortlet .groupNavigation .groupItem > div .uiIconArrowDown {
   background-position: 2px -118px;
   cursor: pointer;
 }
 .uiGroupsNavigationPortlet .groupNavigation .groupItem .groupItem .groupIcon {
-  margin-left: 35px;
+  margin-left: 35px; /* orientation=lt */
+  margin-right: 35px; /* orientation=rt */
 }
 .uiGroupsNavigationPortlet .groupNavigation .groupItem .active {
   margin: 8px 0 0 ;
@@ -361,13 +367,15 @@
 .uiGroupsNavigationPortlet .groupNavigation .groupItem .active:after {
   background: #ffffff;
   border: 1px solid #ffffff;
-  border-left: 0;
+  border-left: 0; /* orientation=lt */
+  border-right: 0; /* orientation=rt */
   -webkit-box-shadow: inset -1px 0px 2px rgba(255, 255, 255, 0.14);
   -moz-box-shadow: inset -1px 0px 2px rgba(255, 255, 255, 0.14);
   box-shadow: inset -1px 0px 2px rgba(255, 255, 255, 0.14);
   content: "";
   height: 34px;
-  left: 0;
+  left: 0; /* orientation=lt */
+  right: 0; /* orientation=rt */
   top: -1px;
   position: absolute;
   width: 5px;
