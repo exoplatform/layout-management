@@ -31,7 +31,7 @@
 	</modules>
 	<properties>
 		<!-- 3rd party libraries versions -->
-		<org.exoplatform.social.version>6.2.x-SNAPSHOT</org.exoplatform.social.version>
+		<org.exoplatform.social.version>6.2.0-20210718</org.exoplatform.social.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
