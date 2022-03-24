@@ -15,7 +15,9 @@
   String seoLabel = _ctx.appRes("UIAdminToolbarPortlet.action.Properties");
   String siteLabel = _ctx.appRes("UIAdminToolbarPortlet.action.Site");
   String addSiteLabel = _ctx.appRes("UIAdminToolbarPortlet.action.AddSite");
-  String editAdministration = _ctx.appRes("UIAdminToolbarPortlet.title.EditAdministration");
+  String editAdministration = _ctx.appRes("UIAdminToolbarPortlet.TopbarTooltip");
+  String editTooltip = _ctx.appRes("UIAdminToolbarPortlet.topbarIcon.tooltip");
+
 
   PortalRequestContext context = Util.getPortalRequestContext();
 
@@ -34,9 +36,10 @@
   <button
     type="button"
     class="editAdministrationBtn v-btn v-btn--flat v-btn--icon v-btn--round theme--light v-size--default"
+    title="<%=editTooltip%>"
     @click="closeDrawer()">
     <span class="v-btn__content">
-      <i aria-hidden="true" class="v-icon notranslate uiIcon uiEditAdminIcon material-icons theme--light"></i>
+      <i aria-hidden="true" class="v-icon notranslate uiIcon uiEditAdminIcon material-icons icon-large-size icon-default-color theme--light"></i>
     </span>
   </button>
    <v-navigation-drawer
