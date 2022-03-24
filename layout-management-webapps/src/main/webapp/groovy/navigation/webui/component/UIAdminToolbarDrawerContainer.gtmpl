@@ -36,7 +36,7 @@
     class="editAdministrationBtn v-btn v-btn--flat v-btn--icon v-btn--round theme--light v-size--default"
     @click="closeDrawer()">
     <span class="v-btn__content">
-      <i aria-hidden="true" class="v-icon notranslate uiIcon uiEditAdminIcon material-icons theme--light"></i>
+      <i aria-hidden="true" class="v-icon notranslate uiIcon uiEditAdminIcon material-icons icon-large-size icon-default-color theme--light"></i>
     </span>
   </button>
    <v-navigation-drawer
