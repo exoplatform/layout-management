@@ -10,11 +10,11 @@
       <init-params>
         <value-param>
           <name>priority</name>
-          <value>10</value>
+          <value>50</value>
         </value-param>
         <value-param>
           <name>containerName</name>
-          <value>DrawerAdminToolBarPortlet</value>
+          <value>middle-topNavigation-container</value>
         </value-param>
         <object-param>
           <name>QuickEditLayoutPortlet</name>
