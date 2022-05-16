@@ -20,7 +20,7 @@
       </action>
       <ManageSites>Manage Sites</ManageSites>
       <ManageGroupSites>Manage Group Sites</ManageGroupSites>
-      <TopbarTooltip>Edit pages and navigations</TopbarTooltip>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
