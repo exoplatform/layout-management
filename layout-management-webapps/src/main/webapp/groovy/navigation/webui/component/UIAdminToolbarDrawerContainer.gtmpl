@@ -16,7 +16,7 @@
   String siteLabel = _ctx.appRes("UIAdminToolbarPortlet.action.Site");
   String addSiteLabel = _ctx.appRes("UIAdminToolbarPortlet.action.AddSite");
   String editAdministration = _ctx.appRes("UIAdminToolbarPortlet.TopbarTooltip");
-  String editTooltip = _ctx.appRes("UIAdminToolbarPortlet.topbarIcon.tooltip");
+  String editTooltip = _ctx.appRes("UIAdminToolbarPortlet.TopbarTooltip");
 
 
   PortalRequestContext context = Util.getPortalRequestContext();
