@@ -276,7 +276,7 @@
 }
 .uiManagementSite .nothingEditable {
   font-weight: bold;
-  color: #999999;
+  color: #767676;
 }
 .uiManagementSite .nothingEditable + .uiAction {
   margin-top: 20px;
