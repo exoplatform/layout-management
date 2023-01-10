@@ -138,7 +138,7 @@
   require(['SHARED/vuetify', 'SHARED/jquery', 'SHARED/vue'], function(vuetify, jq){
     new Vue({
       el: '#DrawerEditAdministration',
-      vuetify: new Vuetify(),
+      vuetify: Vue.prototype.vuetifyOptions,
       data () {
         return {
           editDrawer: null,
