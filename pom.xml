@@ -20,7 +20,7 @@
 	</parent>
 	<groupId>org.exoplatform.addons.layout-management</groupId>
 	<artifactId>layout-management</artifactId>
-  <version>1.5.x-SNAPSHOT</version>
+  <version>1.5.x-maintenance-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>eXo Add-on:: Layout management - Parent POM</name>
 	<description>Layout management Addon</description>
@@ -31,8 +31,8 @@
 	</modules>
 	<properties>
 		<!-- 3rd party libraries versions -->
-		<org.exoplatform.commons-exo.version>6.5.x-SNAPSHOT</org.exoplatform.commons-exo.version>
-		<org.exoplatform.social.version>6.5.x-SNAPSHOT</org.exoplatform.social.version>
+		<org.exoplatform.commons-exo.version>6.5.x-maintenance-SNAPSHOT</org.exoplatform.commons-exo.version>
+		<org.exoplatform.social.version>6.5.x-maintenance-SNAPSHOT</org.exoplatform.social.version>
 		<!-- Sonar properties -->
 		<sonar.organization>exoplatform</sonar.organization>
 	</properties>
