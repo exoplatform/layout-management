@@ -37,6 +37,15 @@
       <scope>provided</scope>
       <outputFileNameMapping>layout-management.war</outputFileNameMapping>
     </dependencySet>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/webapps</outputDirectory>
+      <includes>
+        <include>org.exoplatform.gatein.portal:exo.portal.portlet.exoadmin:war</include>
+      </includes>
+      <scope>provided</scope>
+      <outputFileNameMapping>exoadmin.war</outputFileNameMapping>
+    </dependencySet>
     <!-- Libraries -->
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
