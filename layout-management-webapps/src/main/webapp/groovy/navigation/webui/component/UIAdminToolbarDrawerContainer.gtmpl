@@ -1,9 +1,14 @@
-<%  
+<%
   import org.exoplatform.web.application.JavascriptManager;
   import org.exoplatform.portal.webui.util.Util;
   import org.exoplatform.portal.application.PortalRequestContext ;
+  import org.exoplatform.commons.api.settings.ExoFeatureService;
 
   def rcontext = _ctx.getRequestContext();
+
+  ExoFeatureService featureService = uicomponent.getApplicationComponent(ExoFeatureService.class);
+  def userName = rcontext.getRemoteUser();
+  Boolean  oldEditNavigationMenuEnabled = featureService.isFeatureActiveForUser("oldEditNavigationMenu", userName);
    
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
   String addPageLabel = _ctx.appRes("UIAdminToolbarPortlet.action.AddPage");  
@@ -33,6 +38,7 @@
 %>
 <div class="uiAdminToolbarPortlet uiDropdownWithIcon VuetifyApp" id="$uicomponent.id">
 <div id="DrawerEditAdministration">
+  <% if(oldEditNavigationMenuEnabled) { %>
   <button
     type="button"
     class="editAdministrationBtn v-btn v-btn--flat v-btn--icon v-btn--round theme--light v-size--default"
@@ -132,6 +138,7 @@
         <% } %>
       </ul>
     </v-navigation-drawer>
+    <% } %>
   </div>
 
   <script type="text/javascript" defer>
