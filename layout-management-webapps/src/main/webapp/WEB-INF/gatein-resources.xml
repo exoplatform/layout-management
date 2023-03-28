@@ -40,6 +40,14 @@
     <css-path>/skin/navigation/webui/component/DefaultStylesheet.css</css-path>
   </portlet-skin>
 
+  <!-- GroupNavigationPortlet skins -->
+  <portlet-skin>
+    <application-name>layout-management</application-name>
+    <portlet-name>layoutManagement</portlet-name>
+    <skin-name>Enterprise</skin-name>
+    <css-path>/skin/css/layoutManagement.css</css-path>
+  </portlet-skin>
+
   <portlet>
     <name>QuickEditLayoutPortlet</name>
     <module>
@@ -78,6 +86,32 @@
       </depends>
       <depends>
         <module>webui-ext</module>
+      </depends>
+    </module>
+  </portlet>
+
+  <portlet>
+    <name>layoutManagement</name>
+    <module>
+      <script>
+        <minify>false</minify>
+        <path>/js/layoutManagement.bundle.js</path>
+      </script>
+      <depends>
+        <module>extensionRegistry</module>
+      </depends>
+      <depends>
+        <module>vue</module>
+      </depends>
+      <depends>
+        <module>vuetify</module>
+      </depends>
+      <depends>
+        <module>eXoVueI18n</module>
+      </depends>
+      <depends>
+        <module>jquery</module>
+        <as>$</as>
       </depends>
     </module>
   </portlet>

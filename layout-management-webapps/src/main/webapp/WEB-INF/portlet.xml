@@ -140,6 +140,25 @@
     </portlet-info>
   </portlet>
 
+  <portlet>
+    <portlet-name>layoutManagement</portlet-name>
+    <display-name>layoutManagement</display-name>
+    <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+    <init-param>
+      <name>portlet-view-dispatched-file-path</name>
+      <value>/WEB-INF/jsp/layoutManagement.jsp</value>
+    </init-param>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portlet.layoutManagement.PortalNavigationPortlet</resource-bundle>
+    <portlet-info>
+      <title>layout Management</title>
+      <keywords>layout Management</keywords>
+    </portlet-info>
+  </portlet>
+
   <event-definition>
     <name>NavigationChange</name>
   </event-definition>
