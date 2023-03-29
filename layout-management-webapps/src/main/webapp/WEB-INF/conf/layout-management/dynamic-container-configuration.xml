@@ -80,7 +80,7 @@
           <description></description>
           <object type="org.exoplatform.commons.addons.PortletModel">
             <field name="contentId">
-              <string>layout-management/siteNavigation</string>
+              <string>layout-management/SiteNavigation</string>
             </field>
             <field name="permissions">
               <collection type="java.util.ArrayList">

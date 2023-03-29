@@ -5,7 +5,7 @@
 <div class="VuetifyApp">
   <div id="siteNavigation">
     <script type="text/javascript">
-      require(['PORTLET/layout-management/siteNavigation'], app => app.init(<%=canManageSiteNavigation%>));
+      require(['PORTLET/layout-management/SiteNavigation'], app => app.init(<%=canManageSiteNavigation%>));
     </script>
   </div>
 </div>

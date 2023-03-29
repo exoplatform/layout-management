@@ -43,7 +43,7 @@
   <!-- SiteNavigation skins -->
   <portlet-skin>
     <application-name>layout-management</application-name>
-    <portlet-name>siteNavigation</portlet-name>
+    <portlet-name>SiteNavigation</portlet-name>
     <skin-name>Enterprise</skin-name>
     <css-path>/skin/css/siteNavigation.css</css-path>
   </portlet-skin>
@@ -91,7 +91,7 @@
   </portlet>
 
   <portlet>
-    <name>siteNavigation</name>
+    <name>SiteNavigation</name>
     <module>
       <script>
         <minify>false</minify>

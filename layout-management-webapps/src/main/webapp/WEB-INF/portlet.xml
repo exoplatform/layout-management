@@ -141,8 +141,8 @@
   </portlet>
 
   <portlet>
-    <portlet-name>siteNavigation</portlet-name>
-    <display-name>siteNavigation</display-name>
+    <portlet-name>SiteNavigation</portlet-name>
+    <display-name>Site Navigation Portlet</display-name>
     <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
     <init-param>
       <name>portlet-view-dispatched-file-path</name>
