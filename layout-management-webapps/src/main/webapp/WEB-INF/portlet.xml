@@ -140,6 +140,25 @@
     </portlet-info>
   </portlet>
 
+  <portlet>
+    <portlet-name>SiteNavigation</portlet-name>
+    <display-name>Site Navigation Portlet</display-name>
+    <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+    <init-param>
+      <name>portlet-view-dispatched-file-path</name>
+      <value>/WEB-INF/jsp/siteNavigation.jsp</value>
+    </init-param>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portlet.layoutManagement.SiteNavigationPortlet</resource-bundle>
+    <portlet-info>
+      <title>site navigation</title>
+      <keywords>site navigation Management</keywords>
+    </portlet-info>
+  </portlet>
+
   <event-definition>
     <name>NavigationChange</name>
   </event-definition>
