@@ -40,12 +40,12 @@
     <css-path>/skin/navigation/webui/component/DefaultStylesheet.css</css-path>
   </portlet-skin>
 
-  <!-- GroupNavigationPortlet skins -->
+  <!-- SiteNavigation skins -->
   <portlet-skin>
     <application-name>layout-management</application-name>
-    <portlet-name>layoutManagement</portlet-name>
+    <portlet-name>siteNavigation</portlet-name>
     <skin-name>Enterprise</skin-name>
-    <css-path>/skin/css/layoutManagement.css</css-path>
+    <css-path>/skin/css/siteNavigation.css</css-path>
   </portlet-skin>
 
   <portlet>
@@ -91,11 +91,11 @@
   </portlet>
 
   <portlet>
-    <name>layoutManagement</name>
+    <name>siteNavigation</name>
     <module>
       <script>
         <minify>false</minify>
-        <path>/js/layoutManagement.bundle.js</path>
+        <path>/js/siteNavigation.bundle.js</path>
       </script>
       <depends>
         <module>extensionRegistry</module>

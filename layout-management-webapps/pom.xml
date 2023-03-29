@@ -46,11 +46,6 @@
       <classifier>sources</classifier>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-        <groupId>org.exoplatform.social</groupId>
-        <artifactId>social-component-core</artifactId>
-        <scope>provided</scope>
-    </dependency>
   </dependencies>
   <build>
     <finalName>layout-management</finalName>
@@ -103,7 +98,7 @@
               <outputDirectory>${project.build.directory}/${project.build.finalName}/skin/css</outputDirectory>
               <compress>false</compress>
               <includes>
-                <include>layoutManagement.less</include>
+                <include>siteNavigation.less</include>
               </includes>
             </configuration>
             <goals>

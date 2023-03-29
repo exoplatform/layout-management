@@ -34,7 +34,7 @@ const config = {
     new VueLoaderPlugin()
   ],
   entry: {
-    layoutManagement: './src/main/webapp/vue-app/layout-management/main.js',
+    siteNavigation: './src/main/webapp/vue-app/site-navigation/main.js',
   },
   output: {
     path: path.join(__dirname, 'target/layout-management/'),

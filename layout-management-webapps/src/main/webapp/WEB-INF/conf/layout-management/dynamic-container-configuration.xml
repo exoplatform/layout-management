@@ -76,11 +76,11 @@
           <value>top-bar-logo-container</value>
         </value-param>
         <object-param>
-          <name>layout management</name>
+          <name>site navigation</name>
           <description></description>
           <object type="org.exoplatform.commons.addons.PortletModel">
             <field name="contentId">
-              <string>layout-management/layoutManagement</string>
+              <string>layout-management/siteNavigation</string>
             </field>
             <field name="permissions">
               <collection type="java.util.ArrayList">
@@ -93,7 +93,7 @@
               </collection>
             </field>
             <field name="title">
-              <string>layout management</string>
+              <string>site navigation</string>
             </field>
             <field name="showInfoBar">
               <boolean>false</boolean>

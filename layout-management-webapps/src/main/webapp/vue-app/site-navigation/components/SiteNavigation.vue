@@ -1,5 +1,5 @@
 <template>
-  <v-app v-if="canAcceed">
+  <v-app v-if="canManageSiteNavigation">
     <v-hover>
       <div slot-scope="{ hover }" class="mx-2">
         <v-tooltip bottom>
@@ -18,7 +18,7 @@
               </v-icon>
             </v-btn>
           </template>
-          {{ $t('UISiteManagement.label.siteNavigation') }}
+          {{ $t('siteNavigation.button.tooltip.label') }}
         </v-tooltip>
       </div>
     </v-hover>
@@ -27,7 +27,7 @@
 <script>
 export default {
   props: {
-    canAcceed: {
+    canManageSiteNavigation: {
       type: Boolean,
       default: false,
     },
