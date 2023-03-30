@@ -16,9 +16,17 @@
  */
 
 import SiteNavigation from './components/SiteNavigation.vue';
+import SiteNavigationDrawer from './components/SiteNavigationDrawer.vue';
+import NodesList from './components/NodesList.vue';
+import NodeItem from './components/NodeItem.vue';
+import NodeItemMenu from './components/NodeItemMenu.vue';
 
 const components = {
-  'site-navigation': SiteNavigation
+  'site-navigation': SiteNavigation,
+  'site-navigation-drawer': SiteNavigationDrawer,
+  'site-navigation-nodes-list': NodesList,
+  'site-navigation-node-item': NodeItem,
+  'site-navigation-node-item-menu': NodeItemMenu,
 };
 
 for (const key in components) {
