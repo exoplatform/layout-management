@@ -29,6 +29,7 @@
         <name>EditNavigationFeatureProperties</name>
         <description>Add Edit Navigation Feature flags</description>
         <property name="exo.feature.oldEditNavigationMenu.enabled" value="${exo.feature.oldEditNavigationMenu.enabled:true}" />
+        <property name="exo.feature.newEditNavigationDrawer.enabled" value="${exo.feature.newEditNavigationDrawer.enabled:false}" />
       </properties-param>
     </init-params>
   </component>
