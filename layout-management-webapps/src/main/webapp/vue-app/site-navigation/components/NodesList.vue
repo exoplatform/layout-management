@@ -18,11 +18,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <v-list>
     <v-list-item
-      v-for="navigationsNode in navigationsNodes"
-      :key="navigationsNode.id"
+      v-for="navigationNode in navigationNodes"
+      :key="navigationNode.id"
       class="px-1">
       <v-list-item-content class="text-truncate py-0 px-3">
-        <site-navigation-node-item :navigation-node="navigationsNode" />
+        <site-navigation-node-item :navigation-node="navigationNode" />
       </v-list-item-content>
     </v-list-item>
   </v-list>
@@ -31,7 +31,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <script>
 export default {
   props: {
-    navigationsNodes: {
+    navigationNodes: {
       type: Object,
       default: null
     },

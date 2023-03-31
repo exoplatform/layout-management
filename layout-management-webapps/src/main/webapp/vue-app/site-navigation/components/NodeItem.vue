@@ -41,7 +41,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action class="mx-0 my-0">
-        <site-navigation-node-item-menu :navigations-node="navigationNode" />
+        <site-navigation-node-item-menu :navigation-node="navigationNode" />
       </v-list-item-action>
     </v-list-item>
     <div v-if="displayChildren">

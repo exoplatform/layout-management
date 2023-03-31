@@ -30,7 +30,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         class="ms-4 mt-3 mb-4 primary">
         {{ siteName }}
       </v-chip>
-      <site-navigation-nodes-list :navigations-nodes="navigationsNodes" />
+      <site-navigation-nodes-list :navigation-nodes="navigationNodes" />
     </template>
   </exo-drawer>
 </template>
@@ -39,16 +39,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data() {
     return {
-      navigationsNodes: [],
+      navigationNodes: [],
+      siteName: eXo.env.portal.siteKeyName,
+      siteType: eXo.env.portal.siteKeyType,
     };
   },
-  computed: {
-    siteName(){
-      return eXo.env.portal.siteKeyName;
-    }
-  },
   created() {
-    this.getNavigations();
+    this.getNavigationNodes();
     this.$root.$on('open-site-navigation-drawer', this.open);
   },
   methods: {
@@ -58,11 +55,11 @@ export default {
     close() {
       this.$refs.siteNavigationDrawer.close();
     },
-    getNavigations() {
-      return this.$navigationService.getNavigations(eXo.env.portal.siteKeyName, eXo.env.portal.siteKeyType)
-        .then(navigationsNodes => {
-          this.navigationsNodes = navigationsNodes?.filter(navigationsNode => navigationsNode.siteKey.name.toLowerCase() === eXo.env.portal.siteKeyName.toLowerCase()
-              && navigationsNode.siteKey.type.toLowerCase() === eXo.env.portal.siteKeyType.toLowerCase()) || [];
+    getNavigationNodes() {
+      return this.$navigationService.getNavigations(this.siteName, this.siteType)
+        .then(navigationNodes => {
+          this.navigationNodes = navigationNodes?.filter(navigationNode => navigationNode.siteKey.name.toLowerCase() === this.siteName.toLowerCase()
+              && navigationNode.siteKey.type.toLowerCase() === this.siteType.toLowerCase()) || [];
         });
     },
   }
