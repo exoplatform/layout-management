@@ -30,9 +30,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title
-          :title="navigation.name"
+          :title="navigation.label"
           class="font-weight-bold text-truncate">
-          {{ navigation.name }}
+          {{ navigation.label }}
         </v-list-item-title>
         <v-list-item-subtitle
           :title="navigationUri"

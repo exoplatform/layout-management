@@ -60,9 +60,10 @@ export default {
       this.$refs.siteNavigationDrawer.close();
     },
     getNavigations() {
-      return this.$navigationService.getNavigations(eXo.env.portal.siteKeyName, eXo.env.portal.siteKeyType , null, null, this.exclude)
+      return this.$navigationService.getNavigations(eXo.env.portal.siteKeyName, eXo.env.portal.siteKeyType)
         .then(navigations => {
-          this.navigations = navigations || [];
+          this.navigations = navigations?.filter(nav => nav.siteKey.name.toLowerCase() === eXo.env.portal.siteKeyName.toLowerCase()
+              && nav.siteKey.type.toLowerCase() === eXo.env.portal.siteKeyType.toLowerCase()) || [];
         });
     },
   }
