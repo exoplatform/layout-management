@@ -23,7 +23,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     allow-expand
     @closed="close">
     <template slot="title">
-      <span>  {{ $t('siteNavigation.drawer.title') }}</span>
+      <span>{{ $t('siteNavigation.drawer.title') }}</span>
     </template>
     <template slot="content">
       <v-chip
