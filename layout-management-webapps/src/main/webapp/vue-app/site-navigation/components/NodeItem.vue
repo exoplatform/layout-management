@@ -30,25 +30,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title
-          :title="navigation.label"
+          :title="navigationNode.label"
           class="font-weight-bold text-truncate">
-          {{ navigation.label }}
+          {{ navigationNode.label }}
         </v-list-item-title>
         <v-list-item-subtitle
-          :title="navigationUri"
+          :title="navigationNodeUri"
           class="text-truncate">
-          {{ navigationUri }}
+          {{ navigationNodeUri }}
         </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action class="mx-0 my-0">
-        <site-navigation-node-item-menu :navigation="navigation" />
+        <site-navigation-node-item-menu :navigations-node="navigationNode" />
       </v-list-item-action>
     </v-list-item>
     <div v-if="displayChildren">
       <site-navigation-node-item
-        v-for="child in navigation.children"
+        v-for="child in navigationNode.children"
         :key="child.id"
-        :navigation="child"
+        :navigation-node="child"
         class="ms-7" />
     </div>
   </div>
@@ -57,7 +57,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <script>
 export default {
   props: {
-    navigation: {
+    navigationNode: {
       type: Object,
       default: null,
     },
@@ -72,10 +72,10 @@ export default {
       return this.displayChildren && 'mdi-menu-down' || 'mdi-menu-right';
     },
     hasChildren() {
-      return this.navigation?.children?.length;
+      return this.navigationNode?.children?.length;
     },
-    navigationUri() {
-      return `/${this.navigation.uri}`;
+    navigationNodeUri() {
+      return `/${this.navigationNode.uri}`;
     },
   }
 };

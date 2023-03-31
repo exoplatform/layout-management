@@ -23,14 +23,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     allow-expand
     @closed="close">
     <template slot="title">
-      <span>  {{ $t('siteNavigation.label.siteNavigation.drawerTitle') }}</span>
+      <span>  {{ $t('siteNavigation.drawer.title') }}</span>
     </template>
     <template slot="content">
       <v-chip
         class="ms-4 mt-3 mb-4 primary">
         {{ siteName }}
       </v-chip>
-      <site-navigation-nodes-list :navigations="navigations" />
+      <site-navigation-nodes-list :navigations-nodes="navigationsNodes" />
     </template>
   </exo-drawer>
 </template>
@@ -39,8 +39,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data() {
     return {
-      navigations: [],
-      exclude: 'global'
+      navigationsNodes: [],
     };
   },
   computed: {
@@ -49,11 +48,11 @@ export default {
     }
   },
   created() {
+    this.getNavigations();
     this.$root.$on('open-site-navigation-drawer', this.open);
   },
   methods: {
     open() {
-      this.getNavigations();
       this.$refs.siteNavigationDrawer.open();
     },
     close() {
@@ -61,9 +60,9 @@ export default {
     },
     getNavigations() {
       return this.$navigationService.getNavigations(eXo.env.portal.siteKeyName, eXo.env.portal.siteKeyType)
-        .then(navigations => {
-          this.navigations = navigations?.filter(nav => nav.siteKey.name.toLowerCase() === eXo.env.portal.siteKeyName.toLowerCase()
-              && nav.siteKey.type.toLowerCase() === eXo.env.portal.siteKeyType.toLowerCase()) || [];
+        .then(navigationsNodes => {
+          this.navigationsNodes = navigationsNodes?.filter(navigationsNode => navigationsNode.siteKey.name.toLowerCase() === eXo.env.portal.siteKeyName.toLowerCase()
+              && navigationsNode.siteKey.type.toLowerCase() === eXo.env.portal.siteKeyType.toLowerCase()) || [];
         });
     },
   }
