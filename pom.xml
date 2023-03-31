@@ -28,7 +28,8 @@
 		<module>layout-management-services</module>
 		<module>layout-management-webapps</module>
 		<module>layout-management-packaging</module>
-	</modules>
+        <module>layout-management-api</module>
+    </modules>
 	<properties>
 		<!-- 3rd party libraries versions -->
 		<org.exoplatform.social.version>6.5.x-experience-SNAPSHOT</org.exoplatform.social.version>
