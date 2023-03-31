@@ -29,7 +29,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               <v-icon
                 v-show="hover"
                 class="mb-2 text-color"
-                size="16">
+                size="16"
+                @click="openSiteNavigationDrawer">
                 fas fa-sitemap
               </v-icon>
             </v-btn>
@@ -38,6 +39,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-tooltip>
       </div>
     </v-hover>
+    <site-navigation-drawer />
   </v-app>
 </template>
 <script>
@@ -48,5 +50,10 @@ export default {
       default: false,
     },
   },
+  methods: {
+    openSiteNavigationDrawer(){
+      this.$root.$emit('open-site-navigation-drawer');
+    }
+  }
 };
 </script>
