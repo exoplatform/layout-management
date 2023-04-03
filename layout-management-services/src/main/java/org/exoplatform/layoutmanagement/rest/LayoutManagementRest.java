@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.exoplatform.layoutmanagement.service.LayoutManagementService;
+import org.exoplatform.portal.mop.service.NavigationService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
@@ -27,12 +27,12 @@ import java.util.concurrent.ScheduledExecutorService;
 public class LayoutManagementRest implements ResourceContainer, Startable {
   private static final Log         LOG = ExoLogger.getLogger(LayoutManagementRest.class);
 
-  private LayoutManagementService  layoutManagementService;
+  private NavigationService navigationService;
 
   private ScheduledExecutorService scheduledExecutor;
 
-  public LayoutManagementRest(LayoutManagementService layoutManagementService) {
-    this.layoutManagementService = layoutManagementService;
+  public LayoutManagementRest(NavigationService navigationService) {
+    this.navigationService = navigationService;
   }
 
   @DELETE
@@ -52,7 +52,7 @@ public class LayoutManagementRest implements ResourceContainer, Startable {
       return Response.status(Response.Status.BAD_REQUEST).entity("Node id is mandatory").build();
     }
     try {
-      layoutManagementService.removeNode(nodeId);
+      navigationService.destroyNode(nodeId);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error while deleting a node", e);
