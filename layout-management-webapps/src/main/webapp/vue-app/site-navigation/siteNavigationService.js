@@ -43,3 +43,16 @@ export function undoDeleteNode(nodeId) {
     }
   });
 }
+
+export function editLayout(uiPageId, pageName, pageSiteType, pageSiteName) {
+  return fetch(`${eXo.env.server.createPortalURL(uiPageId, 'EditAnyPage', true)}&pageName=${pageName}&pageSiteType=${pageSiteType}&pageSiteName=${pageSiteName}`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error(resp.status);
+    } else {
+      location.reload();
+    }
+  });
+}
