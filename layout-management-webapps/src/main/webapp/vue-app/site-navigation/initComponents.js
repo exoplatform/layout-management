@@ -32,3 +32,11 @@ const components = {
 for (const key in components) {
   Vue.component(key, components[key]);
 }
+
+import * as siteNavigationService from './siteNavigationService';
+
+if (!Vue.prototype.$siteNavigationService) {
+  window.Object.defineProperty(Vue.prototype, '$siteNavigationService', {
+    value: siteNavigationService,
+  });
+}
