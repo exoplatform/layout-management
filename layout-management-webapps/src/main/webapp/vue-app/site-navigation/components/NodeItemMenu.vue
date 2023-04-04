@@ -32,8 +32,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-btn>
     </template>
     <v-list class="pa-0" dense>
-      <v-list-item>
-        <v-list-item-title class="subtitle-2" />
+      <v-list-item
+        @click="deleteNode()">
+        <v-icon
+          size="13"
+          class="pe-1">
+          fas fa-trash
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.delete') }}</span>
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
@@ -50,6 +59,7 @@ export default {
   data: () => ({
     displayActionMenu: false,
   }),
+
   created() {
     $(document).on('mousedown', () => {
       if (this.displayActionMenu) {
@@ -58,6 +68,22 @@ export default {
         },200);
       }
     });
+  },
+  methods: {
+    deleteNode() {
+      const deleteDelay = 6;
+      this.$siteNavigationService.deleteNode(this.navigationNode.id, deleteDelay)
+        .then(() => {
+          this.$root.$emit('confirm-node-deletion', this.navigationNode);
+        });
+      const redirectionTime = 6100;
+      setTimeout(() => {
+        const deletedNode = localStorage.getItem('deletedNode');
+        if (deletedNode != null) {
+          this.$root.$emit('navigation-node-deleted');
+        }
+      }, redirectionTime);
+    }
   }
 };
 </script>

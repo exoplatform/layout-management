@@ -18,3 +18,28 @@ export function getNavigationNodes(siteType, siteName, includeGlobal) {
     }
   });
 }
+
+export function deleteNode(nodeId, delay) {
+  localStorage.setItem('deletedNode', nodeId);
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node/${nodeId}?delay=${delay || 0}`, {
+    credentials: 'include',
+    method: 'DELETE'
+  }).then((resp) => {
+    if (resp && !resp.ok) {
+      throw new Error('Error when deleting node');
+    }
+  });
+}
+
+export function undoDeleteNode(nodeId) {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node/${nodeId}/undoDelete`, {
+    method: 'POST',
+    credentials: 'include',
+  }).then((resp) => {
+    if (resp && resp.ok) {
+      localStorage.removeItem('deletedNode');
+    } else {
+      throw new Error('Error when undoing deleting node');
+    }
+  });
+}

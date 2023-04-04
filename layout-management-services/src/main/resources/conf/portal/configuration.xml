@@ -22,6 +22,6 @@
         xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
         xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
     <component>
-        <type>org.exoplatform.layoutmanagement.rest.LayoutManagementRest</type>
+      <type>org.exoplatform.layoutmanagement.rest.SiteNavigationRestService</type>
     </component>
 </configuration>
