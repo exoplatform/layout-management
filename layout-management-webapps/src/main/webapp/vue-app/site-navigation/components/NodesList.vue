@@ -84,9 +84,6 @@ export default {
     icon() {
       return this.displayChildren && 'mdi-menu-down' || 'mdi-menu-right';
     },
-    navigationNodeUri() {
-      return `/${this.navigationNode.uri}`;
-    },
     extraClass() {
       return `ml-${this.originMargin + this.margin}`;
     },
