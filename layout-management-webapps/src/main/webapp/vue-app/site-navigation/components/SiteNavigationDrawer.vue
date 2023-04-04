@@ -45,6 +45,7 @@ export default {
     };
   },
   created() {
+    this.$root.$on('navigation-node-deleted', this.getNavigationNodes);
     this.getNavigationNodes();
     this.$root.$on('open-site-navigation-drawer', this.open);
   },
