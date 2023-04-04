@@ -30,7 +30,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         class="ms-4 mt-3 mb-4 primary">
         {{ siteName }}
       </v-chip>
-      <site-navigation-nodes-list :navigation-nodes="navigationNodes" />
+      <site-navigation-nodes-list
+        :navigation-nodes="navigationNodes"
+        :expanded="$refs.siteNavigationDrawer?.expand" />
     </template>
   </exo-drawer>
 </template>
