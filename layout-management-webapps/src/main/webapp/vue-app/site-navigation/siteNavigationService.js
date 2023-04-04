@@ -26,7 +26,7 @@ export function deleteNode(nodeId, delay) {
     method: 'DELETE'
   }).then((resp) => {
     if (resp && !resp.ok) {
-      throw new Error('Error when deleting node');
+      throw new Error('Error when deleting navigation node');
     }
   });
 }
@@ -39,7 +39,7 @@ export function undoDeleteNode(nodeId) {
     if (resp && resp.ok) {
       localStorage.removeItem('deletedNode');
     } else {
-      throw new Error('Error when undoing deleting node');
+      throw new Error('Error when undoing deleting navigation node');
     }
   });
 }

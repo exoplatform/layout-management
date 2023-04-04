@@ -40,7 +40,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </div>
     </v-hover>
     <site-navigation-drawer />
-    <exo-navigation-node-notification-alerts />
+    <site-navigation-notification-alerts />
   </v-app>
 </template>
 <script>

@@ -20,8 +20,8 @@ import SiteNavigationDrawer from './components/SiteNavigationDrawer.vue';
 import SiteNavigationNodesList from './components/NodesList.vue';
 import SiteNavigationNodeItem from './components/NodeItem.vue';
 import SiteNavigationNodeItemMenu from './components/NodeItemMenu.vue';
-import ExoNavigationNodeNotificationAlert from './snackbar/ExoNavigationNodeNotificationAlert.vue';
-import ExoNavigationNodeNotificationAlerts from './snackbar/ExoNavigationNodeNotificationAlerts.vue';
+import SiteNavigationNotificationAlert from './snackbar/SiteNavigationNotificationAlert.vue';
+import SiteNavigationNotificationAlerts from './snackbar/SiteNavigationNotificationAlerts.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
@@ -29,8 +29,8 @@ const components = {
   'site-navigation-nodes-list': SiteNavigationNodesList,
   'site-navigation-node-item': SiteNavigationNodeItem,
   'site-navigation-node-item-menu': SiteNavigationNodeItemMenu,
-  'exo-navigation-node-notification-alert': ExoNavigationNodeNotificationAlert,
-  'exo-navigation-node-notification-alerts': ExoNavigationNodeNotificationAlerts,
+  'site-navigation-notification-alert': SiteNavigationNotificationAlert,
+  'site-navigation-notification-alerts': SiteNavigationNotificationAlerts,
 };
 
 for (const key in components) {

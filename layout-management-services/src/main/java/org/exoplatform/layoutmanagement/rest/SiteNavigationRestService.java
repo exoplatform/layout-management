@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
 import org.exoplatform.portal.mop.service.NavigationService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.exoplatform.services.security.Identity;
 
 @Path("v1/siteNavigation")
 @Tag(name = "v1/siteNavigation", description = "Managing site navigation")
@@ -65,8 +67,11 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "Time to effectively delete navigation node", required = false)
                              @QueryParam("delay")
                              long delay) {
-    org.exoplatform.services.security.Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+    Identity currentIdentity = ConversationState.getCurrent().getIdentity();
     try {
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
       if (nodeId == 0) {
         return Response.status(Response.Status.BAD_REQUEST).entity("Node id is mandatory").build();
       }
@@ -80,7 +85,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
               navigationNodeToDeleteQueue.remove(nodeId);
               navigationService.deleteNode(nodeId);
             } catch (Exception e) {
-              LOG.warn("Error when deleting the node with id " + nodeId, e);
+              LOG.warn("Error when deleting the navigation node with id {}", nodeId, e);
             } finally {
               RequestLifeCycle.end();
             }
@@ -92,7 +97,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       }
       return Response.ok().build();
     } catch (Exception e) {
-      LOG.error("Error when deleting the node with id " + nodeId, e);
+      LOG.error("Error when deleting the navigation node with id {}", nodeId, e);
       return Response.serverError().entity(e.getMessage()).build();
     }
   }
@@ -111,24 +116,33 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                  @Parameter(description = "Node identifier", required = true)
                                  @PathParam("nodeId")
                                  Long nodeId) {
+    Identity currentIdentity = ConversationState.getCurrent().getIdentity();
     if (nodeId == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("Node id is mandatory").build();
     }
-    if (navigationNodeToDeleteQueue.containsKey(nodeId)) {
-      String authenticatedUser = request.getRemoteUser();
-      String originalModifierUser = navigationNodeToDeleteQueue.get(nodeId);
-      if (!originalModifierUser.equals(authenticatedUser)) {
-        LOG.warn("User {} attempts to cancel deletion of navigation node deleted by user {}",
-                 authenticatedUser,
-                 originalModifierUser);
-        return Response.status(Response.Status.FORBIDDEN).build();
+    try {
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      navigationNodeToDeleteQueue.remove(nodeId);
-      return Response.noContent().build();
-    } else {
-      return Response.status(Response.Status.BAD_REQUEST)
-                     .entity("Node with id {} was already deleted or isn't planned to be deleted" + nodeId)
-                     .build();
+      if (navigationNodeToDeleteQueue.containsKey(nodeId)) {
+        String authenticatedUser = request.getRemoteUser();
+        String originalModifierUser = navigationNodeToDeleteQueue.get(nodeId);
+        if (!originalModifierUser.equals(authenticatedUser)) {
+          LOG.warn("User {} attempts to cancel deletion of navigation node deleted by user {}",
+                   authenticatedUser,
+                   originalModifierUser);
+          return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        navigationNodeToDeleteQueue.remove(nodeId);
+        return Response.noContent().build();
+      } else {
+        return Response.status(Response.Status.BAD_REQUEST)
+                       .entity("Node with id {} was already deleted or isn't planned to be deleted" + nodeId)
+                       .build();
+      }
+    } catch (Exception e) {
+      LOG.error("Error when undo deleting the navigation node with id {}", nodeId, e);
+      return Response.serverError().build();
     }
   }
 

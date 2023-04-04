@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     app
     bottom
     left>
-    <exo-navigation-node-notification-alert
+    <site-navigation-notification-alert
       v-for="alert in alerts"
       :key="alert.message"
       :alert="alert"
