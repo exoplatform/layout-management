@@ -15,7 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
+<v-hover>
+    <div slot-scope="{ hover }">
     <v-list-item
       dense
       class="px-0">
@@ -41,7 +42,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action class="mx-0 my-0">
-        <site-navigation-node-item-menu :navigation-node="navigationNode" />
+        <site-navigation-node-item-menu :navigation-node="navigationNode"
+        :hover="hover" />
       </v-list-item-action>
     </v-list-item>
     <div v-if="displayChildren">
@@ -52,6 +54,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         class="ms-7" />
     </div>
   </div>
+</v-hover>
 </template>
 
 <script>
