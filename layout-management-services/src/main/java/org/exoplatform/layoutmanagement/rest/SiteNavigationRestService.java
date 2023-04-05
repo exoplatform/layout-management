@@ -18,6 +18,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
+import org.exoplatform.portal.mop.navigation.NodeData;
 import org.exoplatform.portal.mop.service.NavigationService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -57,6 +58,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Operation(summary = "Delete Node ", method = "DELETE", description = "This deletes the navigation node")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node deleted"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "404", description = "Node not found"),
       @ApiResponse(responseCode = "401", description = "User not authorized to delete the navigation node"),
       @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response deleteNode(@Context
@@ -67,14 +69,19 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "Time to effectively delete navigation node", required = false)
                              @QueryParam("delay")
                              long delay) {
-    Identity currentIdentity = ConversationState.getCurrent().getIdentity();
     try {
-      if (!SiteNavigationUtils.canEditNavigation(currentIdentity)) {
-        return Response.status(Response.Status.UNAUTHORIZED).build();
-      }
-      if (nodeId == 0) {
+      if (nodeId == null) {
         return Response.status(Response.Status.BAD_REQUEST).entity("Node id is mandatory").build();
       }
+      NodeData nodeData = navigationService.getNodeById(nodeId);
+      if (nodeData == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Node data with node id is not found").build();
+      }
+      Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+
       if (delay > 0) {
         navigationNodeToDeleteQueue.put(nodeId, currentIdentity.getUserId());
         scheduledExecutor.schedule(() -> {
@@ -108,6 +115,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Operation(summary = "Undo deleting node if not yet effectively deleted", method = "POST", description = "Undo deleting node if not yet effectively deleted")
   @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "404", description = "Node not found"),
       @ApiResponse(responseCode = "403", description = "Forbidden operation"),
       @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
@@ -116,14 +124,19 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                  @Parameter(description = "Node identifier", required = true)
                                  @PathParam("nodeId")
                                  Long nodeId) {
-    Identity currentIdentity = ConversationState.getCurrent().getIdentity();
-    if (nodeId == null) {
-      return Response.status(Response.Status.BAD_REQUEST).entity("Node id is mandatory").build();
-    }
     try {
-      if (!SiteNavigationUtils.canEditNavigation(currentIdentity)) {
+      if (nodeId == null) {
+        return Response.status(Response.Status.BAD_REQUEST).entity("Node id is mandatory").build();
+      }
+      NodeData nodeData = navigationService.getNodeById(nodeId);
+      if (nodeData == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Node data with node id is not found").build();
+      }
+      Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
+
       if (navigationNodeToDeleteQueue.containsKey(nodeId)) {
         String authenticatedUser = request.getRemoteUser();
         String originalModifierUser = navigationNodeToDeleteQueue.get(nodeId);

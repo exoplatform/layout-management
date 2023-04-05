@@ -1,9 +1,14 @@
 package org.exoplatform.layoutmanagement.utils;
-import org.exoplatform.services.security.Identity;
-public class SiteNavigationUtils {
 
-  private SiteNavigationUtils() {
-  }
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.portal.mop.SiteKey;
+import org.exoplatform.portal.mop.navigation.NodeData;
+import org.exoplatform.portal.mop.service.LayoutService;
+import org.exoplatform.services.security.Identity;
+
+public class SiteNavigationUtils {
 
   private static final String EDITOR_MEMBERSHIP_NAME          = "editor";
 
@@ -13,8 +18,17 @@ public class SiteNavigationUtils {
 
   private static final String PLATFORM_ADMINISTRATORS_GROUP   = "/platform/administrators";
 
-  public static boolean canEditNavigation(Identity currentIdentity) {
-    return currentIdentity.isMemberOf(PLATFORM_WEB_CONTRIBUTORS_GROUP, EDITOR_MEMBERSHIP_NAME)
-        || currentIdentity.isMemberOf(PLATFORM_ADMINISTRATORS_GROUP, MANAGER_MEMBERSHIP_NAME);
+  private SiteNavigationUtils() {
+  }
+
+  public static boolean canEditNavigation(Identity currentIdentity, NodeData nodeData) {
+    SiteKey siteKey = nodeData.getSiteKey();
+    LayoutService layoutService = CommonsUtils.getService(LayoutService.class);
+    PortalConfig sitePortalConfig = layoutService.getPortalConfig(siteKey);
+    UserACL userACL = CommonsUtils.getService(UserACL.class);
+    return (currentIdentity.isMemberOf(PLATFORM_WEB_CONTRIBUTORS_GROUP, EDITOR_MEMBERSHIP_NAME)
+        || currentIdentity.isMemberOf(PLATFORM_ADMINISTRATORS_GROUP, MANAGER_MEMBERSHIP_NAME))
+        && (userACL.hasEditPermissionOnPortal(siteKey.getTypeName(), siteKey.getName(), sitePortalConfig.getEditPermission())
+            || userACL.hasEditPermissionOnNavigation(siteKey));
   }
 }
