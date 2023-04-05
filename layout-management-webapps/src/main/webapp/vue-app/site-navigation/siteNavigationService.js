@@ -43,3 +43,17 @@ export function undoDeleteNode(nodeId) {
     }
   });
 }
+
+export function editLayout(uiPageId, pageName, pageSiteType, pageSiteName, nodeUri, nodeSiteType, nodeSiteName) {
+  return fetch(`${eXo.env.server.createPortalURL(uiPageId, 'EditAnyPage', true)}&pageName=${pageName}&pageSiteType=${pageSiteType}&pageSiteName=${pageSiteName}`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error(resp.status);
+    } else {
+      const targetPageUrl = `/portal${nodeSiteType === 'group' ? '/g' : ''}/${nodeSiteName.replaceAll('/', ':')}/${nodeUri}`;
+      window.open(targetPageUrl, '_blank');
+    }
+  });
+}
