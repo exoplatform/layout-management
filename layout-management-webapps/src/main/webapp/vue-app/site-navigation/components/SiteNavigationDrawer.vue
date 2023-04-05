@@ -56,10 +56,9 @@ export default {
       this.$refs.siteNavigationDrawer.close();
     },
     getNavigationNodes() {
-      return this.$navigationService.getNavigations(this.siteName, this.siteType)
+      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false)
         .then(navigationNodes => {
-          this.navigationNodes = navigationNodes?.filter(navigationNode => navigationNode.siteKey.name.toLowerCase() === this.siteName.toLowerCase()
-              && navigationNode.siteKey.type.toLowerCase() === this.siteType.toLowerCase()) || [];
+          this.navigationNodes = navigationNodes || [];
         });
     },
   }
