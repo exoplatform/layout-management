@@ -15,43 +15,47 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
-    <v-list-item
-      dense
-      class="px-0">
-      <v-list-item-action class="me-2 my-0">
-        <v-icon
-          v-if="hasChildren"
-          size="24"
-          @click="displayChildren = !displayChildren">
-          {{ icon }}
-        </v-icon>
-        <div v-else class="mfs-3 mfe-2"></div>
-      </v-list-item-action>
-      <v-list-item-content>
-        <v-list-item-title
-          :title="navigationNode.label"
-          class="font-weight-bold text-truncate">
-          {{ navigationNode.label }}
-        </v-list-item-title>
-        <v-list-item-subtitle
-          :title="navigationNodeUri"
-          class="text-truncate">
-          {{ navigationNodeUri }}
-        </v-list-item-subtitle>
-      </v-list-item-content>
-      <v-list-item-action class="mx-0 my-0">
-        <site-navigation-node-item-menu :navigation-node="navigationNode" />
-      </v-list-item-action>
-    </v-list-item>
-    <div v-if="displayChildren">
-      <site-navigation-node-item
-        v-for="child in navigationNode.children"
-        :key="child.id"
-        :navigation-node="child"
-        class="ms-7" />
+  <v-hover>
+    <div slot-scope="{ hover }">
+      <v-list-item
+        dense
+        class="px-0">
+        <v-list-item-action class="me-2 my-0">
+          <v-icon
+            v-if="hasChildren"
+            size="24"
+            @click="displayChildren = !displayChildren">
+            {{ icon }}
+          </v-icon>
+          <div v-else class="mfs-3 mfe-2"></div>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title
+            :title="navigationNode.label"
+            class="font-weight-bold text-truncate">
+            {{ navigationNode.label }}
+          </v-list-item-title>
+          <v-list-item-subtitle
+            :title="navigationNodeUri"
+            class="text-truncate">
+            {{ navigationNodeUri }}
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action class="mx-0 my-0">
+          <site-navigation-node-item-menu
+            :navigation-node="navigationNode"
+            :hover="hover" />
+        </v-list-item-action>
+      </v-list-item>
+      <div v-if="displayChildren">
+        <site-navigation-node-item
+          v-for="child in navigationNode.children"
+          :key="child.id"
+          :navigation-node="child"
+          class="ms-7" />
+      </div>
     </div>
-  </div>
+  </v-hover>
 </template>
 
 <script>
