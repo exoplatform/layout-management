@@ -36,5 +36,18 @@ export default {
       default: null
     },
   },
+  created() {
+    this.$root.$on('delete-node', this.deleteNode);
+  },
+  methods: {
+    deleteNode(navigationNodeID) {
+      if (this.navigationNodes.length) {
+        const index = this.navigationNodes.findIndex(navigationNode => navigationNode.id === navigationNodeID);
+        if (index >= 0) {
+          this.navigationNodes.splice(index, 1);
+        }
+      }
+    }
+  }
 };
 </script>

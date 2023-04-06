@@ -75,6 +75,7 @@ export default {
     undoDeleteNode(nodeId) {
       return this.$siteNavigationService.undoDeleteNode(nodeId)
         .then(() => {
+          this.$root.$emit('refresh-navigation-nodes');
           this.deleteAlert(alert);
           this.addAlert({
             message: this.$t('siteNavigation.deleteCanceled'),
