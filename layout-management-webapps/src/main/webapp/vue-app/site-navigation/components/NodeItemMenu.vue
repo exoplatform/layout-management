@@ -110,6 +110,7 @@ export default {
   },
   methods: {
     deleteNode() {
+      this.$root.$emit('delete-node', this.navigationNode.id);
       const deleteDelay = 6;
       this.$siteNavigationService.deleteNode(this.navigationNode.id, deleteDelay)
         .then(() => {
