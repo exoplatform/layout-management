@@ -40,9 +40,9 @@ export default {
     this.$root.$on('delete-node', this.deleteNode);
   },
   methods: {
-    deleteNode(navigationNodeID) {
+    deleteNode(navigationNodeId) {
       if (this.navigationNodes.length) {
-        const index = this.navigationNodes.findIndex(navigationNode => navigationNode.id === navigationNodeID);
+        const index = this.navigationNodes.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index >= 0) {
           this.navigationNodes.splice(index, 1);
         }

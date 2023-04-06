@@ -107,7 +107,6 @@ export default {
         },200);
       }
     });
-    this.$root.$on('delete-node', this.deleteNodeChild);
   },
   methods: {
     deleteNode() {
@@ -128,14 +127,6 @@ export default {
     editLayout() {
       const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
       return this.$siteNavigationService.editLayout(uiPageId, this.pageName, this.pageSiteType, this.pageSiteName, this.nodeUri, this.nodeSiteType, this.nodeSiteName);    
-    },
-    deleteNodeChild(navigationNodeID) {
-      if (this.navigationNode.children.length) {
-        const index = this.navigationNode.children.findIndex(child => child.id === navigationNodeID);
-        if (index >= 0) {
-          this.navigationNode.children.splice(index, 1);
-        }
-      }
     }
   }
 };
