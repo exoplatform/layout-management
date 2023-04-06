@@ -60,6 +60,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <span class="ps-1">{{ $t('siteNavigation.label.delete') }}</span>
         </v-list-item-title>
       </v-list-item>
+      <v-divider />
+      <v-list-item
+        v-if="navigationNode.pageKey"
+        @click="$root.$emit('open-site-navigation-manage-access-drawer', navigationNode)">
+        <v-icon
+          size="13"
+          class="pe-1">
+          fas fa-shield-alt
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.manageAccess') }}</span>
+        </v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
