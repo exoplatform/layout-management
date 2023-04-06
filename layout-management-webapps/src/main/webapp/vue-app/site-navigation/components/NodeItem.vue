@@ -83,10 +83,10 @@ export default {
     },
   },
   created() {
-    this.$root.$on('delete-node', this.deleteNodeChild);
+    this.$root.$on('delete-node', this.deleteChildNode);
   },
   methods: {
-    deleteNodeChild(navigationNodeId) {
+    deleteChildNode(navigationNodeId) {
       if (this.navigationNode.children.length) {
         const index = this.navigationNode.children.findIndex(child => child.id === navigationNodeId);
         if (index >= 0) {
