@@ -24,6 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     class="px-0 mx-2 overflow-visible">
     <template #activator="{ on, attrs }">
       <v-btn
+        v-show="hover"
         v-bind="attrs"
         class="pull-right"
         icon
@@ -42,6 +43,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <script>
 export default {
   props: {
+    hover: {
+      type: Boolean,
+      default: () => false,
+    },
     navigationNode: {
       type: Object,
       default: null,
