@@ -22,6 +22,7 @@ import SiteNavigationNodeItem from './components/NodeItem.vue';
 import SiteNavigationNodeItemMenu from './components/NodeItemMenu.vue';
 import SiteNavigationNotificationAlert from './snackbar/SiteNavigationNotificationAlert.vue';
 import SiteNavigationNotificationAlerts from './snackbar/SiteNavigationNotificationAlerts.vue';
+import SiteNavigationManageAccessDrawer from './components/SiteNavigationManageAccessDrawer.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
@@ -31,6 +32,7 @@ const components = {
   'site-navigation-node-item-menu': SiteNavigationNodeItemMenu,
   'site-navigation-notification-alert': SiteNavigationNotificationAlert,
   'site-navigation-notification-alerts': SiteNavigationNotificationAlerts,
+  'site-navigation-manage-access-drawer': SiteNavigationManageAccessDrawer
 };
 
 for (const key in components) {
