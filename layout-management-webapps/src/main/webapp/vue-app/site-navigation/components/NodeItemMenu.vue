@@ -34,6 +34,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </template>
     <v-list class="pa-0" dense>
       <v-list-item
+        v-if="navigationNode.pageKey"
+        class="subtitle-2" 
+        @click="editLayout">
+        <v-icon
+          size="13"
+          class="pe-1">
+          fas fa-table
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.editLayout') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-divider />
+      <v-list-item
         @click="deleteNode()">
         <v-icon
           size="13"
@@ -64,7 +79,26 @@ export default {
   data: () => ({
     displayActionMenu: false,
   }),
-
+  computed: {
+    pageName() {
+      return this.navigationNode?.pageKey?.name;
+    },
+    pageSiteType() {
+      return this.navigationNode?.pageKey?.site?.typeName;
+    },
+    pageSiteName() {
+      return this.navigationNode?.pageKey?.site?.name;
+    },
+    nodeUri() {
+      return this.navigationNode?.uri;
+    },
+    nodeSiteType() {
+      return this.navigationNode?.siteKey?.typeName;
+    },
+    nodeSiteName() {
+      return this.navigationNode?.siteKey?.name;
+    },
+  },
   created() {
     $(document).on('mousedown', () => {
       if (this.displayActionMenu) {
@@ -89,6 +123,10 @@ export default {
           this.$root.$emit('navigation-node-deleted');
         }
       }, redirectionTime);
+    },
+    editLayout() {
+      const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
+      return this.$siteNavigationService.editLayout(uiPageId, this.pageName, this.pageSiteType, this.pageSiteName, this.nodeUri, this.nodeSiteType, this.nodeSiteName);    
     }
   }
 };
