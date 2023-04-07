@@ -62,6 +62,33 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-list-item>
       <v-divider />
       <v-list-item
+        @click="moveUpNode()"
+        v-if="canMoveUp">
+        <v-icon
+          size="21"
+          class="pe-1">
+          mdi-mouse-move-up
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.moveUp') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        v-if="canMoveDown"
+        @click="moveDownNode()">
+        <v-icon
+          size="21"
+          class="pe-1">
+          mdi-mouse-move-down
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.moveDown') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-divider />
+      <v-list-item
         v-if="navigationNode.pageKey"
         @click="$root.$emit('open-site-navigation-manage-access-drawer', navigationNode)">
         <v-icon
@@ -88,6 +115,14 @@ export default {
     navigationNode: {
       type: Object,
       default: null,
+    },
+    canMoveUp: {
+      type: Boolean,
+      default: () => false,
+    },
+    canMoveDown: {
+      type: Boolean,
+      default: () => false,
     },
   },
   data: () => ({
@@ -123,6 +158,12 @@ export default {
     });
   },
   methods: {
+    moveUpNode(){
+      this.$root.$emit('moveup-node', this.navigationNode.id);
+    },
+    moveDownNode(){
+      this.$root.$emit('movedown-node', this.navigationNode.id);
+    },
     deleteNode() {
       this.$root.$emit('delete-node', this.navigationNode.id);
       const deleteDelay = 6;

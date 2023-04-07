@@ -22,7 +22,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       :key="navigationNode.id"
       class="px-1">
       <v-list-item-content class="text-truncate py-0 px-3">
-        <site-navigation-node-item :navigation-node="navigationNode" />
+        <site-navigation-node-item
+          :navigation-node="navigationNode"
+          :can-move-up="canMoveUpNode(navigationNode)"
+          :can-move-down="canMoveDownNode(navigationNode)" />
       </v-list-item-content>
     </v-list-item>
   </v-list>
@@ -38,8 +41,39 @@ export default {
   },
   created() {
     this.$root.$on('delete-node', this.deleteNode);
+    this.$root.$on('moveup-node', this.moveUpNode);
+    this.$root.$on('movedown-node', this.moveDownNode);
   },
   methods: {
+    canMoveUpNode(navigationNode){
+      return this.navigationNodes.indexOf(navigationNode) > 0;
+    },
+    canMoveDownNode(navigationNode){
+      return this.navigationNodes.indexOf(navigationNode) < this.navigationNodes.length - 1;
+    }, 
+    moveUpNode(navigationNodeId){
+      if (this.navigationNodes.length) {
+        const index = this.navigationNodes.findIndex(navigationNode => navigationNode.id === navigationNodeId);
+        if (index !== -1){
+          const previousId = index >1 ? this.navigationNodes[index-2].id : null;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousId).then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          });
+        }
+        
+      }
+    },
+    moveDownNode(navigationNodeId){
+      if (this.navigationNodes.length) {
+        const index = this.navigationNodes.findIndex(navigationNode => navigationNode.id === navigationNodeId);
+        if (index !== -1){
+          const previousId = this.navigationNodes[index + 1].id;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousId).then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          });
+        }
+      }
+    },
     deleteNode(navigationNodeId) {
       if (this.navigationNodes.length) {
         const index = this.navigationNodes.findIndex(navigationNode => navigationNode.id === navigationNodeId);

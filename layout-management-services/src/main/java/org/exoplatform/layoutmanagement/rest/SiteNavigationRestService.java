@@ -158,6 +158,38 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.serverError().build();
     }
   }
+  @PUT
+  @Path("/node/move")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Move navigation node", method = "POST", description = "This move the navigation node")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "400", description = "Invalid query input"),
+          @ApiResponse(responseCode = "403", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "404", description = "Resource not found")})
+  public Response moveNode (@Parameter(description = "node id") @QueryParam("nodeId") Long nodeId,
+                            @Parameter(description = "previous id") @QueryParam("previousId") Long previousId) {
+
+    try {
+      if (nodeId == null && previousId == null) {
+        return Response.status(Response.Status.BAD_REQUEST).entity("either_nodeId_or_previousId_is_mandatory").build();
+      }
+      NodeData nodeData = navigationService.getNodeById(nodeId);
+      if (nodeData == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Node data with node id is not found").build();
+      }
+      Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      Long parentId = Long.valueOf(nodeData.getParentId());
+      navigationService.moveNode(nodeId, parentId, parentId, previousId);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when moving the navigation node with id {}", nodeId, e);
+      return Response.serverError().build();
+    }
+  }
 
   @Override
   public void start() {
