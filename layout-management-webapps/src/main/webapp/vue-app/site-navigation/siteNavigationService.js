@@ -58,19 +58,19 @@ export function editLayout(uiPageId, pageName, pageSiteType, pageSiteName, nodeU
   });
 }
 
-export function moveNode(nodeId, previousId) {
+export function moveNode(nodeId, previousNodeId) {
   const formData = new FormData();
   if (nodeId) {
     formData.append('nodeId', nodeId);
   }
-  if (previousId) {
-    formData.append('previousId', previousId);
+  if (previousNodeId) {
+    formData.append('previousNodeId', previousNodeId);
   }
 
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node/move?${params}`, {
     credentials: 'include',
-    method: 'PUT',
+    method: 'PATCH',
   }).then((resp) => {
     if (resp && resp.ok) {
       return resp.ok;

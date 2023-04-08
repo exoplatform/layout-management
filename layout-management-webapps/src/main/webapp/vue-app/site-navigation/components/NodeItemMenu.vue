@@ -158,10 +158,10 @@ export default {
     });
   },
   methods: {
-    moveUpNode(){
+    moveUpNode() {
       this.$root.$emit('moveup-node', this.navigationNode.id);
     },
-    moveDownNode(){
+    moveDownNode() {
       this.$root.$emit('movedown-node', this.navigationNode.id);
     },
     deleteNode() {

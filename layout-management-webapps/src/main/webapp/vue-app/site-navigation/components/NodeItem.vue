@@ -100,30 +100,30 @@ export default {
     this.$root.$on('movedown-node', this.moveDownChildNode);
   },
   methods: {
-    canMoveUpChildNode(navigationNode){
+    canMoveUpChildNode(navigationNode) {
       return this.navigationNode.children.indexOf(navigationNode) > 0;
     },
-    canMoveDownChildNode(navigationNode){
+    canMoveDownChildNode(navigationNode) {
       return this.navigationNode.children.indexOf(navigationNode) < this.navigationNode.children.length - 1;
     }, 
-    moveUpChildNode(navigationNodeId){
+    moveUpChildNode(navigationNodeId) {
       if (this.navigationNode.children.length) {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
-        if (index !== -1){
-          const previousId = index > 1 ? this.navigationNode.children[index-2].id :null;
-          this.$siteNavigationService.moveNode(navigationNodeId, previousId).then(() => {
+        if (index !== -1) {
+          const previousNodeId = index > 1 ? this.navigationNode.children[index - 2].id : null;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         }
   
       }
     },
-    moveDownChildNode(navigationNodeId){
+    moveDownChildNode(navigationNodeId) {
       if (this.navigationNode.children.length) {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
-        if (index !== -1){
-          const previousId = this.navigationNode.children[index+1].id;
-          this.$siteNavigationService.moveNode(navigationNodeId, previousId).then(() => {
+        if (index !== -1) {
+          const previousNodeId = this.navigationNode.children[index + 1].id;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         } 
