@@ -60,6 +60,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <span class="ps-1">{{ $t('siteNavigation.label.delete') }}</span>
         </v-list-item-title>
       </v-list-item>
+      <v-list-item
+        @click="$root.$emit('open-site-navigation-add-node-drawer')">
+        <v-icon
+          size="13"
+          class="pe-1">
+          fas fa-plus
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.addNode.title') }}</span>
+        </v-list-item-title>
+      </v-list-item>
       <v-divider />
       <v-list-item
         @click="moveUpNode()"
