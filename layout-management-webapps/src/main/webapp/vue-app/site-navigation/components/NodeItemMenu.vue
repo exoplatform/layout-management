@@ -34,7 +34,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </template>
     <v-list class="pa-0" dense>
       <v-list-item
-        v-if="navigationNode.pageKey"
+        v-if="canEdit"
         class="subtitle-2" 
         @click="editLayout">
         <v-icon
@@ -101,8 +101,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-list-item>
       <v-divider />
       <v-list-item
-        v-if="navigationNode.pageKey"
-        @click="$root.$emit('open-site-navigation-manage-access-drawer', navigationNode)">
+        v-if="canEdit"
+        @click="$root.$emit('open-site-navigation-manage-access-drawer', JSON.parse(JSON.stringify(navigationNode)))">
         <v-icon
           size="13"
           class="pe-1">
@@ -158,6 +158,9 @@ export default {
     },
     nodeSiteName() {
       return this.navigationNode?.siteKey?.name;
+    },
+    canEdit() {
+      return this.navigationNode?.canEditPage;
     },
   },
   created() {

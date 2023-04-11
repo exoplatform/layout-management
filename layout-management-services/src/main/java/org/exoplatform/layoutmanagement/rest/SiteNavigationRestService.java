@@ -19,6 +19,10 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
 import org.exoplatform.portal.mop.navigation.NodeData;
+import org.exoplatform.portal.mop.page.PageContext;
+import org.exoplatform.portal.mop.page.PageKey;
+import org.exoplatform.portal.mop.page.PageState;
+import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -27,7 +31,9 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.picocontainer.Startable;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -45,11 +51,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
 
   private final PortalContainer    container;
 
+  private LayoutService            layoutService;
+
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
-  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container) {
+  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService) {
     this.navigationService = navigationService;
     this.container = container;
+    this.layoutService = layoutService;
   }
 
   @DELETE
@@ -192,6 +201,50 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     }
   }
 
+  @Path("{pageRef}")
+  @PUT
+  @RolesAllowed("users")
+  @Operation(summary = "update page access abd edit permission", method = "PUT", description = "update page access abd edit permission")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "400", description = "Invalid query input"),
+          @ApiResponse(responseCode = "404", description = "Page not found"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response updatePagePermissions(@Context
+  HttpServletRequest request,
+                                        @Parameter(description = "Page reference", required = true)
+                                        @PathParam("pageRef")
+                                        String pageRef,
+                                        @Parameter(description = "Page new edit permission", required = true)
+                                        @QueryParam("editPermission")
+                                        String editPermission,
+                                        @Parameter(description = "Page new access permissions", required = true)
+                                        @QueryParam("accessPermissions")
+                                        String accessPermissions) {
+    try {
+      if (pageRef == null || editPermission == null || editPermission.isBlank() ||  accessPermissions == null || accessPermissions.isEmpty()) {
+        return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+      }
+      PageContext page = layoutService.getPageContext(PageKey.parse(pageRef));
+      if(page == null){
+        return Response.status(Response.Status.NOT_FOUND).build();
+      }
+      org.exoplatform.services.security.Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+      if (page.getState() != null && page.getState().getEditPermission().isBlank()
+          && !currentIdentity.isMemberOf(page.getState().getEditPermission().split(":")[1], page.getState().getEditPermission().split(":")[0])) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      PageState pageState = page.getState();
+      List<String> accessPermissionsList = List.of(accessPermissions.split(","));
+      page.setState(new PageState(pageState.getDisplayName(), pageState.getDescription(), pageState.getShowMaxWindow(), pageState.getFactoryId(), accessPermissionsList, editPermission, pageState.getMoveAppsPermissions(),pageState.getMoveContainersPermissions()));
+      layoutService.save(page);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when updating page permissions with reference {}", pageRef, e);
+      return Response.serverError().build();
+    }
+  }
+    
   @Override
   public void start() {
     scheduledExecutor = Executors.newScheduledThreadPool(1);
