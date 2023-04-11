@@ -27,11 +27,13 @@
           </v-label>
         </v-card-text>
         <v-card-text class="d-flex py-0">
-          <input
+          <v-text-field
+            class="pt-0"
             type="text"
-            class="ignore-vuetify-classes flex-grow-1"
-            maxlength="2000"
-            required>
+            required="required"
+            :rules="rules"
+            outlined
+            dense />
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 pb-2">
           <v-label>
@@ -41,11 +43,13 @@
           </v-label>
         </v-card-text>
         <v-card-text class="d-flex py-0">
-          <input
+          <v-text-field
+            class="pt-0"
             type="text"
-            class="ignore-vuetify-classes flex-grow-1"
-            maxlength="2000"
-            required>
+            required="required"
+            :rules="rules"
+            outlined
+            dense />
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 pb-2">
           <v-label>
@@ -143,6 +147,11 @@ export default {
     visible: true,
     scheduleVisibility: false,
     nodeType: 'Group',
+    rules: [
+      value => {
+        return !(value && value.length) || 'Field is required.';
+      },
+    ]
   }),
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
