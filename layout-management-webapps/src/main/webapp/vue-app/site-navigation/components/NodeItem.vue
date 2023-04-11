@@ -44,7 +44,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-list-item-action class="mx-0 my-0">
           <site-navigation-node-item-menu
             :navigation-node="navigationNode"
-            :hover="hover" />
+            :hover="hover"
+            :can-move-up="canMoveUp"
+            :can-move-down="canMoveDown" />
         </v-list-item-action>
       </v-list-item>
       <div v-if="displayChildren">
@@ -52,6 +54,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           v-for="child in navigationNode.children"
           :key="child.id"
           :navigation-node="child"
+          :can-move-up="canMoveUpChildNode(child)"
+          :can-move-down="canMoveDownChildNode(child)"
           class="ms-7" />
       </div>
     </div>
@@ -64,6 +68,14 @@ export default {
     navigationNode: {
       type: Object,
       default: null,
+    },
+    canMoveUp: {
+      type: Boolean,
+      default: () => false,
+    },
+    canMoveDown: {
+      type: Boolean,
+      default: () => false,
     },
   },
   data() {
@@ -84,8 +96,39 @@ export default {
   },
   created() {
     this.$root.$on('delete-node', this.deleteChildNode);
+    this.$root.$on('moveup-node', this.moveUpChildNode);
+    this.$root.$on('movedown-node', this.moveDownChildNode);
   },
   methods: {
+    canMoveUpChildNode(navigationNode) {
+      return this.navigationNode.children.indexOf(navigationNode) > 0;
+    },
+    canMoveDownChildNode(navigationNode) {
+      return this.navigationNode.children.indexOf(navigationNode) < this.navigationNode.children.length - 1;
+    }, 
+    moveUpChildNode(navigationNodeId) {
+      if (this.navigationNode.children.length) {
+        const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
+        if (index !== -1) {
+          const previousNodeId = index > 1 ? this.navigationNode.children[index - 2].id : null;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          });
+        }
+  
+      }
+    },
+    moveDownChildNode(navigationNodeId) {
+      if (this.navigationNode.children.length) {
+        const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
+        if (index !== -1) {
+          const previousNodeId = this.navigationNode.children[index + 1].id;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          });
+        } 
+      }
+    },
     deleteChildNode(navigationNodeId) {
       if (this.navigationNode.children.length) {
         const index = this.navigationNode.children.findIndex(child => child.id === navigationNodeId);
