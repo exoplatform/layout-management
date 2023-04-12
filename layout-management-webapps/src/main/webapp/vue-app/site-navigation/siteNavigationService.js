@@ -82,7 +82,6 @@ export function moveNode(nodeId, previousNodeId) {
   });
 }
 
-
 export function updateNodePagePermission(pageRef, editPermission, accessPermissions) {
 
   const formData = new FormData();
@@ -93,12 +92,25 @@ export function updateNodePagePermission(pageRef, editPermission, accessPermissi
 
   const params = new URLSearchParams(formData).toString();
 
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/${pageRef}?${params}`, {
-    method: 'PUT',
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/permissions/${pageRef}?${params}`, {
+    method: 'PATCH',
     credentials: 'include',
   }).then((resp) => {
     if (resp && !resp.ok) {
       throw new Error(resp.status);
+    }
+  });
+}
+
+export function getMembershipTypes() {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/membershipTypes`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error(this.$t('IDMManagement.error.UnknownServerError'));
+    } else {
+      return resp.json();
     }
   });
 }

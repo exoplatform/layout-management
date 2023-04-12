@@ -101,7 +101,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-list-item>
       <v-divider />
       <v-list-item
-        v-if="canEdit"
+        v-if="canEditPage"
         @click="$root.$emit('open-site-navigation-manage-access-drawer', JSON.parse(JSON.stringify(navigationNode)))">
         <v-icon
           size="13"
@@ -159,7 +159,7 @@ export default {
     nodeSiteName() {
       return this.navigationNode?.siteKey?.name;
     },
-    canEdit() {
+    canEditPage() {
       return this.navigationNode?.canEditPage;
     },
   },

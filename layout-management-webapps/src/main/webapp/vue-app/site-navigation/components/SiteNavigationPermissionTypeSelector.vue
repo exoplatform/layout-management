@@ -62,18 +62,15 @@ export default {
         }, 200);
       }
     });
-    return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/membershipTypes`, {
-      method: 'GET',
-      credentials: 'include',
-    }).then(resp => {
-      if (!resp || !resp.ok) {
-        throw new Error(this.$t('IDMManagement.error.UnknownServerError'));
-      } else {
-        return resp.json();
-      }
-    }).then(data => {
-      this.membershipTypes = data || [];
-    });
+    this.getMembershipTypes();
   },
+  methods: {
+    getMembershipTypes(){
+      return this.$siteNavigationService.getMembershipTypes()
+        .then(membershipTypes => {
+          this.membershipTypes = membershipTypes || [];
+        });
+    }
+  }
 };
 </script>

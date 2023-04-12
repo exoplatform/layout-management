@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
@@ -200,15 +201,15 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     }
   }
 
-  @Path("{pageRef}")
-  @PUT
+  @Path("/page/permissions/{pageRef}")
+  @PATCH
   @RolesAllowed("users")
   @Operation(summary = "update page access abd edit permission", method = "PUT", description = "update page access abd edit permission")
-  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
-          @ApiResponse(responseCode = "400", description = "Invalid query input"),
-          @ApiResponse(responseCode = "404", description = "Page not found"),
-          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
-          @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Page permissions updated"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "404", description = "Page not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response updatePagePermissions(@Context
   HttpServletRequest request,
                                         @Parameter(description = "Page reference", required = true)
@@ -221,11 +222,11 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                         @QueryParam("accessPermissions")
                                         String accessPermissions) {
     try {
-      if (pageRef == null || editPermission == null || editPermission.isBlank() ||  accessPermissions == null || accessPermissions.isEmpty()) {
+      if (StringUtils.isBlank(pageRef) || StringUtils.isBlank(editPermission) || StringUtils.isBlank(accessPermissions)) {
         return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
       }
       PageContext page = layoutService.getPageContext(PageKey.parse(pageRef));
-      if(page == null){
+      if (page == null) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
       if (!SiteNavigationUtils.canEditPage(page)) {
@@ -233,7 +234,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       }
       PageState pageState = page.getState();
       List<String> accessPermissionsList = List.of(accessPermissions.split(","));
-      page.setState(new PageState(pageState.getDisplayName(), pageState.getDescription(), pageState.getShowMaxWindow(), pageState.getFactoryId(), accessPermissionsList, editPermission, pageState.getMoveAppsPermissions(),pageState.getMoveContainersPermissions()));
+      page.setState(new PageState(pageState.getDisplayName(),
+                                  pageState.getDescription(),
+                                  pageState.getShowMaxWindow(),
+                                  pageState.getFactoryId(),
+                                  accessPermissionsList,
+                                  editPermission,
+                                  pageState.getMoveAppsPermissions(),
+                                  pageState.getMoveContainersPermissions()));
       layoutService.save(page);
       return Response.ok().build();
     } catch (Exception e) {
