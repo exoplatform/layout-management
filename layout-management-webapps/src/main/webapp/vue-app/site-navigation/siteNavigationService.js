@@ -108,7 +108,7 @@ export function getMembershipTypes() {
     credentials: 'include',
   }).then(resp => {
     if (!resp || !resp.ok) {
-      throw new Error(this.$t('IDMManagement.error.UnknownServerError'));
+      throw new Error('Error when retrieving membership types');
     } else {
       return resp.json();
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="text-center pe-1">
-    <span class="text-capitalize clickable" @click="showMenu = true"> {{ $t(`siteNavigation.label.membershipType.${membershipType}`) }}</span>
+    <span class="text-capitalize clickable" @click="showMenu = true"> {{ membershipTypeLabel }}</span>
     <v-menu
       v-model="showMenu"
       transition="slide-x-reverse-transition"
@@ -49,6 +49,15 @@ export default {
     membershipTypes: [],
     showMenu: false,
   }),
+  computed: {
+    membershipTypeLabel() {
+      if (!this.$t(`siteNavigation.label.membershipType.${this.membershipType}`).includes('siteNavigation.label')){
+        return  this.$t(`siteNavigation.label.membershipType.${this.membershipType}`);
+      } else  {
+        return this.membershipType;
+      }
+    }
+  },
   watch: {
     membershipType(){
       this.$emit('membership-type-changed', this.membershipType);

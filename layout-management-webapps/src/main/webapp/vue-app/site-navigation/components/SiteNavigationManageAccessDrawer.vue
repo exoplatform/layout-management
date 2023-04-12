@@ -24,7 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <template slot="title">
       <div class="d-flex">
         <i
-          class="uiIcon uiArrowBAckIcon"
+          class="uiIcon uiArrowBAckIcon clickable"
           @click="close"></i>
         <span class="ms-2"> {{ $t('siteNavigation.manageAccessDrawer.title') }}</span>
       </div>

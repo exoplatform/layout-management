@@ -102,7 +102,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-divider />
       <v-list-item
         v-if="canEditPage"
-        @click="$root.$emit('open-site-navigation-manage-access-drawer', JSON.parse(JSON.stringify(navigationNode)))">
+        @click="openManageAccessDrawer">
         <v-icon
           size="13"
           class="pe-1">
@@ -197,6 +197,9 @@ export default {
     editLayout() {
       const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
       return this.$siteNavigationService.editLayout(uiPageId, this.pageName, this.pageSiteType, this.pageSiteName, this.nodeUri, this.nodeSiteType, this.nodeSiteName);    
+    },
+    openManageAccessDrawer(){
+      this.$root.$emit('open-site-navigation-manage-access-drawer', JSON.parse(JSON.stringify(this.navigationNode)));
     }
   }
 };
