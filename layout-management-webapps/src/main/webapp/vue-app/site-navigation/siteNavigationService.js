@@ -53,7 +53,7 @@ export function editLayout(uiPageId, pageName, pageSiteType, pageSiteName, nodeU
       throw new Error(resp.status);
     } else {
       const targetPageUrl = `/portal${nodeSiteType === 'group' ? '/g' : ''}/${nodeSiteName.replaceAll('/', ':')}/${nodeUri}`;
-      window.open(targetPageUrl, '_blank');
+      window.location.href = targetPageUrl;
     }
   });
 }
