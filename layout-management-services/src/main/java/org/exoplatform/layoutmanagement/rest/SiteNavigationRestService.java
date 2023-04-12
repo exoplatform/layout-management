@@ -168,17 +168,22 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.serverError().build();
     }
   }
+
   @PATCH
   @Path("/node/move")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
   @Operation(summary = "Move navigation node", method = "POST", description = "This move the navigation node")
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Request fulfilled"),
-          @ApiResponse(responseCode = "400", description = "Invalid query input"),
-          @ApiResponse(responseCode = "401", description = "User not authorized to move the navigation node"),
-          @ApiResponse(responseCode = "404", description = "Node not found")})
-  public Response moveNode (@Parameter(description = "node id") @QueryParam("nodeId") Long nodeId,
-                            @Parameter(description = "previous id") @QueryParam("previousNodeId") Long previousNodeId) {
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "401", description = "User not authorized to move the navigation node"),
+      @ApiResponse(responseCode = "404", description = "Node not found") })
+  public Response moveNode(@Parameter(description = "node id")
+  @QueryParam("nodeId")
+  Long nodeId,
+                           @Parameter(description = "previous id")
+                           @QueryParam("previousNodeId")
+                           Long previousNodeId) {
 
     try {
       if (nodeId == null) {
@@ -205,7 +210,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @PATCH
   @RolesAllowed("users")
   @Operation(summary = "update page access abd edit permission", method = "PUT", description = "update page access abd edit permission")
-  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Page permissions updated"),
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Page permissions updated"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
       @ApiResponse(responseCode = "404", description = "Page not found"),
       @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
@@ -225,16 +230,16 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (StringUtils.isBlank(pageRef) || StringUtils.isBlank(editPermission) || StringUtils.isBlank(accessPermissions)) {
         return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
       }
-      PageContext page = layoutService.getPageContext(PageKey.parse(pageRef));
-      if (page == null) {
+      PageContext pageContext = layoutService.getPageContext(PageKey.parse(pageRef));
+      if (pageContext == null) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
-      if (!SiteNavigationUtils.canEditPage(page)) {
+      if (!SiteNavigationUtils.canEditPage(pageContext)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      PageState pageState = page.getState();
+      PageState pageState = pageContext.getState();
       List<String> accessPermissionsList = List.of(accessPermissions.split(","));
-      page.setState(new PageState(pageState.getDisplayName(),
+      pageContext.setState(new PageState(pageState.getDisplayName(),
                                   pageState.getDescription(),
                                   pageState.getShowMaxWindow(),
                                   pageState.getFactoryId(),
@@ -242,14 +247,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   editPermission,
                                   pageState.getMoveAppsPermissions(),
                                   pageState.getMoveContainersPermissions()));
-      layoutService.save(page);
+      layoutService.save(pageContext);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when updating page permissions with reference {}", pageRef, e);
       return Response.serverError().build();
     }
   }
-    
+
   @Override
   public void start() {
     scheduledExecutor = Executors.newScheduledThreadPool(1);
