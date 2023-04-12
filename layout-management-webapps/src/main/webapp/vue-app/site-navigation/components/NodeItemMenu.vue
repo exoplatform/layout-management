@@ -34,7 +34,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </template>
     <v-list class="pa-0" dense>
       <v-list-item
-        v-if="canEdit"
+        v-if="navigationNode.pageKey"
         class="subtitle-2" 
         @click="editLayout">
         <v-icon

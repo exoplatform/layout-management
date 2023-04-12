@@ -31,7 +31,6 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.picocontainer.Startable;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,9 +228,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if(page == null){
         return Response.status(Response.Status.NOT_FOUND).build();
       }
-      org.exoplatform.services.security.Identity currentIdentity = ConversationState.getCurrent().getIdentity();
-      if (page.getState() != null && page.getState().getEditPermission().isBlank()
-          && !currentIdentity.isMemberOf(page.getState().getEditPermission().split(":")[1], page.getState().getEditPermission().split(":")[0])) {
+      if (!SiteNavigationUtils.canEditPage(page)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       PageState pageState = page.getState();

@@ -161,8 +161,8 @@ export default {
           });
           this.$root.$emit('refresh-navigation-nodes');
           this.close();
-        }).catch(() => {
-          const message = this.$t('siteNavigation.label.updatePermission.error');
+        }).catch((e) => {
+          const message = e.message ==='401' &&  this.$t('siteNavigation.label.updatePermission.unauthorized') || this.$t('siteNavigation.label.updatePermission.error');
           this.$root.$emit('navigation-node-notification-alert', {
             message,
             type: 'error',

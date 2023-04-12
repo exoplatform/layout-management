@@ -98,7 +98,7 @@ export function updateNodePagePermission(pageRef, editPermission, accessPermissi
     credentials: 'include',
   }).then((resp) => {
     if (resp && !resp.ok) {
-      throw new Error('Error when updating node page permissions');
+      throw new Error(resp.status);
     }
   });
 }
