@@ -110,23 +110,23 @@ export default {
       this.editPermission.membershipType = membershipType;
     },
     addAccessPermission(accessPermission) {
-      const index = this.accessPermissions.findIndex(permission => {
-        return (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId) || (permission.group.spaceId === accessPermission.group.spaceId);
-      });
+      const index = this.accessPermissions.findIndex(permission =>
+        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId)
+      );
       if (index < 0) {
         this.accessPermissions.push(accessPermission);
       }
     },
     removeAccessPermission(accessPermission) {
       const index = this.accessPermissions.findIndex(permission =>
-        (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId) || (permission.group.spaceId === accessPermission.group.spaceId));
+        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId));
       if (index >= 0) {
         this.accessPermissions.splice(index, 1);
       }
     },
     updateAccessPermissionMembership(accessPermission) {
       const index = this.accessPermissions.findIndex(permission =>
-        (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId) || (permission.group.spaceId === accessPermission.group.spaceId));
+        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId));
       if (index >= 0) {
         this.accessPermissions[index].membershipType = accessPermission.membershipType;
       }

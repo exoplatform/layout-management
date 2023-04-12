@@ -18,7 +18,7 @@
       height="40"
       include-groups
       required />
-    <span v-if="!accessPermissions.length" class="caption mx-2 mt-n4 position-absolute error-color">
+    <span v-if="!accessPermissions.length && showAccessPermissionsGroupSuggester" class="caption mx-2 mt-n4 position-absolute error-color">
       {{ $t('siteNavigation.required.error.message') }}
     </span>
     <template v-if="showAccessPermissionsList">
