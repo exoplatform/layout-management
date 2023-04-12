@@ -69,7 +69,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-icon>
         <v-list-item-title
           class="subtitle-2">
-          <span class="ps-1">{{ $t('siteNavigation.label.addNode.title') }}</span>
+          <span class="ps-1">{{ $t('siteNavigation.drawer.addNode.title') }}</span>
         </v-list-item-title>
       </v-list-item>
       <v-divider />

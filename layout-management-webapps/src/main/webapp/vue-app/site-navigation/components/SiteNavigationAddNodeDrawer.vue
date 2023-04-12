@@ -13,7 +13,7 @@
           @click="close()">
           fas fa-arrow-left
         </v-icon>
-        <span> {{ $t('siteNavigation.label.addNode.title') }} </span>
+        <span> {{ $t('siteNavigation.drawer.addNode.title') }} </span>
       </div>
     </template>
     <template slot="content">
@@ -31,7 +31,7 @@
             class="pt-0"
             type="text"
             required="required"
-            :rules="rules"
+            :rules="[rules.required]"
             outlined
             dense />
         </v-card-text>
@@ -47,7 +47,7 @@
             class="pt-0"
             type="text"
             required="required"
-            :rules="rules"
+            :rules="[rules.required]"
             outlined
             dense />
         </v-card-text>
@@ -143,16 +143,16 @@
 </template>
 <script>
 export default {
-  data: () => ({
-    visible: true,
-    scheduleVisibility: false,
-    nodeType: 'Group',
-    rules: [
-      value => {
-        return !(value && value.length) || 'Field is required.';
+  data () {
+    return {
+      visible: true,
+      scheduleVisibility: false,
+      nodeType: 'Group',
+      rules: {
+        required: value => (value && value.length) || this.$t('siteNavigation.required.error.message'),
       },
-    ]
-  }),
+    };
+  },
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
   },
