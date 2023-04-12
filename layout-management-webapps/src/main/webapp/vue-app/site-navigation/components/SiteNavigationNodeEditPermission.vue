@@ -12,7 +12,7 @@
       include-groups
       required />
     <span v-if="!permission.group" class="caption mt-n4 mx-2 position-absolute error-color">
-      {{ $t('siteNavigation.label.filed.required') }}
+      {{ $t('siteNavigation.required.error.message') }}
     </span>
     <site-navigation-node-permission-item
       v-if="permission.group && permission.group"
