@@ -8,7 +8,7 @@
       {{ displayName }}
     </span>
     <v-spacer />
-    <site-navigation-permission-type-selector
+    <site-navigation-node-permission-type-selector
       :membership-type="membershipType"
       class="mt-1"
       @membership-type-changed="$emit('membership-type-changed', $event)" />

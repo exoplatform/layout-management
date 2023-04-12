@@ -50,7 +50,7 @@ export default {
     }
   },
   watch: {
-    'permission.group'(newVal){
+    'permission.group'(newVal) {
       if (newVal?.spaceId){
         this.$set(this.permission,'membershipType', '*');
       }

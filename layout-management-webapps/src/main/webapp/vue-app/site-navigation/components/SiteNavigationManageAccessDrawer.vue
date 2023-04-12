@@ -36,7 +36,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-divider class="my-8" />
         <site-navigation-node-access-permission
           :access-permissions="accessPermissions"
-          :visibility="accessPermissionVisibility" />
+          :type="accessPermissionType" />
       </v-card>
     </template>
     <template slot="footer">
@@ -68,7 +68,7 @@ export default {
         group: {},
         membershipType: '*'},
       accessPermissions: [],
-      accessPermissionVisibility: ''
+      accessPermissionType: ''
     };
   },
   computed: {
@@ -80,17 +80,17 @@ export default {
     this.$root.$on('open-site-navigation-manage-access-drawer', this.open);
     this.$root.$on('reset-edit-permission', this.resetEditPermission);
     this.$root.$on('edit-permission-membership-type-changed', this.updateEditPermissionMembershipType);
-    this.$root.$on('add-new-access-permission', this.addNewAccessPermission);
+    this.$root.$on('add-access-permission', this.addAccessPermission);
     this.$root.$on('remove-access-permission', this.removeAccessPermission);
     this.$root.$on('update-access-permission-membership-type', this.updateAccessPermissionMembership);
-    this.$root.$on('change-access-permission-visibility', this.changeAccessPermissionVisibility);
+    this.$root.$on('change-access-permission-type', this.changeAccessPermissionType);
   },
   methods: {
     open(navigationNode) {
-      this.navigationNode = JSON.parse(JSON.stringify(navigationNode)) ;
-      this.editPermission =JSON.parse(JSON.stringify(navigationNode.pageEditPermission));
-      this.accessPermissions =JSON.parse(JSON.stringify(navigationNode.pageAccessPermissions));
-      this.accessPermissionVisibility = this.accessPermissions[0]?.group && 'GROUP' || 'Everyone';
+      this.navigationNode = JSON.parse(JSON.stringify(navigationNode));
+      this.editPermission = JSON.parse(JSON.stringify(navigationNode.pageEditPermission));
+      this.accessPermissions = JSON.parse(JSON.stringify(navigationNode.pageAccessPermissions));
+      this.accessPermissionType = this.accessPermissions[0]?.group && 'GROUP' || 'Everyone';
       this.$nextTick()
         .then(() => {
           this.$refs.siteNavigationManageAccessDrawer.open();
@@ -109,33 +109,33 @@ export default {
     updateEditPermissionMembershipType(membershipType) {
       this.editPermission.membershipType = membershipType;
     },
-    addNewAccessPermission(newPermission) {
-      const index = this.accessPermissions.findIndex(permission =>{
-        return (permission.group.id === newPermission.group.id) || (permission.group.id === newPermission.group.spaceId)|| (permission.group.spaceId === newPermission.group.spaceId);
+    addAccessPermission(accessPermission) {
+      const index = this.accessPermissions.findIndex(permission => {
+        return (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId) || (permission.group.spaceId === accessPermission.group.spaceId);
       });
       if (index < 0) {
-        this.accessPermissions.push(newPermission);
+        this.accessPermissions.push(accessPermission);
       }
     },
     removeAccessPermission(accessPermission) {
       const index = this.accessPermissions.findIndex(permission =>
-        (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId)|| (permission.group.spaceId === accessPermission.group.spaceId));
+        (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId) || (permission.group.spaceId === accessPermission.group.spaceId));
       if (index >= 0) {
-        this.accessPermissions.splice(index,1);
+        this.accessPermissions.splice(index, 1);
       }
     },
     updateAccessPermissionMembership(accessPermission) {
       const index = this.accessPermissions.findIndex(permission =>
-        (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId)|| (permission.group.spaceId === accessPermission.group.spaceId));
+        (permission.group.id === accessPermission.group.id) || (permission.group.id === accessPermission.group.spaceId) || (permission.group.spaceId === accessPermission.group.spaceId));
       if (index >= 0) {
         this.accessPermissions[index].membershipType = accessPermission.membershipType;
       }
     },
-    changeAccessPermissionVisibility(newVisibility) {
-      this.accessPermissionVisibility = newVisibility;
-      if (newVisibility === 'Everyone' && this.accessPermissions[0]?.group) {
+    changeAccessPermissionType(accessPermissionType) {
+      this.accessPermissionType = accessPermissionType;
+      if (accessPermissionType === 'Everyone' && this.accessPermissions[0]?.group) {
         this.accessPermissions = ['Everyone'];
-      } else if (newVisibility === 'GROUP' && !this.accessPermissions[0]?.group){
+      } else if (accessPermissionType === 'GROUP' && !this.accessPermissions[0]?.group) {
         this.accessPermissions= !this.navigationNode.pageAccessPermissions[0]?.group && [] || this.navigationNode.pageAccessPermissions;
       }
     },

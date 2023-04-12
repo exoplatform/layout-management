@@ -2,8 +2,8 @@
   <div>
     <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.whoCanView') }}</span>
     <v-select
-      v-model="visibility"
-      :items="visibilityLabel"
+      v-model="type"
+      :items="typeLabel"
       item-text="text"
       item-value="value"
       dense
@@ -42,7 +42,7 @@ export default {
         return [];
       }
     },
-    visibility: {
+    type: {
       type: String,
       default: 'Everyone'
     },
@@ -61,7 +61,7 @@ export default {
         noDataLabel: this.$t('siteNavigation.label.groupSuggester.noData')
       };
     },
-    visibilityLabel(){
+    typeLabel() {
       return [
         {
           text: this.$t('siteNavigation.label.view.everyone'),
@@ -73,10 +73,10 @@ export default {
         },
       ];
     },
-    showAccessPermissionsGroupSuggester(){
-      return this.visibility === 'GROUP';
+    showAccessPermissionsGroupSuggester() {
+      return this.type === 'GROUP';
     },
-    showAccessPermissionsList(){
+    showAccessPermissionsList() {
       return this.showAccessPermissionsGroupSuggester && this.accessPermissions[0]?.group.id;
     },
   },
@@ -86,12 +86,12 @@ export default {
         const permission = {
           group: this.accessPermission,
           membershipType: '*'};
-        this.$root.$emit('add-new-access-permission', permission);
+        this.$root.$emit('add-access-permission', permission);
         this.$refs.NavigationNodeAccessPermissions.emitSelectedValue({});
       }
     },
-    visibility(){
-      this.$root.$emit('change-access-permission-visibility', this.visibility);
+    type() {
+      this.$root.$emit('change-access-permission-type', this.type);
     }
   },
   methods: {

@@ -51,15 +51,15 @@ export default {
   }),
   computed: {
     membershipTypeLabel() {
-      if (!this.$t(`siteNavigation.label.membershipType.${this.membershipType}`).includes('siteNavigation.label')){
+      if (!this.$t(`siteNavigation.label.membershipType.${this.membershipType}`).includes('siteNavigation.label')) {
         return  this.$t(`siteNavigation.label.membershipType.${this.membershipType}`);
-      } else  {
+      } else {
         return this.membershipType;
       }
     }
   },
   watch: {
-    membershipType(){
+    membershipType() {
       this.$emit('membership-type-changed', this.membershipType);
     }
   },
@@ -74,7 +74,7 @@ export default {
     this.getMembershipTypes();
   },
   methods: {
-    getMembershipTypes(){
+    getMembershipTypes() {
       return this.$siteNavigationService.getMembershipTypes()
         .then(membershipTypes => {
           this.membershipTypes = membershipTypes || [];
