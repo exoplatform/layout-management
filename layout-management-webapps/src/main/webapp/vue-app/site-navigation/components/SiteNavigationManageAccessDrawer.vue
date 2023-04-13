@@ -24,45 +24,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <template slot="title">
       <div class="d-flex">
         <i
-          class="uiIcon uiArrowBAckIcon"
+          class="uiIcon uiArrowBAckIcon clickable"
           @click="close"></i>
         <span class="ms-2"> {{ $t('siteNavigation.manageAccessDrawer.title') }}</span>
       </div>
     </template>
     <template slot="content">
       <v-card class="mx-4 my-4 px-2 py-2 elevation-0">
-        <template>
-          <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.whoCanEdit') }}</span>
-          <exo-identity-suggester
-            ref="NavigationNodeEditPermissions"
-            :labels="suggesterLabels"
-            v-model="editPermissions"
-            name="editPermissions"
-            height="40"
-            include-groups
-            required />
-        </template>
+        <site-navigation-node-edit-permission
+          :permission="editPermission" />
         <v-divider class="my-8" />
-        <template>
-          <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.whoCanView') }}</span>
-          <v-select
-            v-model="visibilityChoice"
-            :items="visibilityLabel"
-            item-text="text"
-            item-value="value"
-            dense
-            class="caption"
-            outlined />
-          <exo-identity-suggester
-            v-if="showViewPermissionsGroupSuggester"
-            ref="NavigationNodeViewPermissions"
-            :labels="suggesterLabels"
-            v-model="viewPermissions"
-            name="viewPermissions"
-            height="40"
-            include-groups
-            required />
-        </template>
+        <site-navigation-node-access-permission
+          :access-permissions="accessPermissions"
+          :type="accessPermissionType" />
       </v-card>
     </template>
     <template slot="footer">
@@ -74,6 +48,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-btn>
         <v-btn
           :loading="loading"
+          :disabled="!enableSave"
+          @click="save"
           class="btn btn-primary ms-2">
           {{ $t('siteNavigation.label.btn.save') }}
         </v-btn>
@@ -88,44 +64,114 @@ export default {
     return {
       loading: false,
       navigationNode: null,
-      editPermissions: null,
-      viewPermissions: null,
-      visibilityChoice: 'EVERYONE',
+      editPermission: {
+        group: {},
+        membershipType: '*'},
+      accessPermissions: [],
+      accessPermissionType: ''
     };
   },
   computed: {
-    suggesterLabels() {
-      return {
-        placeholder: this.$t('siteNavigation.label.groupSuggester.placeholder'),
-        noDataLabel: this.$t('siteNavigation.label.groupSuggester.noData')
-      };
-    },
-    visibilityLabel(){
-      return [
-        {
-          text: this.$t('siteNavigation.label.view.everyone'),
-          value: 'EVERYONE',
-        },
-        {
-          text: this.$t('siteNavigation.label.view.designedGroup'),
-          value: 'GROUP',
-        },
-      ];
-    },
-    showViewPermissionsGroupSuggester(){
-      return this.visibilityChoice === 'GROUP';
+    enableSave() {
+      return this.accessPermissions.length && this.editPermission?.group?.id;
     },
   },
   created() {
     this.$root.$on('open-site-navigation-manage-access-drawer', this.open);
+    this.$root.$on('reset-edit-permission', this.resetEditPermission);
+    this.$root.$on('edit-permission-membership-type-changed', this.updateEditPermissionMembershipType);
+    this.$root.$on('add-access-permission', this.addAccessPermission);
+    this.$root.$on('remove-access-permission', this.removeAccessPermission);
+    this.$root.$on('update-access-permission-membership-type', this.updateAccessPermissionMembership);
+    this.$root.$on('change-access-permission-type', this.changeAccessPermissionType);
   },
   methods: {
     open(navigationNode) {
-      this.navigationNode = navigationNode;
-      this.$refs.siteNavigationManageAccessDrawer.open();
+      this.navigationNode = JSON.parse(JSON.stringify(navigationNode));
+      this.editPermission = JSON.parse(JSON.stringify(navigationNode.pageEditPermission));
+      this.accessPermissions = JSON.parse(JSON.stringify(navigationNode.pageAccessPermissions));
+      this.accessPermissionType = this.accessPermissions[0]?.group && 'GROUP' || 'Everyone';
+      this.$nextTick()
+        .then(() => {
+          this.$refs.siteNavigationManageAccessDrawer.open();
+        });
     },
     close() {
+      this.resetEditPermission();
+      this.accessPermissions = [];
       this.$refs.siteNavigationManageAccessDrawer.close();
+    },
+    resetEditPermission() {
+      this.editPermission = {
+        membershipType: '*'
+      };
+    },
+    updateEditPermissionMembershipType(membershipType) {
+      this.editPermission.membershipType = membershipType;
+    },
+    addAccessPermission(accessPermission) {
+      const index = this.accessPermissions.findIndex(permission =>
+        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId)
+      );
+      if (index < 0) {
+        this.accessPermissions.push(accessPermission);
+      }
+    },
+    removeAccessPermission(accessPermission) {
+      const index = this.accessPermissions.findIndex(permission =>
+        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId));
+      if (index >= 0) {
+        this.accessPermissions.splice(index, 1);
+      }
+    },
+    updateAccessPermissionMembership(accessPermission) {
+      const index = this.accessPermissions.findIndex(permission =>
+        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId));
+      if (index >= 0) {
+        this.accessPermissions[index].membershipType = accessPermission.membershipType;
+      }
+    },
+    changeAccessPermissionType(accessPermissionType) {
+      this.accessPermissionType = accessPermissionType;
+      if (accessPermissionType === 'Everyone' && this.accessPermissions[0]?.group) {
+        this.accessPermissions = ['Everyone'];
+      } else if (accessPermissionType === 'GROUP' && !this.accessPermissions[0]?.group) {
+        this.accessPermissions= !this.navigationNode.pageAccessPermissions[0]?.group && [] || this.navigationNode.pageAccessPermissions;
+      }
+    },
+    save() {
+      this.loading = true;
+      this.$refs.siteNavigationManageAccessDrawer.startLoading();
+      const pageEditPermission = `${this.editPermission.membershipType}:${this.editPermission.group.spaceId || this.editPermission.group.id}`;
+      let pageAccessPermissions = ['Everyone'];
+      if (this.accessPermissions[0] !== 'Everyone') {
+        pageAccessPermissions = [];
+        this.accessPermissions.forEach(permission => {
+          const accessPermission = `${permission.membershipType}:${permission.group.spaceId || permission.group.id}`;
+          pageAccessPermissions.push(accessPermission);
+        });
+      }
+      const pageRef = this.navigationNode.pageKey.ref ||`${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}`;
+      return this.$siteNavigationService.updateNodePagePermission(pageRef, pageEditPermission, pageAccessPermissions)
+        .then(() => {
+          const message = this.$t('siteNavigation.label.updatePermission.success');
+          this.$root.$emit('navigation-node-notification-alert', {
+            message,
+            type: 'success',
+          });
+          this.$root.$emit('refresh-navigation-nodes');
+          this.close();
+        }).catch((e) => {
+          const message = e.message ==='401' &&  this.$t('siteNavigation.label.updatePermission.unauthorized') || this.$t('siteNavigation.label.updatePermission.error');
+          this.$root.$emit('navigation-node-notification-alert', {
+            message,
+            type: 'error',
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+          this.$refs.siteNavigationManageAccessDrawer.endLoading();
+        });
     },
   }
 };

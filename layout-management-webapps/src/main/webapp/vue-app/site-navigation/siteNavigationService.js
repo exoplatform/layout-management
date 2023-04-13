@@ -1,10 +1,12 @@
 
-export function getNavigationNodes(siteType, siteName, includeGlobal) {
+export function getNavigationNodes(siteType, siteName, includeGlobal, expandPageDetails) {
   const formData = new FormData();
   if (siteName) {
     formData.append('siteName', siteName);
   }
   formData.append('includeGlobal', includeGlobal);
+
+  formData.append('expandPageDetails', expandPageDetails);
 
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/navigations/${siteType || 'portal'}?${params}`, {
@@ -76,6 +78,39 @@ export function moveNode(nodeId, previousNodeId) {
       return resp.ok;
     } else {
       throw resp;
+    }
+  });
+}
+
+export function updateNodePagePermission(pageRef, editPermission, accessPermissions) {
+
+  const formData = new FormData();
+
+  formData.append('editPermission', editPermission);
+
+  formData.append('accessPermissions', accessPermissions);
+
+  const params = new URLSearchParams(formData).toString();
+
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/permissions/${pageRef}?${params}`, {
+    method: 'PATCH',
+    credentials: 'include',
+  }).then((resp) => {
+    if (resp && !resp.ok) {
+      throw new Error(resp.status);
+    }
+  });
+}
+
+export function getMembershipTypes() {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/membershipTypes`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error('Error when retrieving membership types');
+    } else {
+      return resp.json();
     }
   });
 }

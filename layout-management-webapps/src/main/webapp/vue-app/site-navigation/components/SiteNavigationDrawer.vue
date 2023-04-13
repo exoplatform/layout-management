@@ -58,7 +58,7 @@ export default {
       this.$refs.siteNavigationDrawer.close();
     },
     getNavigationNodes() {
-      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false)
+      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
         });
