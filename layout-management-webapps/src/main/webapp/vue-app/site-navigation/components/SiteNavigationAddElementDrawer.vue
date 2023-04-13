@@ -37,8 +37,19 @@
             item-text="text"
             item-value="value"
             dense
-            class="caption pt-1"
+            class="caption pt-1 mb-5"
             outlined />
+        </template>
+        <template v-if="isElementLink">
+          <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.link') }}</span>
+          <v-text-field
+            v-model="link"
+            :placeholder="$t('siteNavigation.label.enterUrl') "
+            class="pt-0"
+            type="text"
+            required="required"
+            outlined
+            dense />
         </template>
       </v-card>
     </template>
@@ -65,7 +76,8 @@ export default {
   data() {
     return {
       elementType: 'newPage',
-      openMode: 'sameTab'
+      openMode: 'sameTab',
+      link: ''
     };
   },
   computed: {
@@ -96,6 +108,9 @@ export default {
           value: 'newTab',
         },
       ];
+    },
+    isElementLink() {
+      return this.elementType === 'link';
     },
   },
   created() {
