@@ -28,6 +28,7 @@
         </v-card-text>
         <v-card-text class="d-flex py-0">
           <v-text-field
+            v-model="nodeLabel"
             class="pt-0"
             type="text"
             required="required"
@@ -44,32 +45,13 @@
         </v-card-text>
         <v-card-text class="d-flex py-0">
           <v-text-field
+            v-model="nodeId"
             class="pt-0"
             type="text"
             required="required"
             :rules="[rules.required]"
             outlined
             dense />
-        </v-card-text>
-        <v-card-text class="d-flex flex-grow-1 pb-2">
-          <v-label>
-            <span class="text-color font-weight-bold">
-              {{ $t('siteNavigation.label.nodeIcon.title') }}            
-            </span>
-          </v-label>
-        </v-card-text>
-        <v-card-text>
-          <div class="d-flex flex-row py-0">
-            <v-label>
-              <span class="caption">
-                {{ $t('siteNavigation.label.nodeIcon.description') }}
-              </span>
-            </v-label>
-            <v-spacer />
-            <v-file-input
-              prepend-icon="fas fa-camera z-index-two rounded-circle primary-border-color py-1 ms-3"
-              class="file-selector pa-0 ma-0" />
-          </div>
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 pb-2">
           <v-label>
@@ -145,11 +127,13 @@
 export default {
   data () {
     return {
+      nodeLabel: null,
+      nodeId: null,
       visible: true,
       scheduleVisibility: false,
       nodeType: 'Group',
       rules: {
-        required: value => (value && value.length) || this.$t('siteNavigation.required.error.message'),
+        required: value => (value == null || value.length) || this.$t('siteNavigation.required.error.message'),
       },
     };
   },
@@ -161,6 +145,8 @@ export default {
       this.$refs.siteNavigationAddNodeDrawer.open();
     },
     close() {
+      this.nodeId = null;
+      this.nodeLabel = null;
       this.$refs.siteNavigationAddNodeDrawer.close();
     }
   },
