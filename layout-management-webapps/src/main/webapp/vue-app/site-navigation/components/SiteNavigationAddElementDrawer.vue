@@ -45,9 +45,10 @@
           <v-text-field
             v-model="link"
             :placeholder="$t('siteNavigation.label.enterUrl') "
+            :rules="linkRules"
             class="pt-0"
             type="text"
-            required="required"
+            required
             outlined
             dense />
         </template>
@@ -77,7 +78,8 @@ export default {
     return {
       elementType: 'newPage',
       openMode: 'sameTab',
-      link: ''
+      link: '',
+      linkRules: [url => !!(url && (url.indexOf('/portal/') === 0 || url.indexOf('./') === 0 || url.match(/(http(s)?:\/\/.)[-a-zA-Z0-9@:%._\\+~#=]{2,256}/g))) || this.$t('siteNavigation.label.invalidLink')],
     };
   },
   computed: {
