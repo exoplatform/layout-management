@@ -107,7 +107,7 @@
                 value="Group" />
               <v-radio
                 :label="$t('siteNavigation.label.nodeType.pageOrLink')"
-                value="pagrOrLink" />
+                value="pageOrLink" />
             </v-radio-group>
           </div>
         </v-card-text>
@@ -121,6 +121,15 @@
           {{ $t('siteNavigation.label.btn.cancel') }}
         </v-btn>
         <v-btn
+          v-if="displayNextBtn"
+          :loading="loading"
+          :disabled="!enableNextBtn"
+          class="btn btn-primary ms-2"
+          @click="openAddElementDrawer">
+          {{ $t('siteNavigation.label.btn.next') }}
+        </v-btn>
+        <v-btn
+          v-else
           :loading="loading"
           class="btn btn-primary ms-2">
           {{ $t('siteNavigation.label.btn.save') }}
@@ -154,6 +163,14 @@ export default {
       ],
     };
   },
+  computed: {
+    enableNextBtn(){
+      return this.nodeId && this.nodeLabel;
+    },
+    displayNextBtn(){
+      return this.nodeType === 'pageOrLink';
+    }
+  },
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
   },
@@ -184,6 +201,9 @@ export default {
       if (this.nodeId == null) {
         this.nodeId = this.conversionRules();
       }
+    },
+    openAddElementDrawer() {
+      this.$root.$emit('open-add-element-drawer', this.open);
     }
   },
 };
