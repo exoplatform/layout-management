@@ -124,7 +124,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 value="Group" />
               <v-radio
                 :label="$t('siteNavigation.label.nodeType.pageOrLink')"
-                value="pagrOrLink" />
+                value="pageOrLink" />
             </v-radio-group>
           </div>
         </v-card-text>
@@ -138,6 +138,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           {{ $t('siteNavigation.label.btn.cancel') }}
         </v-btn>
         <v-btn
+          :disabled="disabled"
+          v-if="displayNextBtn"
+          :loading="loading"
+          class="btn btn-primary ms-2"
+          @click="openAddElementDrawer">
+          {{ $t('siteNavigation.label.btn.next') }}
+        </v-btn>
+        <v-btn
+          v-else
           :disabled="disabled"
           :loading="loading"
           @click="createNode"
@@ -163,7 +172,6 @@ export default {
       nodeLabelRules: {
         required: value => value == null || value.length || this.$t('siteNavigation.required.error.message'),
       },
-      isValidInputs: true,
       nodeIdRules: [
         value => {
           if (value != null && (/\s+/.test(value) || /[^a-zA-Z0-9_-]/.test(value) || /[\u0300-\u036f]/.test(value.normalize('NFD')))){
@@ -173,11 +181,15 @@ export default {
           }
         }
       ],
+      isValidInputs: true
     };
   },
   computed: {
     disabled() {
       return !(this.isValidInputs && this.nodeId && this.nodeLabel);
+    },
+    displayNextBtn() {
+      return this.nodeType === 'pageOrLink';
     }
   },
   created() {
@@ -226,6 +238,9 @@ export default {
       if (this.nodeId == null) {
         this.nodeId = this.conversionRules();
       }
+    },
+    openAddElementDrawer() {
+      this.$root.$emit('open-add-element-drawer', this.open);
     }
   },
 };
