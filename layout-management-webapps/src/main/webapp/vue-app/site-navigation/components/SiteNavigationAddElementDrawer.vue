@@ -40,7 +40,7 @@
             class="caption pt-1 mb-5"
             outlined />
         </template>
-        <template v-if="isElementLink">
+        <template v-if="isLinkElement">
           <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.link') }}</span>
           <v-text-field
             v-model="link"
@@ -109,7 +109,7 @@ export default {
         },
       ];
     },
-    isElementLink() {
+    isLinkElement() {
       return this.elementType === 'link';
     },
   },
