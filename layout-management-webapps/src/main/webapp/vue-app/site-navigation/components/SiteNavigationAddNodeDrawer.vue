@@ -49,15 +49,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             class="pt-0"
             type="text"
             required="required"
-            :rules="[rules.required]"
+            :rules="[nodeLabelRules.required]"
             outlined
-            dense />
+            dense 
+            @blur="blurOnNodeLabel" />
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 pb-2">
           <v-label>
             <span class="text-color font-weight-bold mr-6">
               {{ $t('siteNavigation.label.nodeId.title') }} *              
             </span>
+            <p
+              v-if="nodeId && nodeId.length"
+              class="caption text-break">
+              {{ nodeUrl }}
+            </p>
           </v-label>
         </v-card-text>
         <v-card-text class="d-flex py-0">
@@ -66,7 +72,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             class="pt-0"
             type="text"
             required="required"
-            :rules="[rules.required]"
+            :rules="nodeIdRules"
             outlined
             dense />
         </v-card-text>
@@ -152,10 +158,21 @@ export default {
       visible: true,
       scheduleVisibility: false,
       nodeType: 'Group',
-      rules: {
-        required: value => (value == null || value.length) || this.$t('siteNavigation.required.error.message'),
+      parentNavigationNodeUrl: '',
+      nodeUrl: '',
+      nodeLabelRules: {
+        required: value => value == null || value.length || this.$t('siteNavigation.required.error.message'),
       },
-      isValidInputs: true
+      isValidInputs: true,
+      nodeIdRules: [
+        value => {
+          if (value != null && (/\s+/.test(value) || /[^a-zA-Z0-9_-]/.test(value) || /[\u0300-\u036f]/.test(value.normalize('NFD')))){
+            return this.$t('siteNavigation.unauthorizedCharacters.error.message');
+          } else {
+            return value == null || value.length || this.$t('siteNavigation.required.error.message');
+          }
+        }
+      ],
     };
   },
   computed: {
@@ -166,9 +183,20 @@ export default {
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
   },
+  watch: {
+    nodeId() {
+      this.nodeUrl = `${this.$t('siteNavigation.label.nodeId.description')}${this.parentNavigationNodeUrl}/${this.nodeId}`;
+    }
+  },
   methods: {
     open(parentNavigationNode) {
       this.navigationNode = parentNavigationNode;
+      const siteKey = parentNavigationNode.siteKey;
+      if (siteKey.typeName === 'portal') {
+        this.parentNavigationNodeUrl = `/portal/${siteKey.name}/${parentNavigationNode.uri}`;
+      } else {
+        this.parentNavigationNodeUrl = `/portal/g/${siteKey.name.replaceAll('/', ':')}/${parentNavigationNode.uri}`;
+      }
       this.$refs.siteNavigationAddNodeDrawer.open();
     },
     close() {
@@ -190,7 +218,15 @@ export default {
         .finally(() => {
           this.close();
         });
-    } 
+    },
+    conversionRules() {
+      return this.nodeLabel.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]/g, '').replace(/\s+/g, '').toLowerCase();
+    },
+    blurOnNodeLabel() {
+      if (this.nodeId == null) {
+        this.nodeId = this.conversionRules();
+      }
+    }
   },
 };
 </script>
