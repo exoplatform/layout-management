@@ -24,6 +24,10 @@ import SiteNavigationNotificationAlert from './snackbar/SiteNavigationNotificati
 import SiteNavigationNotificationAlerts from './snackbar/SiteNavigationNotificationAlerts.vue';
 import SiteNavigationManageAccessDrawer from './components/SiteNavigationManageAccessDrawer.vue';
 import SiteNavigationAddNodeDrawer from './components/SiteNavigationAddNodeDrawer.vue';
+import SiteNavigationNodeEditPermission from './components/SiteNavigationNodeEditPermission.vue';
+import SiteNavigationNodeAccessPermission from './components/SiteNavigationNodeAccessPermission.vue';
+import SiteNavigationNodePermissionItem from './components/SiteNavigationNodePermissionItem.vue';
+import SiteNavigationNodePermissionTypeSelector from './components/SiteNavigationNodePermissionTypeSelector.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
@@ -34,7 +38,11 @@ const components = {
   'site-navigation-notification-alert': SiteNavigationNotificationAlert,
   'site-navigation-notification-alerts': SiteNavigationNotificationAlerts,
   'site-navigation-manage-access-drawer': SiteNavigationManageAccessDrawer,
-  'site-navigation-add-node-drawer': SiteNavigationAddNodeDrawer
+  'site-navigation-add-node-drawer': SiteNavigationAddNodeDrawer,
+  'site-navigation-node-edit-permission': SiteNavigationNodeEditPermission,
+  'site-navigation-node-access-permission': SiteNavigationNodeAccessPermission,
+  'site-navigation-node-permission-item': SiteNavigationNodePermissionItem,
+  'site-navigation-node-permission-type-selector': SiteNavigationNodePermissionTypeSelector
 };
 
 for (const key in components) {
