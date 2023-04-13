@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       elementType: 'newPage',
-      openMode: 'newTab'
+      openMode: 'sameTab'
     };
   },
   computed: {
@@ -88,12 +88,12 @@ export default {
     openModes() {
       return [
         {
-          text: this.$t('siteNavigation.label.newTab'),
-          value: 'newTab',
-        },
-        {
           text: this.$t('siteNavigation.label.sameTab'),
           value: 'sameTab',
+        },
+        {
+          text: this.$t('siteNavigation.label.newTab'),
+          value: 'newTab',
         },
       ];
     },
