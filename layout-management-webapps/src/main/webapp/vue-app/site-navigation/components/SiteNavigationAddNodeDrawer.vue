@@ -32,15 +32,20 @@
             class="pt-0"
             type="text"
             required="required"
-            :rules="[rules.required]"
+            :rules="[nodeLabelRules.required]"
             outlined
-            dense />
+            dense 
+            @blur="blurOnNodeLabel" />
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 pb-2">
           <v-label>
             <span class="text-color font-weight-bold mr-6">
               {{ $t('siteNavigation.label.nodeId.title') }} *              
             </span>
+            <p v-if="nodeId && nodeId.length"
+              class="caption text-break">
+              {{ $t('siteNavigation.label.nodeId.description') }} {{ nodeUrl }}
+            </p>
           </v-label>
         </v-card-text>
         <v-card-text class="d-flex py-0">
@@ -49,7 +54,7 @@
             class="pt-0"
             type="text"
             required="required"
-            :rules="[rules.required]"
+            :rules="nodeIdRules"
             outlined
             dense />
         </v-card-text>
@@ -132,22 +137,52 @@ export default {
       visible: true,
       scheduleVisibility: false,
       nodeType: 'Group',
-      rules: {
+      InitialUrl: '',
+      nodeUrl: '',
+      nodeLabelRules: {
         required: value => (value == null || value.length) || this.$t('siteNavigation.required.error.message'),
       },
+      nodeIdRules: [
+        value => {
+          if (value != null && (/\s+/.test(value) || /[^a-zA-Z0-9_-]/.test(value) || /[\u0300-\u036f]/.test(value.normalize('NFD')))){
+            return this.$t('siteNavigation.unauthorizedCharacters.error.message');
+          } else {
+            return (value == null || value.length) || this.$t('siteNavigation.required.error.message');
+          }
+        }
+      ],
     };
   },
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
   },
+  watch: {
+    nodeId() {
+      this.nodeUrl = `${this.InitialUrl}/${this.nodeId}`;
+    }
+  },
   methods: {
-    open() {
+    open(navigationNode) {
+      const siteKey = navigationNode.siteKey;
+      if (siteKey.name === 'dw') {
+        this.InitialUrl = `/portal/${siteKey.name}/${navigationNode.uri}`;
+      } else {
+        this.InitialUrl = `/portal/g/${siteKey.name.replaceAll('/', ':')}/${navigationNode.uri}`;
+      }
       this.$refs.siteNavigationAddNodeDrawer.open();
     },
     close() {
       this.nodeId = null;
       this.nodeLabel = null;
       this.$refs.siteNavigationAddNodeDrawer.close();
+    },
+    conversionRules() {
+      return this.nodeLabel.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]/g, '').replace(/\s+/g, '').toLowerCase();
+    },
+    blurOnNodeLabel() {
+      if (this.nodeId == null) {
+        this.nodeId = this.conversionRules();
+      }
     }
   },
 };
