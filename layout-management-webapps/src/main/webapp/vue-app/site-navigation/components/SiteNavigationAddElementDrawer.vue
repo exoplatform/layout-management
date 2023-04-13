@@ -17,10 +17,10 @@
       </div>
     </template>
     <template slot="content">
-      <v-card class="mx-4 my-4 px-2 py-2 elevation-0" >
-      <template>
-        <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.selectElementType') }}</span>
-        <v-select
+      <v-card class="mx-4 my-4 px-2 py-2 elevation-0">
+        <template>
+          <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.selectElementType') }}</span>
+          <v-select
             v-model="elementType"
             :items="elementTypes"
             item-text="text"
@@ -28,18 +28,18 @@
             dense
             class="caption pt-1 mb-5"
             outlined />
-      </template>
-      <template>
-        <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
-        <v-select
-            v-model="openType"
-            :items="openTypes"
+        </template>
+        <template>
+          <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
+          <v-select
+            v-model="openMode"
+            :items="openModes"
             item-text="text"
             item-value="value"
             dense
             class="caption pt-1"
             outlined />
-      </template>
+        </template>
       </v-card>
     </template>
     <template slot="footer">
@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       elementType: 'newPage',
-      openType: 'newTab'
+      openMode: 'newTab'
     };
   },
   computed: {
@@ -85,7 +85,7 @@ export default {
         },
       ];
     },
-    openTypes() {
+    openModes() {
       return [
         {
           text: this.$t('siteNavigation.label.newTab'),

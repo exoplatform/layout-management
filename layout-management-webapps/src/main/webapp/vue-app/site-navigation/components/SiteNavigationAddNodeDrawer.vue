@@ -17,7 +17,8 @@
       </div>
     </template>
     <template slot="content">
-      <v-form>
+      <v-form
+        v-model="isValidInputs">
         <v-card-text class="d-flex pb-2">
           <v-label>
             <span class="text-color font-weight-bold">
@@ -161,13 +162,14 @@ export default {
           }
         }
       ],
+      isValidInputs: true
     };
   },
   computed: {
-    enableNextBtn(){
-      return this.nodeId && this.nodeLabel;
+    enableNextBtn (){
+      return this.isValidInputs && this.nodeId && this.nodeLabel;
     },
-    displayNextBtn(){
+    displayNextBtn (){
       return this.nodeType === 'pageOrLink';
     }
   },
