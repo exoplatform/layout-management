@@ -42,9 +42,10 @@
             <span class="text-color font-weight-bold mr-6">
               {{ $t('siteNavigation.label.nodeId.title') }} *              
             </span>
-            <p v-if="nodeId && nodeId.length"
+            <p
+              v-if="nodeId && nodeId.length"
               class="caption text-break">
-              {{ $t('siteNavigation.label.nodeId.description') }} {{ nodeUrl }}
+              {{ nodeUrl }}
             </p>
           </v-label>
         </v-card-text>
@@ -137,17 +138,17 @@ export default {
       visible: true,
       scheduleVisibility: false,
       nodeType: 'Group',
-      InitialUrl: '',
+      parentNavigationNodeUrl: '',
       nodeUrl: '',
       nodeLabelRules: {
-        required: value => (value == null || value.length) || this.$t('siteNavigation.required.error.message'),
+        required: value => value == null || value.length || this.$t('siteNavigation.required.error.message'),
       },
       nodeIdRules: [
         value => {
           if (value != null && (/\s+/.test(value) || /[^a-zA-Z0-9_-]/.test(value) || /[\u0300-\u036f]/.test(value.normalize('NFD')))){
             return this.$t('siteNavigation.unauthorizedCharacters.error.message');
           } else {
-            return (value == null || value.length) || this.$t('siteNavigation.required.error.message');
+            return value == null || value.length || this.$t('siteNavigation.required.error.message');
           }
         }
       ],
@@ -158,16 +159,16 @@ export default {
   },
   watch: {
     nodeId() {
-      this.nodeUrl = `${this.InitialUrl}/${this.nodeId}`;
+      this.nodeUrl = `${this.$t('siteNavigation.label.nodeId.description')}${this.parentNavigationNodeUrl}/${this.nodeId}`;
     }
   },
   methods: {
-    open(navigationNode) {
-      const siteKey = navigationNode.siteKey;
+    open(parentNavigationNode) {
+      const siteKey = parentNavigationNode.siteKey;
       if (siteKey.name === 'dw') {
-        this.InitialUrl = `/portal/${siteKey.name}/${navigationNode.uri}`;
+        this.parentNavigationNodeUrl = `/portal/${siteKey.name}/${parentNavigationNode.uri}`;
       } else {
-        this.InitialUrl = `/portal/g/${siteKey.name.replaceAll('/', ':')}/${navigationNode.uri}`;
+        this.parentNavigationNodeUrl = `/portal/g/${siteKey.name.replaceAll('/', ':')}/${parentNavigationNode.uri}`;
       }
       this.$refs.siteNavigationAddNodeDrawer.open();
     },
