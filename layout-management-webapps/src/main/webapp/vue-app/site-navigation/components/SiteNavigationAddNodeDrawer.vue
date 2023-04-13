@@ -175,6 +175,9 @@ export default {
     close() {
       this.nodeId = null;
       this.nodeLabel = null;
+      this.visible = true;
+      this.scheduleVisibility = false;
+      this.nodeType = 'Group';
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     conversionRules() {
