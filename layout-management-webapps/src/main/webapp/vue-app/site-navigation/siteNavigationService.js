@@ -1,6 +1,7 @@
 
 export function getNavigationNodes(siteType, siteName, includeGlobal, expandPageDetails) {
   const formData = new FormData();
+
   if (siteName) {
     formData.append('siteName', siteName);
   }
@@ -73,6 +74,35 @@ export function moveNode(nodeId, previousNodeId) {
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node/move?${params}`, {
     credentials: 'include',
     method: 'PATCH',
+  }).then((resp) => {
+    if (resp && resp.ok) {
+      return resp.ok;
+    } else {
+      throw resp;
+    }
+  });
+}
+
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible) {
+  const formData = new FormData();
+  if (parentNodeId) {
+    formData.append('parentNodeId', parentNodeId);
+  }
+  if (previousNodeId) {
+    formData.append('previousNodeId', previousNodeId);
+  }
+  if (nodeLabel) {
+    formData.append('nodeLabel', nodeLabel);
+  }
+  if (nodeId) {
+    formData.append('nodeId', nodeId);
+  }
+  formData.append('isVisible', isVisible);
+
+  const params = new URLSearchParams(formData).toString();
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation?${params}`, {
+    credentials: 'include',
+    method: 'POST',
   }).then((resp) => {
     if (resp && resp.ok) {
       return resp.ok;

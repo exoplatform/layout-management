@@ -19,7 +19,9 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
+import org.exoplatform.portal.mop.Visibility;
 import org.exoplatform.portal.mop.navigation.NodeData;
+import org.exoplatform.portal.mop.navigation.NodeState;
 import org.exoplatform.portal.mop.page.PageContext;
 import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import org.exoplatform.services.security.Identity;
 
 @Path("v1/siteNavigation")
@@ -59,6 +62,52 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
+  }
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Create a navigation node", method = "POST", description = "This creates the navigation node")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node created"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "404", description = "Node not found"),
+      @ApiResponse(responseCode = "401", description = "User not authorized to create the navigation node"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createNode(@Parameter(description = "navigation node id")
+  @QueryParam("parentNodeId")
+  Long parentNodeId,
+                             @Parameter(description = "previous node id")
+                             @QueryParam("previousNodeId")
+                             Long previousNodeId,
+                             @Parameter(description = "node label")
+                             @QueryParam("nodeLabel")
+                             String nodeLabel,
+                             @Parameter(description = "node id")
+                             @QueryParam("nodeId")
+                             String nodeId,
+                             @Parameter(description = "isVisible")
+                             @QueryParam("isVisible")
+                             boolean isVisible) {
+    if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+    }
+    try {
+      NodeData parentNodeData = navigationService.getNodeById(parentNodeId);
+      if (parentNodeData == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Node data with parent node id is not found").build();
+      }
+      Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, parentNodeData)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      NodeState nodeState;
+      nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, null, null);
+      navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when creating a new navigation node", e);
+      return Response.serverError().entity(e.getMessage()).build();
+    }
   }
 
   @DELETE
@@ -240,13 +289,13 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       PageState pageState = pageContext.getState();
       List<String> accessPermissionsList = List.of(accessPermissions.split(","));
       pageContext.setState(new PageState(pageState.getDisplayName(),
-                                  pageState.getDescription(),
-                                  pageState.getShowMaxWindow(),
-                                  pageState.getFactoryId(),
-                                  accessPermissionsList,
-                                  editPermission,
-                                  pageState.getMoveAppsPermissions(),
-                                  pageState.getMoveContainersPermissions()));
+                                         pageState.getDescription(),
+                                         pageState.getShowMaxWindow(),
+                                         pageState.getFactoryId(),
+                                         accessPermissionsList,
+                                         editPermission,
+                                         pageState.getMoveAppsPermissions(),
+                                         pageState.getMoveContainersPermissions()));
       layoutService.save(pageContext);
       return Response.ok().build();
     } catch (Exception e) {
