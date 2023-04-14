@@ -1,6 +1,6 @@
 <template>
   <div class="text-center pe-1">
-    <span class="text-capitalize clickable" @click="showMenu = true"> {{ membershipTypeLabel }}</span>
+    <span class="text-capitalize clickable" @click="showMenu = true"> {{ getMembershipTypeLabel(membershipType) }}</span>
     <v-menu
       v-model="showMenu"
       transition="slide-x-reverse-transition"
@@ -28,7 +28,7 @@
           :key="index">
           <v-list-item-title @click="membershipType = membershipTypeItem.name" class="clickable text-capitalize">
             <span class="text-font-size clickable">
-              {{ membershipTypeItem.name }}
+              {{ getMembershipTypeLabel(membershipTypeItem.name) }}
             </span>
           </v-list-item-title>
         </v-list-item>
@@ -49,15 +49,6 @@ export default {
     membershipTypes: [],
     showMenu: false,
   }),
-  computed: {
-    membershipTypeLabel() {
-      if (!this.$t(`siteNavigation.label.membershipType.${this.membershipType}`).includes('siteNavigation.label')) {
-        return  this.$t(`siteNavigation.label.membershipType.${this.membershipType}`);
-      } else {
-        return this.membershipType;
-      }
-    }
-  },
   watch: {
     membershipType() {
       this.$emit('membership-type-changed', this.membershipType);
@@ -79,6 +70,13 @@ export default {
         .then(membershipTypes => {
           this.membershipTypes = membershipTypes || [];
         });
+    },
+    getMembershipTypeLabel(membershipType){
+      if (!this.$t(`siteNavigation.label.membershipType.${membershipType}`).includes('siteNavigation.label')) {
+        return  this.$t(`siteNavigation.label.membershipType.${membershipType}`);
+      } else {
+        return membershipType;
+      }
     }
   }
 };

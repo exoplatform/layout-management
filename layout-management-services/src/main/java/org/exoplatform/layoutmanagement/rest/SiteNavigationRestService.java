@@ -254,7 +254,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     }
   }
 
-  @Path("/page/permissions/{pageRef}")
+  @Path("/page/permissions")
   @PATCH
   @RolesAllowed("users")
   @Operation(summary = "update page access abd edit permission", method = "PUT", description = "update page access abd edit permission")
@@ -266,7 +266,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   public Response updatePagePermissions(@Context
   HttpServletRequest request,
                                         @Parameter(description = "Page reference", required = true)
-                                        @PathParam("pageRef")
+                                        @QueryParam("pageRef")
                                         String pageRef,
                                         @Parameter(description = "Page new edit permission", required = true)
                                         @QueryParam("editPermission")

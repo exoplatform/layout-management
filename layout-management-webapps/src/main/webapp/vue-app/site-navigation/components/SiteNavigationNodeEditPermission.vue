@@ -7,9 +7,11 @@
       v-model="permission.group"
       :group-type="groupType"
       :all-groups-for-admin="allGroupsForAdmin"
+      :group-member="userGroup"
       name="editPermissions"
       height="40"
       include-groups
+      include-spaces
       required />
     <span v-if="!permission.group" class="caption mt-n4 mx-2 position-absolute error-color">
       {{ $t('siteNavigation.required.error.message') }}
@@ -37,6 +39,7 @@ export default {
     loading: false,
     allGroupsForAdmin: true,
     groupType: 'GROUP',
+    userGroup: '/platform/users',
     searchOptions: {
       currentUser: '',
     },
