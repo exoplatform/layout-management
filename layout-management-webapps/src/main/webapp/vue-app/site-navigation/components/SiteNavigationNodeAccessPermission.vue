@@ -77,7 +77,7 @@ export default {
       return this.type === 'GROUP';
     },
     showAccessPermissionsList() {
-      return this.showAccessPermissionsGroupSuggester && this.accessPermissions[0]?.group.id;
+      return this.showAccessPermissionsGroupSuggester;
     },
   },
   watch: {
