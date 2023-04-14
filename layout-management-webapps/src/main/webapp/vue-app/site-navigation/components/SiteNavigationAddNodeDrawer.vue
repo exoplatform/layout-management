@@ -131,7 +131,9 @@
         </v-btn>
         <v-btn
           v-else
+          :disabled="disabled"
           :loading="loading"
+          @click="createNode"
           class="btn btn-primary ms-2">
           {{ $t('siteNavigation.label.btn.save') }}
         </v-btn>
@@ -143,6 +145,7 @@
 export default {
   data () {
     return {
+      navigationNode: null,
       nodeLabel: null,
       nodeId: null,
       visible: true,
@@ -150,14 +153,17 @@ export default {
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       nodeUrl: '',
+      authorized: true,
       nodeLabelRules: {
         required: value => value == null || value.length || this.$t('siteNavigation.required.error.message'),
       },
       nodeIdRules: [
         value => {
           if (value != null && (/\s+/.test(value) || /[^a-zA-Z0-9_-]/.test(value) || /[\u0300-\u036f]/.test(value.normalize('NFD')))){
+            this.authorized = false;
             return this.$t('siteNavigation.unauthorizedCharacters.error.message');
           } else {
+            this.authorized = true;
             return value == null || value.length || this.$t('siteNavigation.required.error.message');
           }
         }
@@ -171,6 +177,9 @@ export default {
     },
     displayNextBtn (){
       return this.nodeType === 'pageOrLink';
+    },
+    disabled(){
+      return !(this.nodeId && this.nodeLabel && this.authorized);
     }
   },
   created() {
@@ -179,12 +188,13 @@ export default {
   watch: {
     nodeId() {
       this.nodeUrl = `${this.$t('siteNavigation.label.nodeId.description')}${this.parentNavigationNodeUrl}/${this.nodeId}`;
-    }
+    },
   },
   methods: {
     open(parentNavigationNode) {
+      this.navigationNode = parentNavigationNode;
       const siteKey = parentNavigationNode.siteKey;
-      if (siteKey.name === 'dw') {
+      if (siteKey.typeName === 'portal') {
         this.parentNavigationNodeUrl = `/portal/${siteKey.name}/${parentNavigationNode.uri}`;
       } else {
         this.parentNavigationNodeUrl = `/portal/g/${siteKey.name.replaceAll('/', ':')}/${parentNavigationNode.uri}`;
@@ -197,6 +207,7 @@ export default {
       this.visible = true;
       this.scheduleVisibility = false;
       this.nodeType = 'Group';
+      this.disabled = true;
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     conversionRules() {
@@ -209,7 +220,18 @@ export default {
     },
     openAddElementDrawer() {
       this.$root.$emit('open-add-element-drawer', this.open);
-    }
+    },
+    createNode() {
+      const nodeChildrenLength = this.navigationNode.children.length;
+      const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
+      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible)
+        .then(() => {
+          this.$root.$emit('refresh-navigation-nodes');
+        })
+        .finally(() => {
+          this.close();
+        });
+    } 
   },
 };
 </script>
