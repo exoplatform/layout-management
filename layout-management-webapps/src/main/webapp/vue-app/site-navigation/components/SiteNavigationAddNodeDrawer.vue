@@ -124,7 +124,7 @@
         <v-btn
           v-if="displayNextBtn"
           :loading="loading"
-          :disabled="!enableNextBtn"
+          :disabled="disabled"
           class="btn btn-primary ms-2"
           @click="openAddElementDrawer">
           {{ $t('siteNavigation.label.btn.next') }}
@@ -153,17 +153,14 @@ export default {
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       nodeUrl: '',
-      authorized: true,
       nodeLabelRules: {
         required: value => value == null || value.length || this.$t('siteNavigation.required.error.message'),
       },
       nodeIdRules: [
         value => {
           if (value != null && (/\s+/.test(value) || /[^a-zA-Z0-9_-]/.test(value) || /[\u0300-\u036f]/.test(value.normalize('NFD')))){
-            this.authorized = false;
             return this.$t('siteNavigation.unauthorizedCharacters.error.message');
           } else {
-            this.authorized = true;
             return value == null || value.length || this.$t('siteNavigation.required.error.message');
           }
         }
@@ -172,14 +169,11 @@ export default {
     };
   },
   computed: {
-    enableNextBtn (){
-      return this.isValidInputs && this.nodeId && this.nodeLabel;
-    },
     displayNextBtn (){
       return this.nodeType === 'pageOrLink';
     },
     disabled(){
-      return !(this.nodeId && this.nodeLabel && this.authorized);
+      return !(this.isValidInputs && this.nodeId && this.nodeLabel);
     }
   },
   created() {

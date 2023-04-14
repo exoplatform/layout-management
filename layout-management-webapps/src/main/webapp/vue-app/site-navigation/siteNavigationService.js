@@ -83,10 +83,10 @@ export function moveNode(nodeId, previousNodeId) {
   });
 }
 
-export function createNode(navigationNodeId, previousNodeId, nodeLabel, nodeId, isVisible) {
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible) {
   const formData = new FormData();
-  if (navigationNodeId) {
-    formData.append('navigationNodeId', navigationNodeId);
+  if (parentNodeId) {
+    formData.append('parentNodeId', parentNodeId);
   }
   if (previousNodeId) {
     formData.append('previousNodeId', previousNodeId);

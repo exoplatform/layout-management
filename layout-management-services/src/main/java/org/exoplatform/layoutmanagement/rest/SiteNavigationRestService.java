@@ -74,8 +74,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       @ApiResponse(responseCode = "401", description = "User not authorized to create the navigation node"),
       @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response createNode(@Parameter(description = "navigation node id")
-  @QueryParam("navigationNodeId")
-  Long navigationNodeId,
+  @QueryParam("parentNodeId")
+  Long parentNodeId,
                              @Parameter(description = "previous node id")
                              @QueryParam("previousNodeId")
                              Long previousNodeId,
@@ -88,26 +88,21 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "isVisible")
                              @QueryParam("isVisible")
                              boolean isVisible) {
-    if (navigationNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
+    if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
-      NodeData nodeData = navigationService.getNodeById(navigationNodeId);
-      if (nodeData == null) {
-        return Response.status(Response.Status.NOT_FOUND).entity("Node data with node id is not found").build();
+      NodeData parentNodeData = navigationService.getNodeById(parentNodeId);
+      if (parentNodeData == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Node data with parent node id is not found").build();
       }
       Identity currentIdentity = ConversationState.getCurrent().getIdentity();
-      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, parentNodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       NodeState nodeState;
-      if (isVisible) {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, Visibility.DISPLAYED, null, null);
-      } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, Visibility.HIDDEN, null, null);
-      }
-      long parentId = Long.parseLong(nodeData.getId());
-      navigationService.createNode(parentId, previousNodeId, nodeId, nodeState);
+      nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, null, null);
+      navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when creating a new navigation node", e);
