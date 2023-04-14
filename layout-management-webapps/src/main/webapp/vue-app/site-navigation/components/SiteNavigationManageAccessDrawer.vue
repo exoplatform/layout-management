@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     enableSave() {
-      return this.accessPermissions.length && this.editPermission?.group?.id;
+      return (this.accessPermissions.length || this.accessPermissionType ==='Everyone' ) && this.editPermission?.group?.id;
     },
   },
   created() {
@@ -89,8 +89,9 @@ export default {
     open(navigationNode) {
       this.navigationNode = JSON.parse(JSON.stringify(navigationNode));
       this.editPermission = JSON.parse(JSON.stringify(navigationNode.pageEditPermission));
-      this.accessPermissions = JSON.parse(JSON.stringify(navigationNode.pageAccessPermissions));
-      this.accessPermissionType = this.accessPermissions[0]?.group && 'GROUP' || 'Everyone';
+      this.accessPermissionType = navigationNode.pageAccessPermissions[0].membershipType === 'Everyone' && 'Everyone' || 'GROUP';
+      this.accessPermissions = this.accessPermissionType === 'Everyone' && [] ||  JSON.parse(JSON.stringify(navigationNode.pageAccessPermissions));
+
       this.$nextTick()
         .then(() => {
           this.$refs.siteNavigationManageAccessDrawer.open();
@@ -110,8 +111,8 @@ export default {
       this.editPermission.membershipType = membershipType;
     },
     addAccessPermission(accessPermission) {
-      const index = this.accessPermissions.findIndex(permission =>
-        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId)
+      const index = !this.accessPermissions.length && -1 || this.accessPermissions.findIndex(permission =>
+        permission.group?.id === accessPermission.group.id || permission.group?.id === accessPermission.group.spaceId || (permission.group?.spaceId && permission.group?.spaceId  === accessPermission.group.spaceId)
       );
       if (index < 0) {
         this.accessPermissions.push(accessPermission);
@@ -133,10 +134,10 @@ export default {
     },
     changeAccessPermissionType(accessPermissionType) {
       this.accessPermissionType = accessPermissionType;
-      if (accessPermissionType === 'Everyone' && this.accessPermissions[0]?.group) {
+      if (accessPermissionType === 'Everyone') {
         this.accessPermissions = ['Everyone'];
-      } else if (accessPermissionType === 'GROUP' && !this.accessPermissions[0]?.group) {
-        this.accessPermissions= !this.navigationNode.pageAccessPermissions[0]?.group && [] || this.navigationNode.pageAccessPermissions;
+      } else if (accessPermissionType === 'GROUP') {
+        this.accessPermissions =  this.navigationNode?.pageAccessPermissions[0]?.membershipType === 'Everyone' && [] || this.navigationNode.pageAccessPermissions;
       }
     },
     save() {
@@ -147,8 +148,10 @@ export default {
       if (this.accessPermissions[0] !== 'Everyone') {
         pageAccessPermissions = [];
         this.accessPermissions.forEach(permission => {
-          const accessPermission = `${permission.membershipType}:${permission.group.spaceId || permission.group.id}`;
-          pageAccessPermissions.push(accessPermission);
+          if (permission.group) {
+            const accessPermission = `${permission.membershipType}:${permission.group.spaceId || permission.group.id}`;
+            pageAccessPermissions.push(accessPermission);
+          }
         });
       }
       const pageRef = this.navigationNode.pageKey.ref ||`${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}`;
