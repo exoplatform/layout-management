@@ -111,26 +111,13 @@ export default {
       this.editPermission.membershipType = membershipType;
     },
     addAccessPermission(accessPermission) {
-      const index = !this.accessPermissions.length && -1 || this.accessPermissions.findIndex(permission =>
-        permission.group?.id === accessPermission.group.id || permission.group?.id === accessPermission.group.spaceId || (permission.group?.spaceId && permission.group?.spaceId  === accessPermission.group.spaceId)
-      );
-      if (index < 0) {
-        this.accessPermissions.push(accessPermission);
-      }
+      this.accessPermissions.push(accessPermission);
     },
-    removeAccessPermission(accessPermission) {
-      const index = this.accessPermissions.findIndex(permission =>
-        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId));
-      if (index >= 0) {
-        this.accessPermissions.splice(index, 1);
-      }
+    removeAccessPermission(index) {
+      this.accessPermissions.splice(index, 1);
     },
     updateAccessPermissionMembership(accessPermission) {
-      const index = this.accessPermissions.findIndex(permission =>
-        permission.group.id === accessPermission.group.id || permission.group.id === accessPermission.group.spaceId || (permission.group.spaceId && permission.group.spaceId  === accessPermission.group.spaceId));
-      if (index >= 0) {
-        this.accessPermissions[index].membershipType = accessPermission.membershipType;
-      }
+      this.accessPermissions[accessPermission.index].membershipType = accessPermission.membershipType;
     },
     changeAccessPermissionType(accessPermissionType) {
       this.accessPermissionType = accessPermissionType;
@@ -143,13 +130,13 @@ export default {
     save() {
       this.loading = true;
       this.$refs.siteNavigationManageAccessDrawer.startLoading();
-      const pageEditPermission = `${this.editPermission.membershipType}:${this.editPermission.group.spaceId || this.editPermission.group.id}`;
+      const pageEditPermission =this.convertPermission(this.editPermission);
       let pageAccessPermissions = ['Everyone'];
       if (this.accessPermissions[0] !== 'Everyone') {
         pageAccessPermissions = [];
         this.accessPermissions.forEach(permission => {
-          if (permission.group) {
-            const accessPermission = `${permission.membershipType}:${permission.group.spaceId || permission.group.id}`;
+          if (permission.group?.id) {
+            const accessPermission = this.convertPermission(permission);
             pageAccessPermissions.push(accessPermission);
           }
         });
@@ -176,6 +163,13 @@ export default {
           this.$refs.siteNavigationManageAccessDrawer.endLoading();
         });
     },
+    convertPermission(permission){
+      if (permission.group.providerId === 'space'){
+        return `${permission.membershipType}:/spaces/${permission.group.remoteId}`;
+      } else {
+        return `${permission.membershipType}:${permission.group.spaceId || permission.group.id}`;
+      }
+    }
   }
 };
 </script>
