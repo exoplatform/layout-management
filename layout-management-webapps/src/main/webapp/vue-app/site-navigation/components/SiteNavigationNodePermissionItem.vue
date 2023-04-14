@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex" v-if="permissionGroup?.id">
     <v-icon
       size="19"
       class="fas fa-users me-3" />
