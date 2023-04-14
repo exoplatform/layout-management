@@ -61,7 +61,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-title>
       </v-list-item>
       <v-list-item
-        @click="$root.$emit('open-site-navigation-add-node-drawer')">
+        @click="$root.$emit('open-site-navigation-add-node-drawer', navigationNode)">
         <v-icon
           size="13"
           class="pe-1">
