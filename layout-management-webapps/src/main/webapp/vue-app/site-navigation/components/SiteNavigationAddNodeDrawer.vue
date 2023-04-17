@@ -33,7 +33,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </div>
     </template>
     <template slot="content">
-      <v-form>
+      <v-form
+        v-model="isValidInputs">
         <v-card-text class="d-flex pb-2">
           <v-label>
             <span class="text-color font-weight-bold">
@@ -131,7 +132,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           {{ $t('siteNavigation.label.btn.cancel') }}
         </v-btn>
         <v-btn
+          :disabled="disabled"
           :loading="loading"
+          @click="createNode"
           class="btn btn-primary ms-2">
           {{ $t('siteNavigation.label.btn.save') }}
         </v-btn>
@@ -143,6 +146,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data () {
     return {
+      navigationNode: null,
       nodeLabel: null,
       nodeId: null,
       visible: true,
@@ -151,13 +155,20 @@ export default {
       rules: {
         required: value => (value == null || value.length) || this.$t('siteNavigation.required.error.message'),
       },
+      isValidInputs: true
     };
+  },
+  computed: {
+    disabled() {
+      return !(this.isValidInputs && this.nodeId && this.nodeLabel);
+    }
   },
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
   },
   methods: {
-    open() {
+    open(parentNavigationNode) {
+      this.navigationNode = parentNavigationNode;
       this.$refs.siteNavigationAddNodeDrawer.open();
     },
     close() {
@@ -166,8 +177,20 @@ export default {
       this.visible = true;
       this.scheduleVisibility = false;
       this.nodeType = 'Group';
+      this.disabled = true;
       this.$refs.siteNavigationAddNodeDrawer.close();
-    }
+    },
+    createNode() {
+      const nodeChildrenLength = this.navigationNode.children.length;
+      const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
+      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible)
+        .then(() => {
+          this.$root.$emit('refresh-navigation-nodes');
+        })
+        .finally(() => {
+          this.close();
+        });
+    } 
   },
 };
 </script>
