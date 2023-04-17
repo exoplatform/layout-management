@@ -12,13 +12,18 @@
     <exo-identity-suggester
       v-if="showAccessPermissionsGroupSuggester"
       ref="NavigationNodeAccessPermissions"
-      :labels="suggesterLabels"
       v-model="accessPermission"
+      :group-type="groupType"
+      :all-groups-for-admin="allGroupsForAdmin"
+      :group-member="userGroup"
+      :search-options="searchOptions"
+      :labels="suggesterLabels"
       name="accessPermissions"
       height="40"
       include-groups
+      include-spaces
       required />
-    <span v-if="!accessPermissions.length && showAccessPermissionsGroupSuggester" class="caption mx-2 mt-n4 position-absolute error-color">
+    <span v-if="!accessPermissions.length && showAccessPermissionsGroupSuggester" class="caption mx-2 mt-n3 position-absolute error-color">
       {{ $t('siteNavigation.required.error.message') }}
     </span>
     <template v-if="showAccessPermissionsList">
@@ -27,8 +32,8 @@
         :key="index"
         :permission-group="permission.group"
         :membership-type="permission.membershipType"
-        @membership-type-changed="updatePermissionMembershipType(permission.group, $event)"
-        @remove-permission="$root.$emit('remove-access-permission', permission)" />
+        @membership-type-changed="updatePermissionMembershipType(index, $event)"
+        @remove-permission="$root.$emit('remove-access-permission', index)" />
     </template>
   </div>
 </template>
@@ -49,6 +54,10 @@ export default {
   },
   data() {
     return {
+      allGroupsForAdmin: true,
+      groupType: 'GROUP',
+      userGroup: '/platform/users',
+      searchOptions: {filterType: eXo.env.portal.isAdministrator && 'all' || 'member'},
       loading: false,
       navigationNode: null,
       accessPermission: null
@@ -95,9 +104,9 @@ export default {
     }
   },
   methods: {
-    updatePermissionMembershipType(permissionGroup, membershipType) {
+    updatePermissionMembershipType(index, membershipType) {
       const permission = {
-        group: permissionGroup,
+        index: index,
         membershipType: membershipType};
       this.$root.$emit('update-access-permission-membership-type', permission);
     }

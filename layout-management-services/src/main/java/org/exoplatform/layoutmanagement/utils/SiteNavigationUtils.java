@@ -37,4 +37,8 @@ public class SiteNavigationUtils {
     UserACL userACL = CommonsUtils.getService(UserACL.class);
     return userACL.hasEditPermission(pageContext);
   }
+  public static boolean isAdministrator() {
+    UserACL userACL = CommonsUtils.getService(UserACL.class);
+    return userACL.isSuperUser() || userACL.isUserInGroup(PLATFORM_ADMINISTRATORS_GROUP);
+  }
 }

@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import org.exoplatform.services.security.Identity;
 
 @Path("v1/siteNavigation")
@@ -286,7 +288,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       PageState pageState = pageContext.getState();
-      List<String> accessPermissionsList = List.of(accessPermissions.split(","));
+      List<String> accessPermissionsList = List.of(accessPermissions.split(",")).stream().distinct().collect(Collectors.toList());
       pageContext.setState(new PageState(pageState.getDisplayName(),
                                   pageState.getDescription(),
                                   pageState.getShowMaxWindow(),

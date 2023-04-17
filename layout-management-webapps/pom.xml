@@ -46,6 +46,10 @@
       <classifier>sources</classifier>
       <scope>provided</scope>
     </dependency>
+      <dependency>
+        <groupId>org.exoplatform.addons.layout-management</groupId>
+        <artifactId>layout-management-services</artifactId>
+      </dependency>
   </dependencies>
   <build>
     <finalName>layout-management</finalName>
