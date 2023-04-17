@@ -53,6 +53,10 @@
             outlined
             dense />
         </template>
+        <template v-else>
+          <site-navigation-page-element
+            :element-type="elementType" />
+        </template>
       </v-card>
     </template>
     <template slot="footer">

@@ -179,7 +179,7 @@ export default {
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       nodeLabelRules: {
-        required: value => value == null || value.length || this.$t('siteNavigation.required.error.message'),
+        required: value => value == null || !!(value && value.length) || this.$t('siteNavigation.required.error.message'),
       },
       isValidInputs: true,
       nodeIdRules: [
@@ -190,7 +190,7 @@ export default {
           } else if (isNodeExisting) {
             return this.$t('siteNavigation.nodeWithSameNodeIdAlreadyExists.error.message');
           } else {
-            return value == null || value.length || this.$t('siteNavigation.required.error.message');
+            return value == null || !!(value && value.length) || this.$t('siteNavigation.required.error.message');
           }
         }
       ],
