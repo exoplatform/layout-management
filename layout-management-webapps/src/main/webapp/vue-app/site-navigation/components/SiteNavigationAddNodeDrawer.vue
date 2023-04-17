@@ -168,20 +168,22 @@ export default {
       scheduleVisibility: false,
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
-      nodeUrl: '',
       nodeLabelRules: {
         required: value => value == null || value.length || this.$t('siteNavigation.required.error.message'),
       },
       nodeIdRules: [
         value => {
+          const isNodeExisting = this.navigationNode.children.find(node => node.name === value);
           if (value != null && (/\s+/.test(value) || /[^a-zA-Z0-9_-]/.test(value) || /[\u0300-\u036f]/.test(value.normalize('NFD')))){
             return this.$t('siteNavigation.unauthorizedCharacters.error.message');
+          } else if (isNodeExisting) {
+            return this.$t('siteNavigation.nodeWithSameNodeIdAlreadyExists.error.message');
           } else {
             return value == null || value.length || this.$t('siteNavigation.required.error.message');
           }
         }
       ],
-      isValidInputs: true
+      isValidInputs: true,
     };
   },
   computed: {
@@ -190,15 +192,13 @@ export default {
     },
     displayNextBtn() {
       return this.nodeType === 'pageOrLink';
+    },
+    nodeUrl() {
+      return `${this.$t('siteNavigation.label.nodeId.description')}${this.parentNavigationNodeUrl}/${this.nodeId}`;
     }
   },
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
-  },
-  watch: {
-    nodeId() {
-      this.nodeUrl = `${this.$t('siteNavigation.label.nodeId.description')}${this.parentNavigationNodeUrl}/${this.nodeId}`;
-    }
   },
   methods: {
     open(parentNavigationNode) {
