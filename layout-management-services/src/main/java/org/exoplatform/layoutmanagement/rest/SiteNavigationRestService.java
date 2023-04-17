@@ -92,7 +92,13 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              String nodeId,
                              @Parameter(description = "isVisible")
                              @QueryParam("isVisible")
-                             boolean isVisible) {
+                             boolean isVisible,
+                             @Parameter(description = "startPostDate")
+                             @QueryParam("startPostDate")
+                             Long startPostDate,
+                             @Parameter(description = "endPostDate")
+                             @QueryParam("endPostDate")
+                             Long endPostDate) {
     if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
@@ -106,7 +112,11 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       NodeState nodeState;
-      nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, null, null);
+      if (startPostDate != null && endPostDate != null) {
+        nodeState = new NodeState(nodeLabel, null, startPostDate, endPostDate, Visibility.TEMPORAL, null, null);
+      } else {
+        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, null, null);
+      }
       navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
       return Response.ok().build();
     } catch (Exception e) {

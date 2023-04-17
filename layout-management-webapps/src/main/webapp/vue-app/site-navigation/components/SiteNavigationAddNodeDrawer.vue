@@ -84,7 +84,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-label>
           <v-icon
             color="black"
-            size="21"
+            size="24"
             class="pl-2">
             fa-info-circle
           </v-icon>
@@ -94,18 +94,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-switch      
               v-model="visible"
               class="mt-0 me-1" />
-            <span class="caption">
+            <span class="caption pt-1">
               {{ $t('siteNavigation.label.visibility.visible') }}
             </span>
           </div>
-          <div class="d-flex flex-row">
-            <v-switch     
+          <div
+            class="d-flex flex-row"
+            v-if="visible">
+            <v-switch   
               v-model="scheduleVisibility" 
               class="mt-0 me-1" />
-            <span class="caption">
+            <span class="caption pt-1">
               {{ $t('siteNavigation.label.visibility.scheduleVisibility') }}
             </span>
           </div>
+        </v-card-text>
+        <v-card-text class="pt-0" v-if="visible && scheduleVisibility">
+          <site-navigation-form-date-pickers
+          @change="updateDates"/>
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 text-no-wrap text-left font-weight-bold pb-2">
           <v-label>
@@ -161,6 +167,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data () {
     return {
+      startPublicationDate: null,
+      endPublicationDate: null,
+      startPublicationDateTime: null,
+      endPublicationDateTime: null,
+      startPostDate: null,
+      endPostDate: null,
       navigationNode: null,
       nodeLabel: null,
       nodeId: null,
@@ -190,7 +202,7 @@ export default {
     disabled() {
       return !(this.isValidInputs && this.nodeId && this.nodeLabel);
     },
-    displayNextBtn() {
+    displayNextBtn () {
       return this.nodeType === 'pageOrLink';
     },
     nodeUrl() {
@@ -201,6 +213,13 @@ export default {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
   },
   methods: {
+    updateDates(startDate, endDate, startTime, endTime){
+      this.startPublicationDate = startDate;
+      this.endPublicationDate = endDate;
+      this.startPublicationDateTime = startTime;
+      this.endPublicationDateTime = endTime;
+      console.log('updateDate');
+    },
     open(parentNavigationNode) {
       this.navigationNode = parentNavigationNode;
       const siteKey = parentNavigationNode.siteKey;
@@ -221,9 +240,19 @@ export default {
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     createNode() {
+      if (this.scheduleVisibility){
+        this.startPostDate = new Date(this.startPublicationDate);
+        this.startPostDate.setHours(new Date(this.startPublicationDateTime).getHours());
+        this.startPostDate.setMinutes(new Date(this.startPublicationDateTime).getMinutes());
+        this.startPostDate.setSeconds(0);
+        this.endPostDate = new Date(this.endPublicationDate);
+        this.endPostDate.setHours(new Date(this.endPublicationDateTime).getHours());
+        this.endPostDate.setMinutes(new Date(this.endPublicationDateTime).getMinutes());
+        this.endPostDate.setSeconds(0);
+      }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
-      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible)
+      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.startPostDate, this.endPostDate)
         .then(() => {
           this.$root.$emit('refresh-navigation-nodes');
         })
