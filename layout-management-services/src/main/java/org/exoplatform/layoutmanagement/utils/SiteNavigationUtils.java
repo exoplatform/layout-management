@@ -5,6 +5,7 @@ import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.navigation.NodeData;
+import org.exoplatform.portal.mop.page.PageContext;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.services.security.Identity;
 
@@ -30,5 +31,14 @@ public class SiteNavigationUtils {
         || currentIdentity.isMemberOf(PLATFORM_ADMINISTRATORS_GROUP, MANAGER_MEMBERSHIP_NAME))
         && (userACL.hasEditPermissionOnPortal(siteKey.getTypeName(), siteKey.getName(), sitePortalConfig.getEditPermission())
             || userACL.hasEditPermissionOnNavigation(siteKey));
+  }
+
+  public static boolean canEditPage(PageContext pageContext) {
+    UserACL userACL = CommonsUtils.getService(UserACL.class);
+    return userACL.hasEditPermission(pageContext);
+  }
+  public static boolean isAdministrator() {
+    UserACL userACL = CommonsUtils.getService(UserACL.class);
+    return userACL.isSuperUser() || userACL.isUserInGroup(PLATFORM_ADMINISTRATORS_GROUP);
   }
 }

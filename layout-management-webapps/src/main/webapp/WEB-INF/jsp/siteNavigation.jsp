@@ -3,6 +3,7 @@
 <%@ page import="org.exoplatform.commons.api.settings.ExoFeatureService" %>
 <%@ page import="org.exoplatform.commons.utils.CommonsUtils"%>
 <%@ page import="org.exoplatform.portal.mop.user.UserNavigation" %>
+<%@ page import="org.exoplatform.layoutmanagement.utils.SiteNavigationUtils" %>
 
 <%
   ExoFeatureService featureService = CommonsUtils.getService(ExoFeatureService.class);
@@ -13,12 +14,14 @@
   UserNavigation userNavigation = Utils.getSelectedNavigation();
   String siteType = userNavigation.getKey().getTypeName();
   String siteName = userNavigation.getKey().getName();
+  boolean isAdministrator = SiteNavigationUtils.isAdministrator();
 %>
 <div class="VuetifyApp">
   <div id="siteNavigation">
     <script type="text/javascript">
         eXo.env.portal.siteKeyType = '<%=siteType%>';
         eXo.env.portal.siteKeyName = '<%=siteName%>';
+        eXo.env.portal.isAdministrator = <%=isAdministrator%>;
       require(['PORTLET/layout-management/SiteNavigation'], app => app.init(<%=canManageSiteNavigation%>));
     </script>
   </div>
