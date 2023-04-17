@@ -1,20 +1,28 @@
 
 package org.exoplatform.layoutmanagement.rest;
 
-import io.swagger.v3.oas.annotations.Operation;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang.StringUtils;
+import org.picocontainer.Startable;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
@@ -32,17 +40,13 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.http.PATCH;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
-import org.picocontainer.Startable;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
 import org.exoplatform.services.security.Identity;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Path("v1/siteNavigation")
 @Tag(name = "v1/siteNavigation", description = "Managing site navigation")
