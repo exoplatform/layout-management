@@ -8,12 +8,13 @@
       :group-type="groupType"
       :all-groups-for-admin="allGroupsForAdmin"
       :group-member="userGroup"
+      :search-options="searchOptions"
       name="editPermissions"
       height="40"
       include-groups
       include-spaces
       required />
-    <span v-if="!permission.group" class="caption mt-n4 mx-2 position-absolute error-color">
+    <span v-if="!permission.group" class="caption mt-n3 mx-2 position-absolute error-color">
       {{ $t('siteNavigation.required.error.message') }}
     </span>
     <site-navigation-node-permission-item
@@ -40,9 +41,7 @@ export default {
     allGroupsForAdmin: true,
     groupType: 'GROUP',
     userGroup: '/platform/users',
-    searchOptions: {
-      currentUser: '',
-    },
+    searchOptions: {filterType: eXo.env.portal.isAdministrator && 'all' || 'member'},
   }),
   computed: {
     suggesterLabels() {
