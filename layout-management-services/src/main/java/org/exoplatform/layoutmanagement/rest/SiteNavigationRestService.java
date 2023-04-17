@@ -288,7 +288,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       PageState pageState = pageContext.getState();
-      List<String> accessPermissionsList = List.of(accessPermissions.split(",")).stream().distinct().collect(Collectors.toList());
+      List<String> accessPermissionsList = List.of(accessPermissions.split(",")).stream().distinct().toList();
       pageContext.setState(new PageState(pageState.getDisplayName(),
                                   pageState.getDescription(),
                                   pageState.getShowMaxWindow(),
