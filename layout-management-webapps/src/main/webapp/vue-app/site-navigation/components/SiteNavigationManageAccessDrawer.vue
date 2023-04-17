@@ -164,7 +164,7 @@ export default {
         });
     },
     convertPermission(permission){
-      if (permission.group.providerId === 'space'){
+      if (permission.group.providerId === 'space') {
         return `${permission.membershipType}:/spaces/${permission.group.remoteId}`;
       } else {
         return `${permission.membershipType}:${permission.group.spaceId || permission.group.id}`;
