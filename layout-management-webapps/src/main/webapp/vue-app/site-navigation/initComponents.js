@@ -28,6 +28,7 @@ import SiteNavigationNodeEditPermission from './components/SiteNavigationNodeEdi
 import SiteNavigationNodeAccessPermission from './components/SiteNavigationNodeAccessPermission.vue';
 import SiteNavigationNodePermissionItem from './components/SiteNavigationNodePermissionItem.vue';
 import SiteNavigationNodePermissionTypeSelector from './components/SiteNavigationNodePermissionTypeSelector.vue';
+import SiteNavigationAddElementDrawer from './components/SiteNavigationAddElementDrawer.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
@@ -42,7 +43,8 @@ const components = {
   'site-navigation-node-edit-permission': SiteNavigationNodeEditPermission,
   'site-navigation-node-access-permission': SiteNavigationNodeAccessPermission,
   'site-navigation-node-permission-item': SiteNavigationNodePermissionItem,
-  'site-navigation-node-permission-type-selector': SiteNavigationNodePermissionTypeSelector
+  'site-navigation-node-permission-type-selector': SiteNavigationNodePermissionTypeSelector,
+  'site-navigation-add-element-drawer': SiteNavigationAddElementDrawer
 };
 
 for (const key in components) {
