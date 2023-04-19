@@ -79,8 +79,7 @@ export default {
       elementType: 'newPage',
       openMode: 'sameTab',
       link: '',
-      linkRules: [url => !!(url && (url.indexOf('/portal/') === 0 || url.indexOf('javascript:') === 0 || url.indexOf('./') === 0
-              ||  url.match(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g)))
+      linkRules: [url => !!(url && url.match(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9]+\.[^\s]|javascript:|\/portal\//g))
               || ( !url.length && this.$t('siteNavigation.required.error.message') || this.$t('siteNavigation.label.invalidLink'))],
     };
   },
