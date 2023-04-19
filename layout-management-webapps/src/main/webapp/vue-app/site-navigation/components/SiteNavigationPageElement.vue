@@ -18,7 +18,5 @@ export default {
       return this.elementType === 'newPage';
     }
   }
-
-
 };
 </script>

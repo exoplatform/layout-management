@@ -10,12 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,11 +30,14 @@ import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
+import org.exoplatform.portal.page.PageTemplateService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.http.PATCH;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.webui.core.model.SelectItemCategory;
+
 import org.exoplatform.services.security.Identity;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,13 +58,16 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   private final PortalContainer    container;
 
   private LayoutService            layoutService;
+  
+  private PageTemplateService      pageTemplateService;
 
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
-  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService) {
+  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService, PageTemplateService pageTemplateService) {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
+    this.pageTemplateService = pageTemplateService;
   }
 
   @POST
@@ -327,6 +328,23 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when updating page permissions with reference {}", pageRef, e);
+      return Response.serverError().build();
+    }
+  }
+  
+  @Path("/page/templates")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "retrieves page template categories", method = "GET", description = "retrieves page template categories")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response getPageTemplateCategories() {
+    try {
+      List<SelectItemCategory<String>> pageTemplateCategories = pageTemplateService.getPageTemplateCategories();
+      return Response.ok().entity(pageTemplateCategories).build();
+    } catch (Exception e) {
+      LOG.error("Error when retrieving page template categories", e);
       return Response.serverError().build();
     }
   }

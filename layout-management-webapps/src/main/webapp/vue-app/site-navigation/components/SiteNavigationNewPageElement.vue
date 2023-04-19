@@ -4,12 +4,18 @@
     <v-select
       v-model="pageTemplate"
       :items="pageTemplates"
-      item-text="text"
-      item-value="value"
+      item-text="value"
       dense
       class="caption pt-1 mb-5"
-      outlined />
-    <v-img :src="templateSkeleton" />
+      outlined >
+      <template slot="item" slot-scope="data">
+        {{ $t(`siteNavigation.label.${data.item.value}`) }}
+      </template></v-select>
+    <v-img
+      :src="templateSkeleton"
+      class="align-center "
+      max-height="350"
+      max-width="500" />
   </div>
 </template>
 
@@ -17,38 +23,29 @@
 export default {
   data() {
     return {
-      pageTemplate: 'normalPage',
+      pageTemplate: 'empty',
+      pageTemplates: [],
     };
   },
   computed: {
-    pageTemplates() {
-      return [
-        {
-          text: this.$t('siteNavigation.label.normalPage'),
-          value: 'normalPage',
-        },
-        {
-          text: this.$t('siteNavigation.label.blankPage'),
-          value: 'blankPage',
-        },
-        {
-          text: this.$t('siteNavigation.label.analytics'),
-          value: 'analytics',
-        },
-      ];
-    },
     templateSkeleton() {
       switch (this.pageTemplate) {
-      case 'normalPage': return '/layout-management/images/NormalPageSkeleton.png';
-      case 'blankPage': return '/layout-management/images/BlankPageSkeleton.png';
-      case 'analytics': return '/layout-management/images/AnalyticsPageSkeleton.png';
+      case 'normal': return '/eXoSkin/skin/images/themes/default/Container/ItemSelector.png';
+      case 'empty': return '/eXoSkin/skin/images/themes/default/Container/default-layout.png';
+      case 'analytics': return '/analytics/skin/images/analytics-layout.png';
       }
       return '';
     },
   },
-  watch: {
-    pageTemplate() {
-      this.$root.$emit('page-template-changed', this.pageTemplate);
+  created() {
+    this.getPageTemplates();
+  },
+  methods: {
+    getPageTemplates(){
+      return this.$siteNavigationService.getPageTemplateCategories()
+        .then(pageTemplates => {
+          this.pageTemplates = pageTemplates[0]?.selectItemOptions || [];
+        });
     }
   }
 };

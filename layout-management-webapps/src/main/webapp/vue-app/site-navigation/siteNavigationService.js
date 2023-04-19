@@ -159,3 +159,18 @@ export function getMembershipTypes() {
   });
 }
 
+export function getPageTemplateCategories() {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/templates`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error('Error when retrieving page template categories');
+    } else {
+      return resp.json();
+    }
+  });
+}
