@@ -4,6 +4,7 @@
     id="siteNavigationAddElementDrawer"
     :right="!$vuetify.rtl"
     eager
+    allow-expand
     @closed="close">
     <template slot="title">
       <div class="d-flex">
