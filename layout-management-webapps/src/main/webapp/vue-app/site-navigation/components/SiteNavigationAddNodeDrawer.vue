@@ -102,14 +102,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             class="d-flex flex-row"
             v-if="visible">
             <v-switch   
-              v-model="scheduleVisibility" 
+              v-model="isScheduled" 
               class="mt-0 me-1" />
             <span class="caption pt-1">
               {{ $t('siteNavigation.label.visibility.scheduleVisibility') }}
             </span>
           </div>
         </v-card-text>
-        <v-card-text class="pt-0" v-if="visible && scheduleVisibility">
+        <v-card-text class="pt-0" v-if="visible && isScheduled">
           <site-navigation-schedule-date-pickers
             @change="updateDates" />
         </v-card-text>
@@ -167,15 +167,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data () {
     return {
-      startPublicationDate: null,
-      endPublicationDate: null,
-      startPublicationDateTime: null,
-      endPublicationDateTime: null,
+      startScheduleDate: null,
+      endScheduleDate: null,
+      startScheduleTime: null,
+      endScheduleTime: null,
       navigationNode: null,
       nodeLabel: null,
       nodeId: null,
       visible: true,
-      scheduleVisibility: false,
+      isScheduled: false,
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       nodeLabelRules: {
@@ -212,10 +212,10 @@ export default {
   },
   methods: {
     updateDates(startDate, endDate, startTime, endTime){
-      this.startPublicationDate = startDate;
-      this.endPublicationDate = endDate;
-      this.startPublicationDateTime = startTime;
-      this.endPublicationDateTime = endTime;
+      this.startScheduleDate = startDate;
+      this.endScheduleDate = endDate;
+      this.startScheduleTime = startTime;
+      this.endScheduleTime = endTime;
     },
     open(parentNavigationNode) {
       this.navigationNode = parentNavigationNode;
@@ -231,27 +231,27 @@ export default {
       this.nodeId = null;
       this.nodeLabel = null;
       this.visible = true;
-      this.scheduleVisibility = false;
+      this.isScheduled = false;
       this.nodeType = 'Group';
       this.disabled = true;
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     createNode() {
-      let startPostDate = null;
-      let endPostDate = null;
-      if (this.scheduleVisibility){
-        startPostDate = new Date(this.startPublicationDate);
-        startPostDate.setHours(new Date(this.startPublicationDateTime).getHours());
-        startPostDate.setMinutes(new Date(this.startPublicationDateTime).getMinutes());
-        startPostDate.setSeconds(0);
-        endPostDate = new Date(this.endPublicationDate);
-        endPostDate.setHours(new Date(this.endPublicationDateTime).getHours());
-        endPostDate.setMinutes(new Date(this.endPublicationDateTime).getMinutes());
-        endPostDate.setSeconds(0);
+      let startScheduleDate = null;
+      let endScheduleDate = null;
+      if (this.isScheduled){
+        startScheduleDate = new Date(this.startScheduleDate);
+        startScheduleDate.setHours(new Date(this.startScheduleTime).getHours());
+        startScheduleDate.setMinutes(new Date(this.startScheduleTime).getMinutes());
+        startScheduleDate.setSeconds(0);
+        endScheduleDate = new Date(this.endScheduleDate);
+        endScheduleDate.setHours(new Date(this.endScheduleTime).getHours());
+        endScheduleDate.setMinutes(new Date(this.endScheduleTime).getMinutes());
+        endScheduleDate.setSeconds(0);
       }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
-      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.scheduleVisibility, startPostDate, endPostDate)
+      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
         .then(() => {
           this.$root.$emit('refresh-navigation-nodes');
         })

@@ -84,7 +84,7 @@ export function moveNode(nodeId, previousNodeId) {
   });
 }
 
-export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, scheduleVisibility, startScheduleDate, endScheduleDate) {
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, isScheduled, startScheduleDate, endScheduleDate) {
   const formData = new FormData();
   if (parentNodeId) {
     formData.append('parentNodeId', parentNodeId);
@@ -101,7 +101,7 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   
   formData.append('isVisible', isVisible);
 
-  formData.append('scheduleVisibility', scheduleVisibility);
+  formData.append('isScheduled', isScheduled);
 
   if (startScheduleDate) {
     formData.append('startScheduleDate', startScheduleDate.getTime());

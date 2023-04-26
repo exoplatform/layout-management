@@ -93,9 +93,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "isVisible")
                              @QueryParam("isVisible")
                              boolean isVisible,
-                             @Parameter(description = "scheduleVisibility")
-                             @QueryParam("scheduleVisibility")
-                             boolean scheduleVisibility,
+                             @Parameter(description = "isScheduled")
+                             @QueryParam("isScheduled")
+                             boolean isScheduled,
                              @Parameter(description = "startScheduleDate")
                              @QueryParam("startScheduleDate")
                              Long startScheduleDate,
@@ -105,7 +105,6 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
-
     try {
       NodeData parentNodeData = navigationService.getNodeById(parentNodeId);
       if (parentNodeData == null) {
@@ -116,11 +115,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       NodeState nodeState;
-      if (isVisible && scheduleVisibility && startScheduleDate != null && endScheduleDate != null) {
+      long now = System.currentTimeMillis();
+      if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
         if (startScheduleDate > endScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST)
                          .entity("end schedule date must be after start schedule date")
                          .build();
+        } else if (now > startScheduleDate) {
+          return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
           nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, null, null);
         }

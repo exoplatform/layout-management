@@ -7,21 +7,21 @@
         far fa-clock
       </v-icon>
       <date-picker
-        v-model="startPublicationDate"
+        v-model="startScheduleDate"
         :min-value="minimumStartDate"
         class="scheduleStartDatePicker pa-0 pl-4" />
       <time-picker
-        v-model="startPublicationDateTime"
+        v-model="startScheduleTime"
         :min="minimumStartTime"
         class="mb-3" />
     </div>
     <div class="d-flex flex-row pl-8">
       <date-picker
-        v-model="endPublicationDate"
+        v-model="endScheduleDate"
         :min-value="minimumEndDate"
         class="scheduleEndDatePicker pa-0 pl-6" />
       <time-picker
-        v-model="endPublicationDateTime"
+        v-model="endScheduleTime"
         :min="minimumEndTime"
         class="mb-3" />
     </div>
@@ -31,42 +31,55 @@
 <script>
 export default {
   data: () => ({
-    startPublicationDate: new Date(),
-    startPublicationDateTime: new Date(),
-    endPublicationDate: new Date(),
-    endPublicationDateTime: new Date(new Date().getTime() + 900000),
+    startScheduleDate: new Date(),
+    startScheduleTime: new Date(new Date().getTime() + 900000),
+    endScheduleDate: new Date(),
+    endScheduleTime: new Date(new Date().getTime() + 1800000),
   }),
   computed: {
     minimumStartDate() {
       return new Date();
     },
     minimumStartTime() {
-      return new Date(this.startPublicationDateTime.getTime() - 900000);
+      if (!this.startScheduleDate || !this.checkDatesOnSameDay(this.startScheduleDate, new Date().getTime())) {
+        return null;
+      }
+      return new Date();
     },
     minimumEndDate() {
-      if (!this.startPublicationDate) {
+      if (!this.startScheduleDate) {
         return null;
       }
-      return new Date(this.startPublicationDate);
+      return new Date(this.startScheduleDate);
     },
     minimumEndTime() {
-      if (!this.startPublicationDate || !this.endPublicationDate || !this.startPublicationDateTime || !this.endPublicationDateTime) {
+      this.$emit('change', this.startScheduleDate, this.endScheduleDate, this.startScheduleTime, this.endScheduleTime);
+      if (!this.startScheduleDate || !this.endScheduleDate || !this.startScheduleTime || !this.endScheduleTime || !this.checkDatesOnSameDay(this.startScheduleDate, new Date().getTime())) {
         return null;
       }
-      this.$emit('change', this.startPublicationDate, this.endPublicationDate, this.startPublicationDateTime.getTime(), this.endPublicationDateTime.getTime());
-      if (this.checkDatesOnSameDay(this.startPublicationDate, this.endPublicationDate)){ 
-        return new Date(this.startPublicationDateTime.getTime() + 900000);
+      if (this.checkDatesOnSameDay(this.startScheduleDate, this.endScheduleDate)){
+        return new Date(this.startScheduleTime.getTime() + 900000);
       }
       return null ;
     },
   },
   watch: {
-    startPublicationDate(newVal, oldVal) {
+    startScheduleDate(newVal, oldVal) {
       if (!newVal || !oldVal || new Date(newVal).getTime() === new Date(oldVal).getTime()) {
         return;
       }
       const newDate = new Date(newVal);
-      this.endPublicationDate = new Date(newDate.getTime());
+      this.endScheduleDate = new Date(newDate.getTime());
+      if (this.checkDatesOnSameDay(newVal, new Date().getTime())) {
+        this.startScheduleTime = new Date(new Date().getTime() + 900000);
+      }
+    },
+    startScheduleTime(newVal, oldVal) {
+      if (!newVal || !oldVal || new Date(newVal).getTime() === new Date(oldVal).getTime()) {
+        return;
+      }
+      const newDate = new Date(newVal);
+      this.endScheduleTime = new Date(newDate.getTime() + 900000);
     },
   },
   methods: {
