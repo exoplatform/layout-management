@@ -23,16 +23,16 @@ import lombok.*;
 @AllArgsConstructor
 public class PageTemplateRestEntity {
 
-  public String  label;
+  private String  label;
 
-  public String  value;
+  private String  value;
 
-  public String  icon;
+  private String  icon;
 
-  public boolean selected = false;
+  private boolean selected = false;
 
-  public String  description;
+  private String  description;
 
-  public String  skeleton;
+  private String  skeleton;
 
 }
