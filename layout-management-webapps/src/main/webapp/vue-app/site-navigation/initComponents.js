@@ -31,6 +31,7 @@ import SiteNavigationNodePermissionTypeSelector from './components/SiteNavigatio
 import SiteNavigationAddElementDrawer from './components/SiteNavigationAddElementDrawer.vue';
 import SiteNavigationPageElement from './components/SiteNavigationPageElement.vue';
 import SiteNavigationNewPageElement from './components/SiteNavigationNewPageElement.vue';
+import SiteNavigationScheduleDatePickers from './components/SiteNavigationScheduleDatePickers.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
@@ -49,6 +50,7 @@ const components = {
   'site-navigation-add-element-drawer': SiteNavigationAddElementDrawer,
   'site-navigation-page-element': SiteNavigationPageElement,
   'site-navigation-new-page-element': SiteNavigationNewPageElement,
+  'site-navigation-schedule-date-pickers': SiteNavigationScheduleDatePickers
 };
 
 for (const key in components) {
