@@ -8,6 +8,8 @@ export function getNavigationNodes(siteType, siteName, includeGlobal, expandPage
 
   formData.append('expandPageDetails', expandPageDetails);
 
+  formData.append('temporalCheck', false);
+
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/navigations/${siteType || 'portal'}?${params}`, {
     method: 'GET',
@@ -82,7 +84,7 @@ export function moveNode(nodeId, previousNodeId) {
   });
 }
 
-export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible) {
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, isScheduled, startScheduleDate, endScheduleDate) {
   const formData = new FormData();
   if (parentNodeId) {
     formData.append('parentNodeId', parentNodeId);
@@ -96,7 +98,18 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   if (nodeId) {
     formData.append('nodeId', nodeId);
   }
+  
   formData.append('isVisible', isVisible);
+
+  formData.append('isScheduled', isScheduled);
+
+  if (startScheduleDate) {
+    formData.append('startScheduleDate', startScheduleDate.getTime());
+  }
+
+  if (endScheduleDate) {
+    formData.append('endScheduleDate', endScheduleDate.getTime());
+  }
 
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation?${params}`, {
@@ -145,3 +158,4 @@ export function getMembershipTypes() {
     }
   });
 }
+
