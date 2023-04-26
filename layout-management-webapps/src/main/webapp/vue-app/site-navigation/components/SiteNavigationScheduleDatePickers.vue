@@ -60,7 +60,7 @@ export default {
       if (this.checkDatesOnSameDay(this.startScheduleDate, this.endScheduleDate)){
         return new Date(this.startScheduleTime.getTime() + 900000);
       }
-      return null ;
+      return null;
     },
   },
   watch: {
