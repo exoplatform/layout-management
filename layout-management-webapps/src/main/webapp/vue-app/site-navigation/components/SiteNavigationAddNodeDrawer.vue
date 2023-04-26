@@ -110,8 +110,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </div>
         </v-card-text>
         <v-card-text class="pt-0" v-if="visible && scheduleVisibility">
-          <site-navigation-form-date-pickers
-          @change="updateDates"/>
+          <site-navigation-schedule-date-pickers
+            @change="updateDates" />
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 text-no-wrap text-left font-weight-bold pb-2">
           <v-label>
@@ -171,8 +171,6 @@ export default {
       endPublicationDate: null,
       startPublicationDateTime: null,
       endPublicationDateTime: null,
-      startPostDate: null,
-      endPostDate: null,
       navigationNode: null,
       nodeLabel: null,
       nodeId: null,
@@ -202,7 +200,7 @@ export default {
     disabled() {
       return !(this.isValidInputs && this.nodeId && this.nodeLabel);
     },
-    displayNextBtn () {
+    displayNextBtn() {
       return this.nodeType === 'pageOrLink';
     },
     nodeUrl() {
@@ -218,7 +216,6 @@ export default {
       this.endPublicationDate = endDate;
       this.startPublicationDateTime = startTime;
       this.endPublicationDateTime = endTime;
-      console.log('updateDate');
     },
     open(parentNavigationNode) {
       this.navigationNode = parentNavigationNode;
@@ -240,19 +237,21 @@ export default {
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     createNode() {
+      let startPostDate = null;
+      let endPostDate = null;
       if (this.scheduleVisibility){
-        this.startPostDate = new Date(this.startPublicationDate);
-        this.startPostDate.setHours(new Date(this.startPublicationDateTime).getHours());
-        this.startPostDate.setMinutes(new Date(this.startPublicationDateTime).getMinutes());
-        this.startPostDate.setSeconds(0);
-        this.endPostDate = new Date(this.endPublicationDate);
-        this.endPostDate.setHours(new Date(this.endPublicationDateTime).getHours());
-        this.endPostDate.setMinutes(new Date(this.endPublicationDateTime).getMinutes());
-        this.endPostDate.setSeconds(0);
+        startPostDate = new Date(this.startPublicationDate);
+        startPostDate.setHours(new Date(this.startPublicationDateTime).getHours());
+        startPostDate.setMinutes(new Date(this.startPublicationDateTime).getMinutes());
+        startPostDate.setSeconds(0);
+        endPostDate = new Date(this.endPublicationDate);
+        endPostDate.setHours(new Date(this.endPublicationDateTime).getHours());
+        endPostDate.setMinutes(new Date(this.endPublicationDateTime).getMinutes());
+        endPostDate.setSeconds(0);
       }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
-      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.startPostDate, this.endPostDate)
+      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.scheduleVisibility, startPostDate, endPostDate)
         .then(() => {
           this.$root.$emit('refresh-navigation-nodes');
         })

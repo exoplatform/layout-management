@@ -61,7 +61,7 @@ export default {
     },
   },
   watch: {
-    startPublicationDate(newVal, oldVal){
+    startPublicationDate(newVal, oldVal) {
       if (!newVal || !oldVal || new Date(newVal).getTime() === new Date(oldVal).getTime()) {
         return;
       }

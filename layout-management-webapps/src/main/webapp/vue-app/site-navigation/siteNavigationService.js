@@ -84,7 +84,7 @@ export function moveNode(nodeId, previousNodeId) {
   });
 }
 
-export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, startPostDate, endPostDate) {
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, scheduleVisibility, startScheduleDate, endScheduleDate) {
   const formData = new FormData();
   if (parentNodeId) {
     formData.append('parentNodeId', parentNodeId);
@@ -98,13 +98,17 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   if (nodeId) {
     formData.append('nodeId', nodeId);
   }
+  
   formData.append('isVisible', isVisible);
 
-  if (startPostDate) {
-    formData.append('startPostDate', startPostDate.getTime());
+  formData.append('scheduleVisibility', scheduleVisibility);
+
+  if (startScheduleDate) {
+    formData.append('startScheduleDate', startScheduleDate.getTime());
   }
-  if (endPostDate) {
-    formData.append('endPostDate', endPostDate.getTime());
+
+  if (endScheduleDate) {
+    formData.append('endScheduleDate', endScheduleDate.getTime());
   }
 
   const params = new URLSearchParams(formData).toString();
