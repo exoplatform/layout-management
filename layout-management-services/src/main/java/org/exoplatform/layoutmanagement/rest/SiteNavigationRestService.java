@@ -3,6 +3,7 @@ package org.exoplatform.layoutmanagement.rest;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.picocontainer.Startable;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -339,10 +341,12 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Operation(summary = "retrieves page template categories", method = "GET", description = "retrieves page template categories")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
-  public Response getPageTemplateCategories() {
+  public Response getPageTemplates(@Context
+  HttpServletRequest httpRequest) {
     try {
-      List<SelectItemCategory<String>> pageTemplateCategories = pageTemplateService.getPageTemplateCategories();
-      return Response.ok().entity(pageTemplateCategories).build();
+      Locale locale = httpRequest.getLocale();
+      List<SelectItemOption<String>> pageTemplates = pageTemplateService.getPageTemplates();
+      return Response.ok().entity(EntityBuilder.toRestEntities(pageTemplates, locale)).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving page template categories", e);
       return Response.serverError().build();

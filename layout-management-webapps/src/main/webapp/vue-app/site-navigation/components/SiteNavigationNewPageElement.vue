@@ -1,3 +1,19 @@
+<!--
+Copyright (C) 2023 eXo Platform SAS.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+-->
 <template>
   <div>
     <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.pageTemplate') }}</span>
@@ -5,14 +21,12 @@
       v-model="pageTemplate"
       :items="pageTemplates"
       item-text="value"
+      return-object
       dense
       class="caption pt-1 mb-5"
-      outlined >
-      <template slot="item" slot-scope="data">
-        {{ $t(`siteNavigation.label.${data.item.value}`) }}
-      </template></v-select>
+      outlined />
     <v-img
-      :src="templateSkeleton"
+      :src="pageTemplate.skeleton"
       class="align-center "
       max-height="350"
       max-width="500" />
@@ -23,28 +37,21 @@
 export default {
   data() {
     return {
-      pageTemplate: 'empty',
+      pageTemplate: {
+        value: 'empty',
+        skeleton: '/eXoSkin/skin/images/themes/default/Container/default-layout.png'
+      },
       pageTemplates: [],
     };
-  },
-  computed: {
-    templateSkeleton() {
-      switch (this.pageTemplate) {
-      case 'normal': return '/eXoSkin/skin/images/themes/default/Container/ItemSelector.png';
-      case 'empty': return '/eXoSkin/skin/images/themes/default/Container/default-layout.png';
-      case 'analytics': return '/analytics/skin/images/analytics-layout.png';
-      }
-      return '';
-    },
   },
   created() {
     this.getPageTemplates();
   },
   methods: {
-    getPageTemplates(){
-      return this.$siteNavigationService.getPageTemplateCategories()
+    getPageTemplates() {
+      return this.$siteNavigationService.getPageTemplates()
         .then(pageTemplates => {
-          this.pageTemplates = pageTemplates[0]?.selectItemOptions || [];
+          this.pageTemplates = pageTemplates || [];
         });
     }
   }

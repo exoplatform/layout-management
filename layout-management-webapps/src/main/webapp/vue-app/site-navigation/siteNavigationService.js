@@ -159,7 +159,7 @@ export function getMembershipTypes() {
   });
 }
 
-export function getPageTemplateCategories() {
+export function getPageTemplates() {
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/templates`, {
     method: 'GET',
     credentials: 'include',
