@@ -32,7 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.webui.core.model.SelectItemOption;
 import org.picocontainer.Startable;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -53,8 +52,8 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.http.PATCH;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
-
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.webui.core.model.SelectItemOption;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -352,7 +351,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @Operation(summary = "retrieves page template categories", method = "GET", description = "retrieves page template categories")
+  @Operation(summary = "retrieves page templates", method = "GET", description = "retrieves page templates")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response getPageTemplates(@Context
@@ -362,7 +361,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       List<SelectItemOption<String>> pageTemplates = pageTemplateService.getPageTemplates();
       return Response.ok().entity(EntityBuilder.toRestEntities(pageTemplates, locale)).build();
     } catch (Exception e) {
-      LOG.error("Error when retrieving page template categories", e);
+      LOG.error("Error when retrieving page templates", e);
       return Response.serverError().build();
     }
   }

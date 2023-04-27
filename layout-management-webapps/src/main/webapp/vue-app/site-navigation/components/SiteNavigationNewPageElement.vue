@@ -20,14 +20,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <v-select
       v-model="pageTemplate"
       :items="pageTemplates"
-      item-text="value"
-      return-object
+      item-text="label"
+      item-value="value"
       dense
       class="caption pt-1 mb-5"
       outlined />
     <v-img
-      :src="pageTemplate.skeleton"
-      class="align-center "
+      :src="`/layout-management/images/${pageTemplate}.png`"
+      class="align-center mx-auto"
       max-height="350"
       max-width="500" />
   </div>
@@ -37,10 +37,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data() {
     return {
-      pageTemplate: {
-        value: 'empty',
-        skeleton: '/eXoSkin/skin/images/themes/default/Container/default-layout.png'
-      },
+      pageTemplate: 'empty',
       pageTemplates: [],
     };
   },

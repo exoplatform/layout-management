@@ -16,7 +16,9 @@
  */
 package org.exoplatform.layoutmanagement.rest.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -27,12 +29,6 @@ public class PageTemplateRestEntity {
 
   private String  value;
 
-  private String  icon;
-
   private boolean selected = false;
-
-  private String  description;
-
-  private String  skeleton;
 
 }

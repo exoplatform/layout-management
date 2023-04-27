@@ -39,13 +39,6 @@ public class SiteNavigationUtils {
 
   private static final String PLATFORM_ADMINISTRATORS_GROUP   = "/platform/administrators";
 
-  private static final String EMPTY_PAGE_DEFAULT_SKELETON     =
-                                                          "/eXoSkin/skin/images/themes/default/Container/default-layout.png";
-
-  private static final String NORMAL_PAGE_DEFAULT_SKELETON    = "/eXoSkin/skin/images/themes/default/Container/ItemSelector.png";
-
-  private static final String ANALYTICS_PAGE_DEFAULT_SKELETON = "/analytics/skin/images/analytics-layout.png";
-
   private SiteNavigationUtils() {
   }
 
@@ -70,7 +63,7 @@ public class SiteNavigationUtils {
     return userACL.isSuperUser() || userACL.isUserInGroup(PLATFORM_ADMINISTRATORS_GROUP);
   }
 
-  public static String getI18NMessage(Locale userLocale, String messageKey) {
+  public static String getI18NLabel(Locale userLocale, String label) {
     ResourceBundleService resourceBundleService = CommonsUtils.getService(ResourceBundleService.class);
     if (userLocale == null) {
       userLocale = Locale.ENGLISH;
@@ -79,23 +72,14 @@ public class SiteNavigationUtils {
       ResourceBundle resourceBundle =
                                     resourceBundleService.getResourceBundle(resourceBundleService.getSharedResourceBundleNames(),
                                                                             userLocale);
-      String key = "UIWizardPageSelectLayoutForm.label." + messageKey;
-      if (resourceBundle != null && messageKey != null && resourceBundle.containsKey(key)) {
+      String key = "UIWizardPageSelectLayoutForm.label." + label;
+      if (resourceBundle != null && label != null && resourceBundle.containsKey(key)) {
         return resourceBundle.getString(key);
       }
-      return messageKey;
+      return label;
     } catch (Exception e) {
-      return messageKey;
+      return label;
     }
-  }
-
-  public static String getPageTemplateDefaultSkeleton(String templateName) {
-    return switch (templateName) {
-    case "empty" -> EMPTY_PAGE_DEFAULT_SKELETON;
-    case "normal" -> NORMAL_PAGE_DEFAULT_SKELETON;
-    case "analytics" -> ANALYTICS_PAGE_DEFAULT_SKELETON;
-    default -> " ";
-    };
   }
 
 }

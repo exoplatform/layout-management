@@ -17,13 +17,11 @@
 package org.exoplatform.layoutmanagement.rest;
 
 import org.exoplatform.layoutmanagement.rest.model.PageTemplateRestEntity;
+import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
 import org.exoplatform.webui.core.model.SelectItemOption;
 
 import java.util.List;
 import java.util.Locale;
-
-import static org.exoplatform.layoutmanagement.utils.SiteNavigationUtils.getI18NMessage;
-import static org.exoplatform.layoutmanagement.utils.SiteNavigationUtils.getPageTemplateDefaultSkeleton;
 
 public class EntityBuilder {
 
@@ -34,12 +32,9 @@ public class EntityBuilder {
     if (pageTemplate == null) {
       return null;
     }
-    return new PageTemplateRestEntity(getI18NMessage(userLocal, pageTemplate.getLabel()),
+    return new PageTemplateRestEntity(SiteNavigationUtils.getI18NLabel(userLocal, pageTemplate.getLabel()),
                                       pageTemplate.getValue(),
-                                      pageTemplate.getIcon(),
-                                      pageTemplate.isSelected(),
-                                      pageTemplate.getDescription(),
-                                      getPageTemplateDefaultSkeleton(pageTemplate.getValue()));
+                                      pageTemplate.isSelected());
   }
 
   public static List<PageTemplateRestEntity> toRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
