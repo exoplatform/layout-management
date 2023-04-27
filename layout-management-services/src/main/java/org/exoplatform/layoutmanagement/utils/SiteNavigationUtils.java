@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2023 eXo Platform SAS.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.exoplatform.layoutmanagement.utils;
 
 import org.exoplatform.commons.utils.CommonsUtils;
@@ -7,7 +23,11 @@ import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.navigation.NodeData;
 import org.exoplatform.portal.mop.page.PageContext;
 import org.exoplatform.portal.mop.service.LayoutService;
+import org.exoplatform.services.resources.ResourceBundleService;
 import org.exoplatform.services.security.Identity;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SiteNavigationUtils {
 
@@ -37,8 +57,29 @@ public class SiteNavigationUtils {
     UserACL userACL = CommonsUtils.getService(UserACL.class);
     return userACL.hasEditPermission(pageContext);
   }
+
   public static boolean isAdministrator() {
     UserACL userACL = CommonsUtils.getService(UserACL.class);
     return userACL.isSuperUser() || userACL.isUserInGroup(PLATFORM_ADMINISTRATORS_GROUP);
   }
+
+  public static String getI18NLabel(Locale userLocale, String label) {
+    ResourceBundleService resourceBundleService = CommonsUtils.getService(ResourceBundleService.class);
+    if (userLocale == null) {
+      userLocale = Locale.ENGLISH;
+    }
+    try {
+      ResourceBundle resourceBundle =
+                                    resourceBundleService.getResourceBundle(resourceBundleService.getSharedResourceBundleNames(),
+                                                                            userLocale);
+      String key = "UIWizardPageSelectLayoutForm.label." + label;
+      if (resourceBundle != null && label != null && resourceBundle.containsKey(key)) {
+        return resourceBundle.getString(key);
+      }
+      return label;
+    } catch (Exception e) {
+      return label;
+    }
+  }
+
 }
