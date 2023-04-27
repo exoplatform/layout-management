@@ -26,7 +26,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       class="caption pt-1 mb-5"
       outlined />
     <v-img
-      :src="`/layout-management/images/page-templates/${pageTemplate}.png`"
+      :src="pageTemplateSkeleton"
       class="align-center mx-auto"
       max-height="350"
       max-width="500" />
@@ -40,6 +40,11 @@ export default {
       pageTemplate: 'empty',
       pageTemplates: [],
     };
+  },
+  computed: {
+    pageTemplateSkeleton() {
+      return `/layout-management/images/page-templates/${this.pageTemplate}.png`;
+    }
   },
   created() {
     this.getPageTemplates();
