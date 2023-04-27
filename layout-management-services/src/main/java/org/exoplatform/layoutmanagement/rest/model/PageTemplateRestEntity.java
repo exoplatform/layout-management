@@ -29,6 +29,4 @@ public class PageTemplateRestEntity {
 
   private String  value;
 
-  private boolean selected = false;
-
 }

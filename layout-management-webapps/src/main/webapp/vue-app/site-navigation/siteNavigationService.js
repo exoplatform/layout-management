@@ -168,7 +168,7 @@ export function getPageTemplates() {
     },
   }).then(resp => {
     if (!resp || !resp.ok) {
-      throw new Error('Error when retrieving page template categories');
+      throw new Error('Error when retrieving page templates');
     } else {
       return resp.json();
     }

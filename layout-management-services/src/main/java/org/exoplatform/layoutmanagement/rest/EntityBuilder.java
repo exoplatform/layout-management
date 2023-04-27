@@ -33,8 +33,7 @@ public class EntityBuilder {
       return null;
     }
     return new PageTemplateRestEntity(SiteNavigationUtils.getI18NLabel(userLocal, pageTemplate.getLabel()),
-                                      pageTemplate.getValue(),
-                                      pageTemplate.isSelected());
+                                      pageTemplate.getValue());
   }
 
   public static List<PageTemplateRestEntity> toRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
