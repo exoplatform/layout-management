@@ -26,7 +26,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       class="caption pt-1 mb-5"
       outlined />
     <v-img
-      :src="`/layout-management/images/${pageTemplate}.png`"
+      :src="`/layout-management/images/page-templates/${pageTemplate}.png`"
       class="align-center mx-auto"
       max-height="350"
       max-width="500" />
