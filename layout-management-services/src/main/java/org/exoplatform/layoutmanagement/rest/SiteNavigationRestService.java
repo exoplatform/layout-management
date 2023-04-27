@@ -1,8 +1,24 @@
-
+/*
+ * Copyright (C) 2023 eXo Platform SAS.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.exoplatform.layoutmanagement.rest;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -35,12 +52,14 @@ import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
+import org.exoplatform.portal.page.PageTemplateService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.http.PATCH;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.webui.core.model.SelectItemOption;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -60,13 +79,16 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   private final PortalContainer    container;
 
   private LayoutService            layoutService;
+  
+  private PageTemplateService      pageTemplateService;
 
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
-  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService) {
+  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService, PageTemplateService pageTemplateService) {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
+    this.pageTemplateService = pageTemplateService;
   }
 
   @POST
@@ -327,6 +349,25 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when updating page permissions with reference {}", pageRef, e);
+      return Response.serverError().build();
+    }
+  }
+  
+  @Path("/page/templates")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "retrieves page templates", method = "GET", description = "retrieves page templates")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response getPageTemplates(@Context
+  HttpServletRequest httpRequest) {
+    try {
+      Locale locale = httpRequest.getLocale();
+      List<SelectItemOption<String>> pageTemplates = pageTemplateService.getPageTemplates();
+      return Response.ok().entity(EntityBuilder.toRestEntities(pageTemplates, locale)).build();
+    } catch (Exception e) {
+      LOG.error("Error when retrieving page templates", e);
       return Response.serverError().build();
     }
   }
