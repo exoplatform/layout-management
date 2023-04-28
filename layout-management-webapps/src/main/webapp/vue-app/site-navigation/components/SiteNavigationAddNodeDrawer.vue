@@ -82,30 +82,43 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               {{ $t('siteNavigation.label.visibility.title') }} 
             </span>
           </v-label>
-          <v-icon
-            color="black"
-            size="21"
-            class="pl-2">
-            fa-info-circle
-          </v-icon>
+          <v-tooltip bottom>
+            <template #activator="{ on, attrs }">
+              <v-icon
+                v-on="on"
+                v-bind="attrs"
+                color="black"
+                size="24"
+                class="pl-2">
+                fa-info-circle
+              </v-icon>
+            </template>
+            <span>{{ $t('siteNavigation.label.visibility.info') }}</span>
+          </v-tooltip>
         </v-card-text>
         <v-card-text>
           <div class="d-flex flex-row">
             <v-switch      
               v-model="visible"
               class="mt-0 me-1" />
-            <span class="caption">
+            <span class="caption pt-1">
               {{ $t('siteNavigation.label.visibility.visible') }}
             </span>
           </div>
-          <div class="d-flex flex-row">
-            <v-switch     
-              v-model="scheduleVisibility" 
+          <div
+            class="d-flex flex-row"
+            v-if="visible">
+            <v-switch   
+              v-model="isScheduled" 
               class="mt-0 me-1" />
-            <span class="caption">
+            <span class="caption pt-1">
               {{ $t('siteNavigation.label.visibility.scheduleVisibility') }}
             </span>
           </div>
+        </v-card-text>
+        <v-card-text class="pt-0" v-if="visible && isScheduled">
+          <site-navigation-schedule-date-pickers
+            @change="updateDates" />
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 text-no-wrap text-left font-weight-bold pb-2">
           <v-label>
@@ -161,11 +174,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data () {
     return {
+      startScheduleDate: null,
+      endScheduleDate: null,
+      startScheduleTime: null,
+      endScheduleTime: null,
       navigationNode: null,
       nodeLabel: null,
       nodeId: null,
       visible: true,
-      scheduleVisibility: false,
+      isScheduled: false,
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       nodeLabelRules: {
@@ -201,6 +218,12 @@ export default {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
   },
   methods: {
+    updateDates(startDate, endDate, startTime, endTime){
+      this.startScheduleDate = startDate;
+      this.endScheduleDate = endDate;
+      this.startScheduleTime = startTime;
+      this.endScheduleTime = endTime;
+    },
     open(parentNavigationNode) {
       this.navigationNode = parentNavigationNode;
       const siteKey = parentNavigationNode.siteKey;
@@ -215,15 +238,27 @@ export default {
       this.nodeId = null;
       this.nodeLabel = null;
       this.visible = true;
-      this.scheduleVisibility = false;
+      this.isScheduled = false;
       this.nodeType = 'Group';
       this.disabled = true;
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     createNode() {
+      let startScheduleDate = null;
+      let endScheduleDate = null;
+      if (this.isScheduled){
+        startScheduleDate = new Date(this.startScheduleDate);
+        startScheduleDate.setHours(new Date(this.startScheduleTime).getHours());
+        startScheduleDate.setMinutes(new Date(this.startScheduleTime).getMinutes());
+        startScheduleDate.setSeconds(0);
+        endScheduleDate = new Date(this.endScheduleDate);
+        endScheduleDate.setHours(new Date(this.endScheduleTime).getHours());
+        endScheduleDate.setMinutes(new Date(this.endScheduleTime).getMinutes());
+        endScheduleDate.setSeconds(0);
+      }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
-      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible)
+      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
         .then(() => {
           this.$root.$emit('refresh-navigation-nodes');
         })
