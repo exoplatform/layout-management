@@ -15,12 +15,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
+  <div :class="hasChildren ? 'ms-4' : 'ms-7'">
     <v-hover>
       <div slot-scope="{ hover }">
         <v-list-item
           dense
-          class="px-0">
+          :class="highlightNode ? 'px-0 light-grey-background' : 'px-0'">
           <v-list-item-action class="me-2 my-0">
             <v-icon
               v-if="hasChildren"
@@ -58,8 +58,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         :key="child.id"
         :navigation-node="child"
         :can-move-up="canMoveUpChildNode(child)"
-        :can-move-down="canMoveDownChildNode(child)"
-        class="ms-7" />
+        :can-move-down="canMoveDownChildNode(child)" />
     </div>
   </div>
 </template>
@@ -86,6 +85,9 @@ export default {
     };
   },
   computed: {
+    highlightNode() {
+      return this.navigationNode.uri === eXo.env.portal.selectedNodeUri;
+    },
     icon() {
       return this.displayChildren && 'mdi-menu-down' || 'mdi-menu-right';
     },
@@ -97,6 +99,7 @@ export default {
     },
   },
   created() {
+    this.checkCurrentNode();
     this.$root.$on('delete-node', this.deleteChildNode);
     this.$root.$on('moveup-node', this.moveUpChildNode);
     this.$root.$on('movedown-node', this.moveDownChildNode);
@@ -138,7 +141,19 @@ export default {
           this.navigationNode.children.splice(index, 1);
         }
       }
-    }
+    },
+    checkCurrentNode() {
+      const currentUri = eXo.env.portal.selectedNodeUri;
+      const paths = currentUri.split('/');
+      const treeCurrentPaths = [];
+      treeCurrentPaths.push(paths[0]);
+      let uriNode = paths[0];
+      paths.slice(1).forEach(uri => {
+        uriNode = `${uriNode }/${uri}`;
+        treeCurrentPaths.push(uriNode);
+      });
+      this.displayChildren = treeCurrentPaths.includes(this.navigationNode.uri);
+    },
   }
 };
 </script>
