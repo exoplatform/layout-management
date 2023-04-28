@@ -99,7 +99,7 @@ export default {
     },
   },
   created() {
-    this.checkCurrentNode();
+    this.displayCurrentNodeParentTree();
     this.$root.$on('delete-node', this.deleteChildNode);
     this.$root.$on('moveup-node', this.moveUpChildNode);
     this.$root.$on('movedown-node', this.moveDownChildNode);
@@ -142,17 +142,15 @@ export default {
         }
       }
     },
-    checkCurrentNode() {
+    displayCurrentNodeParentTree() {
       const currentUri = eXo.env.portal.selectedNodeUri;
-      const paths = currentUri.split('/');
-      const treeCurrentPaths = [];
-      treeCurrentPaths.push(paths[0]);
-      let uriNode = paths[0];
-      paths.slice(1).forEach(uri => {
-        uriNode = `${uriNode }/${uri}`;
-        treeCurrentPaths.push(uriNode);
-      });
-      this.displayChildren = treeCurrentPaths.includes(this.navigationNode.uri);
+      const splittedCurrentUri = currentUri.split('/');
+      let nodeUri = '';
+      const currentNodeParentTree = splittedCurrentUri.map(subPath => {
+        nodeUri += `${subPath}/`;
+        return nodeUri.slice(0, -1); // Remove trailing slash
+      }).slice(0, -1); // Remove last element
+      this.displayChildren = currentNodeParentTree.includes(this.navigationNode.uri);
     },
   }
 };
