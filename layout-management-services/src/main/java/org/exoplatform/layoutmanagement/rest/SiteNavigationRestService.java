@@ -38,6 +38,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.portal.mop.SiteType;
+import org.gatein.api.Portal;
+import org.gatein.api.page.Page;
+import org.gatein.api.page.PageQuery;
 import org.picocontainer.Startable;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -67,6 +71,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import static org.exoplatform.portal.mop.storage.utils.MOPUtils.convertSiteType;
+
 @Path("v1/siteNavigation")
 @Tag(name = "v1/siteNavigation", description = "Managing site navigation")
 public class SiteNavigationRestService implements ResourceContainer, Startable {
@@ -79,16 +85,19 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   private final PortalContainer    container;
 
   private LayoutService            layoutService;
-  
+
   private PageTemplateService      pageTemplateService;
+
+  private Portal                   portal;
 
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
-  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService, PageTemplateService pageTemplateService) {
+  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService, PageTemplateService pageTemplateService, Portal portal) {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
     this.pageTemplateService = pageTemplateService;
+    this.portal = portal;
   }
 
   @POST
@@ -368,6 +377,41 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.ok().entity(EntityBuilder.toRestEntities(pageTemplates, locale)).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving page templates", e);
+      return Response.serverError().build();
+    }
+  }
+  
+  @Path("/pages")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "retrieves pages", method = "GET", description = "retrieves pages")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response getPages(@Context
+  HttpServletRequest httpRequest,
+                           @Parameter(description = "Portal site type, possible values: PORTAL, GROUP or USER")
+                           @QueryParam("siteType")
+                           String siteType,
+                           @Parameter(description = "Portal site name")
+                           @QueryParam("siteName")
+                           String siteName,
+                           @Parameter(description = "page display name")
+                           @QueryParam("pageDisplayName")
+                           String pageDisplayName) {
+    try {
+      org.gatein.api.site.SiteType selectedSiteType = null;
+      if (!StringUtils.isBlank(siteType)) {
+        selectedSiteType = convertSiteType(SiteType.valueOf(siteType.toUpperCase()));
+      }
+      PageQuery pageQuery = new PageQuery.Builder().withSiteType(selectedSiteType)
+                                                   .withSiteName(siteName)
+                                                   .withDisplayName(pageDisplayName)
+                                                   .build();
+      List<Page> pages = portal.findPages(pageQuery);
+      return Response.ok().entity(pages).build();
+    } catch (Exception e) {
+      LOG.error("Error when retrieving pages", e);
       return Response.serverError().build();
     }
   }

@@ -1,0 +1,125 @@
+<!--
+Copyright (C) 2023 eXo Platform SAS.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+-->
+<template>
+  <v-flex id="SiteNavigationsUserNavigationsSuggesterAutoComplete">
+    <v-autocomplete
+      ref="selectAutoComplete"
+      v-model="selectedSiteNavigation"
+      :placeholder="suggesterLabels.placeholder"
+      :items="userNavigations"
+      :loading="loadingSuggestions"
+      append-icon=""
+      menu-props="closeOnClick, closeOnContentClick, maxHeight = 100"
+      class="identitySuggester identitySuggesterInputStyle"
+      content-class="identitySuggesterContent"
+      width="100%"
+      max-width="100%"
+      item-text="label"
+      item-value="name"
+      return-object
+      persistent-hint
+      hide-selected
+      chips
+      dense
+      flat
+      required
+      @update:search-input="searchTerm = $event"
+      attach>
+      <template slot="no-data">
+        <v-list-item class="pa-0">
+          <v-list-item-title
+            class="px-2">
+            {{ suggesterLabels.noDataLabel }}
+          </v-list-item-title>
+        </v-list-item>
+      </template>
+
+      <template slot="selection" slot-scope="{item, selected}">
+        <v-chip
+          :input-value="selected"
+          :close="true"
+          class="identitySuggesterItem"
+          @click:close="remove()">
+          <span class="text-truncate">
+            {{ item.label }}
+          </span>
+        </v-chip>
+      </template>
+      <template slot="item" slot-scope="data">
+        <v-list-item-title
+          class="text-truncate identitySuggestionMenuItemText"
+          v-text="data.item.label" />
+      </template>
+    </v-autocomplete>
+  </v-flex>
+</template>
+
+<script>
+export default {
+  model: {
+    prop: 'selectedSiteNavigation',
+    event: 'change'
+  },
+  props: {
+    selectedSiteNavigation: {
+      type: Object,
+      default: null,
+    }
+  },
+  data() {
+    return {
+      userNavigations: [],
+      searchTerm: null,
+      loadingSuggestions: false
+    };
+  },
+  computed: {
+    suggesterLabels() {
+      return {
+        placeholder: this.$t('siteNavigation.label.navigationsSuggester.searchPlaceholder'),
+        noDataLabel: this.$t('siteNavigation.label.navigationsSuggester.noDataLabel')
+      };
+    }
+  },
+  watch: {
+    selectedSiteNavigation() {
+      this.$emit('change', this.selectedSiteNavigation);
+    },
+  },
+  mounted() {
+    $(`#${this.id} input`).on('blur', () => {
+      this.$refs.selectAutoComplete.isFocused = false;
+    });
+  },
+  created(){
+    this.getUserNavigations();
+  },
+  methods: {
+    remove() {
+      this.selectedSiteNavigation = null;
+      this.$emit('change', this.selectedSiteNavigation);
+    },
+    getUserNavigations() {
+      this.loadingSuggestions = true;
+      this.userNavigations = [];
+      this.$siteNavigationService.getUserNavigations()
+        .then(userNavigations => this.userNavigations = userNavigations)
+        .finally(() => this.loadingSuggestions = false);
+    }
+  }
+};
+</script>

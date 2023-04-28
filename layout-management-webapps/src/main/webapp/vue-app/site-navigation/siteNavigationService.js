@@ -190,3 +190,44 @@ export function getPageTemplates() {
     }
   });
 }
+
+export function getPages(siteType, siteName, pageDisplayName) {
+  const formData = new FormData();
+  if (siteName) {
+    formData.append('siteName', siteName);
+  }
+  if (siteType) {
+    formData.append('siteType', siteType);
+  }
+  if (pageDisplayName) {
+    formData.append('pageDisplayName', pageDisplayName);
+  }
+  const params = new URLSearchParams(formData).toString();
+
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/pages?${params}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error('Error when retrieving page templates');
+    } else {
+      return resp.json();
+    }
+  });
+}
+
+export function getUserNavigations() {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/navigations`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error('Error when retrieving pages');
+    } else {
+      return resp.json();
+    }
+  });
+}
