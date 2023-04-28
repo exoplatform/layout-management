@@ -82,12 +82,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               {{ $t('siteNavigation.label.visibility.title') }} 
             </span>
           </v-label>
-          <v-icon
-            color="black"
-            size="24"
-            class="pl-2">
-            fa-info-circle
-          </v-icon>
+          <v-tooltip bottom>
+            <template #activator="{ on, attrs }">
+              <v-icon
+                v-on="on"
+                v-bind="attrs"
+                color="black"
+                size="24"
+                class="pl-2">
+                fa-info-circle
+              </v-icon>
+            </template>
+            <span>{{ $t('siteNavigation.label.visibility.info') }}</span>
+          </v-tooltip>
         </v-card-text>
         <v-card-text>
           <div class="d-flex flex-row">
