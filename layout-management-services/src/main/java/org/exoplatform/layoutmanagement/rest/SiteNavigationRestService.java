@@ -26,13 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -100,6 +94,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   }
 
   @POST
+  @Path("node")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
   @Operation(summary = "Create a navigation node", method = "POST", description = "This creates the navigation node")
@@ -163,6 +158,69 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when creating a new navigation node", e);
+      return Response.serverError().entity(e.getMessage()).build();
+    }
+  }
+
+  @PUT
+  @Path("node")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Update a navigation node", method = "POST", description = "This updates the navigation node")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node updated"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "404", description = "Node not found"),
+      @ApiResponse(responseCode = "401", description = "User not authorized to update the navigation node"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateNode(@Parameter(description = "navigation node id")
+  @QueryParam("nodeId")
+  Long nodeId,
+                             @Parameter(description = "node label")
+                             @QueryParam("nodeLabel")
+                             String nodeLabel,
+                             @Parameter(description = "isVisible")
+                             @QueryParam("isVisible")
+                             boolean isVisible,
+                             @Parameter(description = "isScheduled")
+                             @QueryParam("isScheduled")
+                             boolean isScheduled,
+                             @Parameter(description = "startScheduleDate")
+                             @QueryParam("startScheduleDate")
+                             Long startScheduleDate,
+                             @Parameter(description = "endScheduleDate")
+                             @QueryParam("endScheduleDate")
+                             Long endScheduleDate) {
+    if (nodeId == null || StringUtils.isBlank(nodeLabel)) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+    }
+    try {
+      NodeData nodeData = navigationService.getNodeById(nodeId);
+      if (nodeData == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Node data with node id is not found").build();
+      }
+      Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      NodeState nodeState;
+      long now = System.currentTimeMillis();
+      if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
+        if (startScheduleDate > endScheduleDate) {
+          return Response.status(Response.Status.BAD_REQUEST)
+                         .entity("end schedule date must be after start schedule date")
+                         .build();
+        } else if (now > startScheduleDate) {
+          return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
+        } else {
+          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, null, null);
+        }
+      } else {
+        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, null, null);
+      }
+      navigationService.updateNode(nodeId, nodeState);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when updating a navigation node", e);
       return Response.serverError().entity(e.getMessage()).build();
     }
   }

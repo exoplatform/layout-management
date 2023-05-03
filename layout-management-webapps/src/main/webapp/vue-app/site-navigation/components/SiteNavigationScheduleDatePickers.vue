@@ -46,12 +46,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 <script>
 export default {
-  data: () => ({
-    startScheduleDate: new Date(),
-    startScheduleTime: new Date(new Date().getTime() + 900000),
-    endScheduleDate: new Date(),
-    endScheduleTime: new Date(new Date().getTime() + 1800000),
-  }),
+  props: {
+    startScheduleDate: {
+      type: Number,
+      default: 0,
+    },
+    endScheduleDate: {
+      type: Number,
+      default: 0,
+    },
+    startScheduleTime: {
+      type: Number,
+      default: 0,
+    },
+    endScheduleTime: {
+      type: Number,
+      default: 0,
+    }
+  },
   computed: {
     minimumStartDate() {
       return new Date();

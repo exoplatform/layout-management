@@ -128,11 +128,45 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   }
 
   const params = new URLSearchParams(formData).toString();
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation?${params}`, {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node?${params}`, {
     credentials: 'include',
     method: 'POST',
   }).then((resp) => {
     if (resp && resp.ok) {
+      return resp.ok;
+    } else {
+      throw resp;
+    }
+  });
+}
+
+export function updateNode(nodeId, nodeLabel, isVisible, isScheduled, startScheduleDate, endScheduleDate) {
+  const formData = new FormData();
+  if (nodeId) {
+    formData.append('nodeId', nodeId);
+  }
+  if (nodeLabel) {
+    formData.append('nodeLabel', nodeLabel);
+  }
+  
+  formData.append('isVisible', isVisible);
+
+  formData.append('isScheduled', isScheduled);
+
+  if (startScheduleDate) {
+    formData.append('startScheduleDate', startScheduleDate.getTime());
+  }
+
+  if (endScheduleDate) {
+    formData.append('endScheduleDate', endScheduleDate.getTime());
+  }
+
+  const params = new URLSearchParams(formData).toString();
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node?${params}`, {
+    credentials: 'include',
+    method: 'PUT',
+  }).then((resp) => {
+    if (resp?.ok) {
       return resp.ok;
     } else {
       throw resp;
