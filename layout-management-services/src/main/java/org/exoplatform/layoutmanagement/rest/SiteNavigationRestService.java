@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.gatein.api.Portal;
 import org.gatein.api.page.Page;
 import org.gatein.api.page.PageQuery;
@@ -48,6 +48,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
+import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.mop.Visibility;
 import org.exoplatform.portal.mop.navigation.NodeData;
 import org.exoplatform.portal.mop.navigation.NodeState;
@@ -70,8 +71,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import static org.exoplatform.portal.mop.storage.utils.MOPUtils.convertSiteType;
 
 @Path("v1/siteNavigation")
 @Tag(name = "v1/siteNavigation", description = "Managing site navigation")
@@ -402,7 +401,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     try {
       org.gatein.api.site.SiteType selectedSiteType = null;
       if (!StringUtils.isBlank(siteType)) {
-        selectedSiteType = convertSiteType(SiteType.valueOf(siteType.toUpperCase()));
+        selectedSiteType = MOPUtils.convertSiteType(SiteType.valueOf(siteType.toUpperCase()));
       }
       PageQuery pageQuery = new PageQuery.Builder().withSiteType(selectedSiteType)
                                                    .withSiteName(siteName)

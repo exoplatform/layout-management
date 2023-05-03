@@ -212,20 +212,20 @@ export function getPages(siteType, siteName, pageDisplayName) {
     },
   }).then(resp => {
     if (!resp || !resp.ok) {
-      throw new Error('Error when retrieving page templates');
+      throw new Error('Error when retrieving pages');
     } else {
       return resp.json();
     }
   });
 }
 
-export function getUserNavigations() {
+export function getSiteNavigations() {
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/navigations`, {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
     if (!resp || !resp.ok) {
-      throw new Error('Error when retrieving pages');
+      throw new Error('Error when retrieving site navigations');
     } else {
       return resp.json();
     }

@@ -15,20 +15,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <v-flex id="SiteNavigationsUserNavigationsSuggesterAutoComplete">
+  <v-flex id="siteNavigationsPagesSuggesterAutoComplete">
     <v-autocomplete
-      ref="selectAutoComplete"
-      v-model="selectedSiteNavigation"
+      ref="selectPage"
+      v-model="page"
       :placeholder="suggesterLabels.placeholder"
-      :items="userNavigations"
+      :items="pages"
       :loading="loadingSuggestions"
+      hide-no-data
       append-icon=""
       menu-props="closeOnClick, closeOnContentClick, maxHeight = 100"
       class="identitySuggester identitySuggesterInputStyle"
       content-class="identitySuggesterContent"
       width="100%"
       max-width="100%"
-      item-text="label"
+      item-text="displayName"
       item-value="name"
       return-object
       persistent-hint
@@ -43,11 +44,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-list-item class="pa-0">
           <v-list-item-title
             class="px-2">
-            {{ suggesterLabels.noDataLabel }}
+            {{ suggesterLabels.noData }}
           </v-list-item-title>
         </v-list-item>
       </template>
-
       <template slot="selection" slot-scope="{item, selected}">
         <v-chip
           :input-value="selected"
@@ -55,14 +55,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           class="identitySuggesterItem"
           @click:close="remove()">
           <span class="text-truncate">
-            {{ item.label }}
+            {{ item.displayName }}
           </span>
         </v-chip>
       </template>
       <template slot="item" slot-scope="data">
         <v-list-item-title
           class="text-truncate identitySuggestionMenuItemText"
-          v-text="data.item.label" />
+          v-text="data.item.displayName" />
       </template>
     </v-autocomplete>
   </v-flex>
@@ -71,55 +71,92 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <script>
 export default {
   model: {
-    prop: 'selectedSiteNavigation',
+    prop: 'page',
     event: 'change'
   },
   props: {
-    selectedSiteNavigation: {
+    page: {
       type: Object,
       default: null,
-    }
+    },
+    siteName: {
+      type: String,
+      default: null,
+    },
+    siteType: {
+      type: String,
+      default: null,
+    },
+    allSites: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
-      userNavigations: [],
+      pages: [],
       searchTerm: null,
-      loadingSuggestions: false
+      loadingSuggestions: false,
+      startSearchAfterInMilliseconds: 300,
+      endTypingKeywordTimeout: 50,
+      startTypingKeywordTimeout: 0,
+      typing: false,
     };
   },
   computed: {
     suggesterLabels() {
       return {
-        placeholder: this.$t('siteNavigation.label.navigationsSuggester.searchPlaceholder'),
-        noDataLabel: this.$t('siteNavigation.label.navigationsSuggester.noDataLabel')
+        placeholder: this.$t('siteNavigation.label.pagesSuggester.searchPlaceholder'),
+        noData: this.$t('siteNavigation.label.pagesSuggester.noData'),
       };
     }
   },
   watch: {
-    selectedSiteNavigation() {
-      this.$emit('change', this.selectedSiteNavigation);
+    searchTerm() {
+      if (this.searchTerm) {
+        this.startTypingKeywordTimeout = Date.now() + this.startSearchAfterInMilliseconds;
+        if (!this.typing) {
+          this.typing = true;
+          this.waitForEndTyping();
+        }
+      }
+    },
+    page() {
+      this.$emit('change', this.page);
+    },
+    siteType() {
+      this.$refs.selectPage.cachedItems = [];
     },
   },
   mounted() {
-    $(`#${this.id} input`).on('blur', () => {
-      this.$refs.selectAutoComplete.isFocused = false;
+    $('#siteNavigationsPagesSuggesterAutoComplete input').on('blur', () => {
+      this.$refs.selectPage.isFocused = false;
     });
-  },
-  created(){
-    this.getUserNavigations();
   },
   methods: {
     remove() {
-      this.selectedSiteNavigation = null;
-      this.$emit('change', this.selectedSiteNavigation);
+      this.page = null;
+      this.$emit('change', this.page);
     },
-    getUserNavigations() {
-      this.loadingSuggestions = true;
-      this.userNavigations = [];
-      this.$siteNavigationService.getUserNavigations()
-        .then(userNavigations => this.userNavigations = userNavigations)
-        .finally(() => this.loadingSuggestions = false);
-    }
+    searchPages() {
+      if (this.allSites || (!this.allSites && this.siteType && this.siteName)) {
+        this.loadingSuggestions = true;
+        this.pages = [];
+        this.$siteNavigationService.getPages(this.siteType, this.siteName, this.searchTerm)
+          .then(pages => this.pages = pages)
+          .finally(() => this.loadingSuggestions = false);
+      }
+    },
+    waitForEndTyping() {
+      window.setTimeout(() => {
+        if (Date.now() - this.startTypingKeywordTimeout > this.startSearchAfterInMilliseconds) {
+          this.typing = false;
+          this.searchPages();
+        } else {
+          this.waitForEndTyping();
+        }
+      }, this.endTypingKeywordTimeout);
+    },
   }
 };
 </script>

@@ -29,16 +29,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         :class="sitesOrSpaceChipClass"
         @click="allSites = false">
         <span class="text-truncate">
-          {{ $t('siteNavigation.label.sitesOrSpace') }}
+          {{ $t('siteNavigation.label.selectSite') }}
         </span>
       </v-chip>
     </v-flex>
-    <site-navigation-navigations-suggester
+    <site-navigation-sites-suggester
       v-if="!allSites"
       v-model="selectedSite" />
-    <site-navigation-page-suggester
+    <site-navigation-pages-suggester
       v-model="selectedPage"
-      :search-in-all-sites="allSites"
+      :all-sites="allSites"
       :site-type="selectedSite && selectedSite.key.type"
       :site-name="selectedSite && selectedSite.key.name" />
   </div>
@@ -54,10 +54,10 @@ export default {
     };
   },
   computed: {
-    allSitesChipClass(){
+    allSitesChipClass() {
       return this.allSites && 'primary' || '';
     },
-    sitesOrSpaceChipClass(){
+    sitesOrSpaceChipClass() {
       return !this.allSites &&'primary' || '';
     },
   }
