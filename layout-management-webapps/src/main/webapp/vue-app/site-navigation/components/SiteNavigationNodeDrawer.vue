@@ -293,7 +293,7 @@ export default {
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
       if (this.editMode) {
-        const pageRef = this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey.ref ||`${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}` : '';
+        const pageRef = this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}` : '';
         this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
           .then(() => {
             this.$root.$emit('refresh-navigation-nodes');
