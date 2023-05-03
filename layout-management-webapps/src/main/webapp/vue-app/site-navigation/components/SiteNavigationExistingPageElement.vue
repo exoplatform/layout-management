@@ -35,12 +35,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </v-flex>
     <site-navigation-site-suggester
       v-if="!allSites"
-      v-model="selectedSite" />
+      v-model="selectedSiteNavigation" />
     <site-navigation-page-suggester
       v-model="selectedPage"
       :all-sites="allSites"
-      :site-type="selectedSite && selectedSite.key.type"
-      :site-name="selectedSite && selectedSite.key.name" />
+      :site-type="selectedSiteNavigation && selectedSiteNavigation.key.type"
+      :site-name="selectedSiteNavigation && selectedSiteNavigation.key.name" />
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       allSites: true,
-      selectedSite: null,
+      selectedSiteNavigation: null,
       selectedPage: null,
     };
   },

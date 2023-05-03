@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <v-flex id="siteNavigationsSitesSuggesterAutoComplete">
+  <v-flex id="siteNavigationsSiteSuggesterAutoComplete">
     <v-autocomplete
       ref="selectSiteNavigation"
       v-model="selectedSiteNavigation"
@@ -100,7 +100,7 @@ export default {
     },
   },
   mounted() {
-    $('#siteNavigationsSitesSuggesterAutoComplete input').on('blur', () => {
+    $('#siteNavigationsSiteSuggesterAutoComplete input').on('blur', () => {
       this.$refs.selectSiteNavigation.isFocused = false;
     });
   },
