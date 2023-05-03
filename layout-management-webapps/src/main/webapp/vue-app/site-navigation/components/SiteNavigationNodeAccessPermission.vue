@@ -27,7 +27,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       outlined />
     <exo-identity-suggester
       v-if="showAccessPermissionsGroupSuggester"
-      ref="NavigationNodeAccessPermissions"
+      ref="navigationNodeAccessPermissions"
       v-model="accessPermission"
       :group-type="groupType"
       :all-groups-for-admin="allGroupsForAdmin"
@@ -112,7 +112,7 @@ export default {
           group: this.accessPermission,
           membershipType: '*'};
         this.$root.$emit('add-access-permission', permission);
-        this.$refs.NavigationNodeAccessPermissions.emitSelectedValue({});
+        this.$refs.navigationNodeAccessPermissions.emitSelectedValue({});
       }
     },
     type() {
