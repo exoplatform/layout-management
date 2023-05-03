@@ -211,10 +211,10 @@ export function getPages(siteType, siteName, pageDisplayName) {
       'Content-Type': 'application/json'
     },
   }).then(resp => {
-    if (!resp || !resp.ok) {
-      throw new Error('Error when retrieving pages');
-    } else {
+    if (resp && resp.ok) {
       return resp.json();
+    } else {
+      throw new Error('Error when retrieving pages');
     }
   });
 }
@@ -224,10 +224,10 @@ export function getSiteNavigations() {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
-    if (!resp || !resp.ok) {
-      throw new Error('Error when retrieving site navigations');
-    } else {
+    if (resp && resp.ok) {
       return resp.json();
+    } else {
+      throw new Error('Error when retrieving site navigations');
     }
   });
 }

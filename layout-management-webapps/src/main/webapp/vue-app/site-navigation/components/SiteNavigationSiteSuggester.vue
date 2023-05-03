@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <v-flex id="siteNavigationsSitesSuggesterAutoComplete">
     <v-autocomplete
-      ref="selectAutoComplete"
+      ref="selectSiteNavigation"
       v-model="selectedSiteNavigation"
       :placeholder="suggesterLabels.placeholder"
       :items="siteNavigations"
@@ -101,7 +101,7 @@ export default {
   },
   mounted() {
     $('#siteNavigationsSitesSuggesterAutoComplete input').on('blur', () => {
-      this.$refs.selectAutoComplete.isFocused = false;
+      this.$refs.selectSiteNavigation.isFocused = false;
     });
   },
   created(){

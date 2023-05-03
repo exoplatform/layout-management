@@ -33,8 +33,8 @@ import SiteNavigationPageElement from './components/SiteNavigationPageElement.vu
 import SiteNavigationNewPageElement from './components/SiteNavigationNewPageElement.vue';
 import SiteNavigationScheduleDatePickers from './components/SiteNavigationScheduleDatePickers.vue';
 import SiteNavigationExistingPageElement from './components/SiteNavigationExistingPageElement.vue';
-import SiteNavigationPagesSuggester from './components/SiteNavigationPagesSuggester.vue';
-import SiteNavigationSitesSuggester from './components/SiteNavigationSitesSuggester.vue';
+import SiteNavigationPageSuggester from './components/SiteNavigationPageSuggester.vue';
+import SiteNavigationSiteSuggester from './components/SiteNavigationSiteSuggester.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
@@ -55,8 +55,8 @@ const components = {
   'site-navigation-new-page-element': SiteNavigationNewPageElement,
   'site-navigation-schedule-date-pickers': SiteNavigationScheduleDatePickers,
   'site-navigation-existing-page-element': SiteNavigationExistingPageElement,
-  'site-navigation-pages-suggester': SiteNavigationPagesSuggester,
-  'site-navigation-sites-suggester': SiteNavigationSitesSuggester,
+  'site-navigation-page-suggester': SiteNavigationPageSuggester,
+  'site-navigation-site-suggester': SiteNavigationSiteSuggester,
 };
 
 for (const key in components) {
