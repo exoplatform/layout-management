@@ -384,7 +384,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @Operation(summary = "Retrieve pages", method = "GET", description = "this retrieves pages")
+  @Operation(summary = "Retrieve pages", method = "GET", description = "This retrieves pages")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response getPages(@Context
