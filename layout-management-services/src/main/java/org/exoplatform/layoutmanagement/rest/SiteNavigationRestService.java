@@ -92,7 +92,11 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
 
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
-  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService, PageTemplateService pageTemplateService, Portal portal) {
+  public SiteNavigationRestService(NavigationService navigationService,
+                                   PortalContainer container,
+                                   LayoutService layoutService,
+                                   PageTemplateService pageTemplateService,
+                                   Portal portal) {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
