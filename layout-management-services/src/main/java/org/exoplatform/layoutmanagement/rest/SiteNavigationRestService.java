@@ -178,6 +178,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "node label")
                              @QueryParam("nodeLabel")
                              String nodeLabel,
+                             @Parameter(description = "pageRef")
+                             @QueryParam("pageRef")
+                             String pageRef,
                              @Parameter(description = "isVisible")
                              @QueryParam("isVisible")
                              boolean isVisible,
@@ -198,6 +201,16 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (nodeData == null) {
         return Response.status(Response.Status.NOT_FOUND).entity("Node data with node id is not found").build();
       }
+      PageKey pageKey = null;
+      if (!StringUtils.isBlank(pageRef)) {
+        PageContext pageContext = layoutService.getPageContext(PageKey.parse(pageRef));
+        if (pageContext == null) {
+          return Response.status(Response.Status.NOT_FOUND).entity("Page context with page reference is not found").build();
+        } else {
+          pageKey = pageContext.getKey();
+        }
+      }
+
       Identity currentIdentity = ConversationState.getCurrent().getIdentity();
       if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -212,10 +225,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, null, null);
+          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, pageKey, null);
         }
       } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, null, null);
+        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, pageKey, null);
       }
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();

@@ -140,7 +140,7 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   });
 }
 
-export function updateNode(nodeId, nodeLabel, isVisible, isScheduled, startScheduleDate, endScheduleDate) {
+export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, startScheduleDate, endScheduleDate) {
   const formData = new FormData();
   if (nodeId) {
     formData.append('nodeId', nodeId);
@@ -149,6 +149,8 @@ export function updateNode(nodeId, nodeLabel, isVisible, isScheduled, startSched
     formData.append('nodeLabel', nodeLabel);
   }
   
+  formData.append('pageRef', pageRef);
+
   formData.append('isVisible', isVisible);
 
   formData.append('isScheduled', isScheduled);

@@ -93,7 +93,7 @@ export default {
   },
   watch: {
     startScheduleDate(newVal, oldVal) {
-      if (!newVal || !oldVal || new Date(newVal).getTime() === new Date(oldVal).getTime()) {
+      if (!newVal || !oldVal || this.checkDatesOnSameDay(newVal, oldVal)) {
         return;
       }
       const newDate = new Date(newVal);

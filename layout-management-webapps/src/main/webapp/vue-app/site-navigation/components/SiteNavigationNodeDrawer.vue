@@ -167,7 +167,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           v-else
           :disabled="disabled"
           :loading="loading"
-          @click="createNode"
+          @click="saveNode"
           class="btn btn-primary ms-2">
           {{ $t('siteNavigation.label.btn.save') }}
         </v-btn>
@@ -193,7 +193,7 @@ export default {
       parentNavigationNodeUrl: '',
       editMode: false,
       nodeLabelRules: {
-        required: value => value == null || !!(value && value.length) || this.$t('siteNavigation.required.error.message'),
+        required: value => value == null || !!(value?.length) || this.$t('siteNavigation.required.error.message'),
       },
       isValidInputs: true,
       nodeIdRules: [
@@ -204,7 +204,7 @@ export default {
           } else if (isNodeExisting) {
             return this.$t('siteNavigation.nodeWithSameNodeIdAlreadyExists.error.message');
           } else {
-            return value == null || !!(value && value.length) || this.$t('siteNavigation.required.error.message');
+            return value == null || !!(value?.length) || this.$t('siteNavigation.required.error.message');
           }
         }
       ],
@@ -226,8 +226,8 @@ export default {
     }
   },
   created() {
-    this.$root.$on('open-site-navigation-add-node-drawer',this.open);
-    this.$root.$on('open-site-navigation-edit-node-drawer',(navigationNode) => {
+    this.$root.$on('open-site-navigation-add-node-drawer', this.open);
+    this.$root.$on('open-site-navigation-edit-node-drawer', (navigationNode) => {
       this.editMode = true;
       this.open(navigationNode);
     });
@@ -271,9 +271,13 @@ export default {
       this.nodeType = 'Group';
       this.disableNodeId = false;
       this.editMode= false;
+      this.startScheduleDate = new Date().getTime();
+      this.endScheduleDate = new Date().getTime();
+      this.startScheduleTime = new Date(new Date().getTime() + 900000);
+      this.endScheduleTime = new Date(new Date().getTime() + 1800000);
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
-    createNode() {
+    saveNode() {
       let startScheduleDate = null;
       let endScheduleDate = null;
       if (this.isScheduled) {
@@ -289,7 +293,8 @@ export default {
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
       if (this.editMode) {
-        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
+        const pageRef = this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey.ref ||`${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}` : '';
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
           .then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           })
