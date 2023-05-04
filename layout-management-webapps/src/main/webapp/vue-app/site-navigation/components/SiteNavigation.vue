@@ -41,7 +41,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </v-hover>
     <site-navigation-drawer />
     <site-navigation-manage-access-drawer />
-    <site-navigation-add-node-drawer />
+    <site-navigation-node-drawer />
     <site-navigation-add-element-drawer />
     <site-navigation-notification-alerts />
   </v-app>
