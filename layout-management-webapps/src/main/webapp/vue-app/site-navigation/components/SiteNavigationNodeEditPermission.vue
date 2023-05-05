@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <div>
     <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.whoCanEdit') }}</span>
     <exo-identity-suggester
-      ref="NavigationNodeEditPermissions"
+      ref="navigationNodeEditPermissions"
       :labels="suggesterLabels"
       v-model="permission.group"
       :group-type="groupType"
