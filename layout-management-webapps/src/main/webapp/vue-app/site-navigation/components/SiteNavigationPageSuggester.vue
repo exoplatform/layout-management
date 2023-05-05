@@ -125,7 +125,10 @@ export default {
       this.$emit('change', this.page);
     },
     siteType() {
-      this.$refs.selectPage.cachedItems = [];
+      this.page = null;
+    },
+    allSites() {
+      this.page = null;
     },
   },
   mounted() {
