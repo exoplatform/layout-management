@@ -60,6 +60,11 @@ export default {
     selectSiteChipClass() {
       return !this.allSites &&'primary' || '';
     },
-  }
+  },
+  watch: {
+    selectedPage(){
+      this.$root.$emit('existing-page-selected', this.selectedPage);
+    }
+  },
 };
 </script>

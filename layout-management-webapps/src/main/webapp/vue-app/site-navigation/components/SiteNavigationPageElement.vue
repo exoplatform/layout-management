@@ -27,12 +27,12 @@ export default {
   props: {
     elementType: {
       type: String,
-      default: 'newPage'
+      default: 'PAGE'
     }
   },
   computed: {
     isNewPageElement() {
-      return this.elementType === 'newPage';
+      return this.elementType === 'PAGE';
     }
   }
 };

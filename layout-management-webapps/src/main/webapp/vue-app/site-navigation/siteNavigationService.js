@@ -100,7 +100,7 @@ export function moveNode(nodeId, previousNodeId) {
   });
 }
 
-export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, isScheduled, startScheduleDate, endScheduleDate) {
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, isScheduled, startScheduleDate, endScheduleDate, pageRef, target) {
   const formData = new FormData();
   if (parentNodeId) {
     formData.append('parentNodeId', parentNodeId);
@@ -127,6 +127,12 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
     formData.append('endScheduleDate', endScheduleDate.getTime());
   }
 
+  if (pageRef) {
+    formData.append('pageRef', pageRef);
+  }
+  if (target) {
+    formData.append('target', target);
+  }
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node?${params}`, {
     credentials: 'include',
@@ -260,6 +266,40 @@ export function getSiteNavigations() {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
+    if (resp && resp.ok) {
+      return resp.json();
+    } else {
+      throw new Error('Error when retrieving site navigations');
+    }
+  });
+}
+
+export function createPage(pageName, pageTye, link, pageTemplate, siteName, siteType) {
+
+  const formData = new FormData();
+
+  formData.append('pageName', pageName);
+
+  formData.append('pageTye', pageTye);
+
+  if (link) {
+    formData.append('link', link);
+  }
+
+  if (pageTemplate) {
+    formData.append('pageTemplate', pageTemplate);
+  }
+
+  formData.append('siteName', siteName);
+
+  formData.append('siteType', siteType);
+
+  const params = new URLSearchParams(formData).toString();
+
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/pages?${params}`, {
+    credentials: 'include',
+    method: 'POST',
+  }).then((resp) => {
     if (resp && resp.ok) {
       return resp.json();
     } else {

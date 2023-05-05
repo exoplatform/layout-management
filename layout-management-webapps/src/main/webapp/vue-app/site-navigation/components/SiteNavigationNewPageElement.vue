@@ -46,6 +46,11 @@ export default {
       return `/layout-management/images/page-templates/${this.pageTemplate}.png`;
     }
   },
+  watch: {
+    pageTemplate(){
+      this.$root.$emit('page-template-changed', this.pageTemplate);
+    }
+  },
   created() {
     this.getPageTemplates();
   },
