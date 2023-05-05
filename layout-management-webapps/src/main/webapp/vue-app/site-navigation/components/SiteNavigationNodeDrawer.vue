@@ -29,7 +29,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           @click="close()">
           fas fa-arrow-left
         </v-icon>
-        <span> {{ $t('siteNavigation.drawer.addNode.title') }} </span>
+        <span> {{ title }} </span>
       </div>
     </template>
     <template slot="content">
@@ -73,6 +73,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             type="text"
             required="required"
             :rules="nodeIdRules"
+            :disabled="disableNodeId"
             outlined
             dense />
         </v-card-text>
@@ -118,6 +119,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-card-text>
         <v-card-text class="pt-0" v-if="visible && isScheduled">
           <site-navigation-schedule-date-pickers
+            :start-schedule-date="startScheduleDate"
+            :end-schedule-date="endScheduleDate"
+            :start-schedule-time="startScheduleTime"
+            :end-schedule-time="endScheduleTime"
             @change="updateDates" />
         </v-card-text>
         <v-card-text class="d-flex flex-grow-1 text-no-wrap text-left font-weight-bold pb-2">
@@ -162,7 +167,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           v-else
           :disabled="disabled"
           :loading="loading"
-          @click="createNode"
+          @click="saveNode"
           class="btn btn-primary ms-2">
           {{ $t('siteNavigation.label.btn.save') }}
         </v-btn>
@@ -174,19 +179,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data () {
     return {
-      startScheduleDate: null,
-      endScheduleDate: null,
-      startScheduleTime: null,
-      endScheduleTime: null,
+      startScheduleDate: new Date().getTime(),
+      endScheduleDate: new Date().getTime(),
+      startScheduleTime: new Date(new Date().getTime() + 900000),
+      endScheduleTime: new Date(new Date().getTime() + 1800000),
       navigationNode: null,
       nodeLabel: null,
       nodeId: null,
       visible: true,
       isScheduled: false,
+      disableNodeId: false,
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
+      editMode: false,
       nodeLabelRules: {
-        required: value => value == null || !!(value && value.length) || this.$t('siteNavigation.required.error.message'),
+        required: value => value == null || !!(value?.length) || this.$t('siteNavigation.required.error.message'),
       },
       isValidInputs: true,
       nodeIdRules: [
@@ -197,28 +204,36 @@ export default {
           } else if (isNodeExisting) {
             return this.$t('siteNavigation.nodeWithSameNodeIdAlreadyExists.error.message');
           } else {
-            return value == null || !!(value && value.length) || this.$t('siteNavigation.required.error.message');
+            return value == null || !!(value?.length) || this.$t('siteNavigation.required.error.message');
           }
         }
       ],
     };
   },
   computed: {
+    title() {
+      return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
+    },
     disabled() {
       return !(this.isValidInputs && this.nodeId && this.nodeLabel);
     },
     displayNextBtn() {
-      return this.nodeType === 'pageOrLink';
+      return this.editMode ? this.nodeType === 'pageOrLink' && !this.navigationNode.pageKey : this.nodeType === 'pageOrLink';
     },
     nodeUrl() {
-      return `${this.$t('siteNavigation.label.nodeId.description')}${this.parentNavigationNodeUrl}/${this.nodeId}`;
+      const nodeuri = `${this.$t('siteNavigation.label.nodeId.description')}${this.parentNavigationNodeUrl}`;
+      return this.editMode ? nodeuri : `${nodeuri}/${this.nodeId}` ;
     }
   },
   created() {
     this.$root.$on('open-site-navigation-add-node-drawer', this.open);
+    this.$root.$on('open-site-navigation-edit-node-drawer', (navigationNode) => {
+      this.editMode = true;
+      this.open(navigationNode);
+    });
   },
   methods: {
-    updateDates(startDate, endDate, startTime, endTime){
+    updateDates(startDate, endDate, startTime, endTime) {
       this.startScheduleDate = startDate;
       this.endScheduleDate = endDate;
       this.startScheduleTime = startTime;
@@ -232,6 +247,20 @@ export default {
       } else {
         this.parentNavigationNodeUrl = `/portal/g/${siteKey.name.replaceAll('/', ':')}/${parentNavigationNode.uri}`;
       }
+      if (this.editMode) {
+        this.nodeLabel = parentNavigationNode.label;
+        this.nodeId = parentNavigationNode.name;
+        this.nodeType = parentNavigationNode.pageKey ? 'pageOrLink' : 'Group';
+        this.visible = parentNavigationNode.visibility !== 'HIDDEN';
+        this.disableNodeId = true;
+        if (parentNavigationNode.visibility === 'TEMPORAL') {
+          this.isScheduled = true;
+          this.startScheduleDate = parentNavigationNode.startPublicationTime;
+          this.endScheduleDate = parentNavigationNode.endPublicationTime;
+          this.startScheduleTime = new Date(parentNavigationNode.startPublicationTime);
+          this.endScheduleTime = new Date(parentNavigationNode.endPublicationTime);
+        }
+      }
       this.$refs.siteNavigationAddNodeDrawer.open();
     },
     close() {
@@ -240,13 +269,18 @@ export default {
       this.visible = true;
       this.isScheduled = false;
       this.nodeType = 'Group';
-      this.disabled = true;
+      this.disableNodeId = false;
+      this.editMode= false;
+      this.startScheduleDate = new Date().getTime();
+      this.endScheduleDate = new Date().getTime();
+      this.startScheduleTime = new Date(new Date().getTime() + 900000);
+      this.endScheduleTime = new Date(new Date().getTime() + 1800000);
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
-    createNode() {
+    saveNode() {
       let startScheduleDate = null;
       let endScheduleDate = null;
-      if (this.isScheduled){
+      if (this.isScheduled) {
         startScheduleDate = new Date(this.startScheduleDate);
         startScheduleDate.setHours(new Date(this.startScheduleTime).getHours());
         startScheduleDate.setMinutes(new Date(this.startScheduleTime).getMinutes());
@@ -258,13 +292,24 @@ export default {
       }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
-      this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
-        .then(() => {
-          this.$root.$emit('refresh-navigation-nodes');
-        })
-        .finally(() => {
-          this.close();
-        });
+      if (this.editMode) {
+        const pageRef = this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}` : '';
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
+          .then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          })
+          .finally(() => {
+            this.close();
+          });
+      } else {
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
+          .then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          })
+          .finally(() => {
+            this.close();
+          });
+      }
     },
     openAddElementDrawer() {
       this.$root.$emit('open-add-element-drawer', this.open);

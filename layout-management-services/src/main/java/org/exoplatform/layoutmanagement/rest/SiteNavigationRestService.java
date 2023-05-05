@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -100,9 +101,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   }
 
   @POST
+  @Path("node")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @Operation(summary = "Create a navigation node", method = "POST", description = "This creates the navigation node")
+  @Operation(summary = "Create a navigation node", method = "POST", description = "This creates the given navigation node")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node created"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
       @ApiResponse(responseCode = "404", description = "Node not found"),
@@ -167,11 +169,87 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     }
   }
 
+  @PUT
+  @Path("node")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Update a navigation node", method = "PUT", description = "This updates the given navigation node")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node updated"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "404", description = "Node not found"),
+      @ApiResponse(responseCode = "401", description = "User not authorized to update the navigation node"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateNode(@Parameter(description = "navigation node id")
+  @QueryParam("nodeId")
+  Long nodeId,
+                             @Parameter(description = "node label")
+                             @QueryParam("nodeLabel")
+                             String nodeLabel,
+                             @Parameter(description = "pageRef")
+                             @QueryParam("pageRef")
+                             String pageRef,
+                             @Parameter(description = "isVisible")
+                             @QueryParam("isVisible")
+                             boolean isVisible,
+                             @Parameter(description = "isScheduled")
+                             @QueryParam("isScheduled")
+                             boolean isScheduled,
+                             @Parameter(description = "startScheduleDate")
+                             @QueryParam("startScheduleDate")
+                             Long startScheduleDate,
+                             @Parameter(description = "endScheduleDate")
+                             @QueryParam("endScheduleDate")
+                             Long endScheduleDate) {
+    if (nodeId == null || StringUtils.isBlank(nodeLabel)) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+    }
+    try {
+      NodeData nodeData = navigationService.getNodeById(nodeId);
+      if (nodeData == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Node data with node id is not found").build();
+      }
+      PageKey pageKey = null;
+      if (!StringUtils.isBlank(pageRef)) {
+        PageContext pageContext = layoutService.getPageContext(PageKey.parse(pageRef));
+        if (pageContext == null) {
+          return Response.status(Response.Status.NOT_FOUND).entity("Page context with page reference is not found").build();
+        } else {
+          pageKey = pageContext.getKey();
+        }
+      }
+
+      Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+      if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      NodeState nodeState;
+      long now = System.currentTimeMillis();
+      if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
+        if (startScheduleDate > endScheduleDate) {
+          return Response.status(Response.Status.BAD_REQUEST)
+                         .entity("end schedule date must be after start schedule date")
+                         .build();
+        } else if (now > startScheduleDate) {
+          return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
+        } else {
+          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, pageKey, null);
+        }
+      } else {
+        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, pageKey, null);
+      }
+      navigationService.updateNode(nodeId, nodeState);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when updating a navigation node", e);
+      return Response.serverError().entity(e.getMessage()).build();
+    }
+  }
+
   @DELETE
   @Path("node/{nodeId}")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @Operation(summary = "Delete Node ", method = "DELETE", description = "This deletes the navigation node")
+  @Operation(summary = "Delete a navigation node ", method = "DELETE", description = "This deletes the given navigation node")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node deleted"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
       @ApiResponse(responseCode = "404", description = "Node not found"),
@@ -228,7 +306,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Path("node/{nodeId}/undoDelete")
   @POST
   @RolesAllowed("users")
-  @Operation(summary = "Undo deleting node if not yet effectively deleted", method = "POST", description = "Undo deleting node if not yet effectively deleted")
+  @Operation(summary = "Undo delete a navigation node if not yet effectively deleted", method = "POST", description = "This undo deletes the given navigation node if not yet effectively deleted")
   @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
       @ApiResponse(responseCode = "404", description = "Node not found"),
@@ -279,7 +357,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Path("/node/move")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @Operation(summary = "Move navigation node", method = "POST", description = "This move the navigation node")
+  @Operation(summary = "Move a navigation node", method = "PATCH", description = "This moves the given navigation node")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
       @ApiResponse(responseCode = "401", description = "User not authorized to move the navigation node"),
@@ -315,7 +393,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Path("/page/permissions")
   @PATCH
   @RolesAllowed("users")
-  @Operation(summary = "update page access abd edit permission", method = "PUT", description = "update page access abd edit permission")
+  @Operation(summary = "Update a page access and edit permission", method = "PATCH", description = "This updates the given page access and edit permission")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Page permissions updated"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
       @ApiResponse(responseCode = "404", description = "Page not found"),
@@ -346,13 +424,13 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       PageState pageState = pageContext.getState();
       List<String> accessPermissionsList = List.of(accessPermissions.split(",")).stream().distinct().toList();
       pageContext.setState(new PageState(pageState.getDisplayName(),
-                                  pageState.getDescription(),
-                                  pageState.getShowMaxWindow(),
-                                  pageState.getFactoryId(),
-                                  accessPermissionsList,
-                                  editPermission,
-                                  pageState.getMoveAppsPermissions(),
-                                  pageState.getMoveContainersPermissions()));
+                                         pageState.getDescription(),
+                                         pageState.getShowMaxWindow(),
+                                         pageState.getFactoryId(),
+                                         accessPermissionsList,
+                                         editPermission,
+                                         pageState.getMoveAppsPermissions(),
+                                         pageState.getMoveContainersPermissions()));
       layoutService.save(pageContext);
       return Response.ok().build();
     } catch (Exception e) {
@@ -360,12 +438,12 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.serverError().build();
     }
   }
-  
+
   @Path("/page/templates")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @Operation(summary = "retrieves page templates", method = "GET", description = "retrieves page templates")
+  @Operation(summary = "Retrieve page templates", method = "GET", description = "This retrieves page templates")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response getPageTemplates(@Context
