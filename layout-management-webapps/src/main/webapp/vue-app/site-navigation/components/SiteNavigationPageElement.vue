@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <div>
     <site-navigation-new-page-element
       v-if="isNewPageElement" />
+    <site-navigation-existing-page-element v-else />
   </div>
 </template>
 
