@@ -40,15 +40,12 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.portal.config.UserPortalConfigService;
-import org.exoplatform.portal.config.model.Container;
 import org.exoplatform.portal.config.model.Page;
 import org.exoplatform.portal.mop.*;
 import org.exoplatform.portal.mop.navigation.*;
 import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.gatein.api.Portal;
-import org.gatein.api.Util;
 import org.gatein.api.page.PageQuery;
-import org.gatein.api.security.Permission;
 import org.picocontainer.Startable;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -172,10 +169,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, PageKey.parse(pageRef), null, target, null);
+          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, PageKey.parse(pageRef), null, target);
         }
       } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef), null, target, null);
+        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef), null, target);
       }
       navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
       return Response.ok().build();
@@ -248,10 +245,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, pageKey, null, nodeData.getTarget(), nodeData.getDescription());
+          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, pageKey, null, nodeData.getTarget());
         }
       } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, pageKey, null, nodeData.getTarget(), nodeData.getDescription());
+        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, pageKey, null, nodeData.getTarget());
       }
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();
@@ -511,7 +508,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     }
   }
 
-  @Path("/pages")
+  @Path("/page")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
@@ -519,44 +516,45 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "page created"),
           @ApiResponse(responseCode = "400", description = "Invalid query input"),
           @ApiResponse(responseCode = "500", description = "Internal server error") })
-  public Response createPage(@Parameter(description = "page name")
-  @QueryParam("pageName")
-  String pageName,
-                             @Parameter(description = "Page Type : GROUP, PAGE OR LINK")
-                             @QueryParam("pageTye")
-                             String pageTye,
-                             @Parameter(description = "node label")
+  public Response createPage(@Parameter(description = "page name", required = true)
+                             @QueryParam("pageName")
+                             String pageName,
+                             @Parameter(description = "page site type", required = true)
+                             @QueryParam("pageSiteType")
+                             String pageSiteType,
+                             @Parameter(description = "page site name", required = true)
+                             @QueryParam("pageSiteName")
+                             String pageSiteName,
+                             @Parameter(description = "Page Type : GROUP, PAGE OR LINK", required = true)
+                             @QueryParam("pageType")
+                             String pageType,
+                             @Parameter(description = "link")
                              @QueryParam("link")
                              String link,
                              @Parameter(description = "page template : blank , normal, analytics ...")
                              @QueryParam("pageTemplate")
                              String pageTemplate,
-                             @Parameter(description = "site type")
-                             @QueryParam("siteType")
-                             String siteType,
-                             @Parameter(description = "site name")
-                             @QueryParam("siteName")
-                             String siteName) {
-    if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageTye) || StringUtils.isBlank(siteName)
-        || StringUtils.isBlank(siteType)) {
+                             @Parameter(description = "page edit permission", required = true)
+                             @QueryParam("editPermission")
+                             String editPermission) {
+    if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageType) || StringUtils.isBlank(pageSiteName)
+        || StringUtils.isBlank(pageSiteType)|| StringUtils.isBlank(editPermission)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
-      org.exoplatform.portal.config.model.Page page;
-      if (PageType.PAGE.equals(PageType.valueOf(pageTye))) {
+      Page page;
+      if (PageType.PAGE.equals(PageType.valueOf(pageType))) {
         if (StringUtils.isBlank(pageTemplate)) {
-          return Response.status(Response.Status.BAD_REQUEST).entity("pageTemplate param is mandatory for new page").build();
+          return Response.status(Response.Status.BAD_REQUEST).entity("pageTemplate param is mandatory for PAGE pageType").build();
         }
-        page = userPortalConfigService.createPageTemplate(pageTemplate, siteType, siteName);
+        page = userPortalConfigService.createPageTemplate(pageTemplate, pageSiteType, pageSiteName);
       } else {
-        page = new Page(siteType, siteName, pageName);
+        page = new Page(pageSiteType, pageSiteName, pageName);
       }
-      userPortalConfigService.createPageTemplate(pageTemplate, siteType, siteName);
       page.setName(pageName);
       page.setTitle(pageName);
-      page.setPageType(pageTye);
-      Permission edit = Permission.any("platform", "administrators");
-      page.setEditPermission(Util.from(edit)[0]);
+      page.setPageType(pageType);
+      page.setEditPermission(editPermission);
       PageState pageState = Utils.toPageState(page);
       layoutService.save(new PageContext(page.getPageKey(), pageState), page);
       PageContext createdPage = layoutService.getPageContext(page.getPageKey());

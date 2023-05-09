@@ -104,7 +104,7 @@ export default {
       linkRules: [url => !!(url && url.match(/^((https?:\/\/)?(www\.)?[a-zA-Z0-9]+\.[^\s]{2,})|(javascript:)|(\/portal\/)/))
               || ( !url.length && this.$t('siteNavigation.required.error.message') || this.$t('siteNavigation.label.invalidLink'))],
       navigationNode: null,
-      elementLabel: null,
+      elementName: null,
       pageTemplate: 'empty',
       selectedPage: null,
       loading: false,
@@ -150,8 +150,8 @@ export default {
 
   },
   methods: {
-    open(elementLabel, navigationNode) {
-      this.elementLabel = elementLabel;
+    open(elementName, navigationNode) {
+      this.elementName = elementName;
       this.navigationNode = navigationNode;
       this.$refs.siteNavigationAddElementDrawer.open();
     },
@@ -173,7 +173,8 @@ export default {
           'pageType': this.elementType
         });
       } else {
-        this.$siteNavigationService.createPage(this.elementLabel, this.elementType, this.link, this.pageTemplate, this.navigationNode.siteKey.name, this.navigationNode.siteKey.type)
+        const editPermission = `${this.navigationNode.pageEditPermission.membershipType}:${this.navigationNode.pageEditPermission.group.id}`;
+        this.$siteNavigationService.createPage(this.elementName, this.navigationNode.siteKey.name, this.navigationNode.siteKey.type, this.elementType, this.link, this.pageTemplate, editPermission)
           .then((createdPage) => {
             const pageRef = createdPage?.key?.ref || `${createdPage?.key.site.typeName}::${createdPage?.key.site.name}::${createdPage?.pageContext?.key.name}`;
             this.$root.$emit('save-node-with-page', {
@@ -181,6 +182,12 @@ export default {
               'nodeTarget': this.openMode,
               'pageType': this.elementType,
               'createdPage': createdPage
+            });
+          }).catch(() => {
+            const message = this.$t('siteNavigation.label.pageCreation.error');
+            this.$root.$emit('navigation-node-notification-alert', {
+              message,
+              type: 'error',
             });
           });
       }

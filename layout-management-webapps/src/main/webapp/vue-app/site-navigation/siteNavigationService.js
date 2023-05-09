@@ -274,13 +274,13 @@ export function getSiteNavigations() {
   });
 }
 
-export function createPage(pageName, pageTye, link, pageTemplate, siteName, siteType) {
+export function createPage(pageName, pageSiteName, pageSiteType, pageType, link, pageTemplate, editPermission) {
 
   const formData = new FormData();
 
   formData.append('pageName', pageName);
 
-  formData.append('pageTye', pageTye);
+  formData.append('pageType', pageType);
 
   if (link) {
     formData.append('link', link);
@@ -290,20 +290,22 @@ export function createPage(pageName, pageTye, link, pageTemplate, siteName, site
     formData.append('pageTemplate', pageTemplate);
   }
 
-  formData.append('siteName', siteName);
+  formData.append('pageSiteName', pageSiteName);
 
-  formData.append('siteType', siteType);
+  formData.append('pageSiteType', pageSiteType);
+
+  formData.append('editPermission', editPermission);
 
   const params = new URLSearchParams(formData).toString();
 
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/pages?${params}`, {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page?${params}`, {
     credentials: 'include',
     method: 'POST',
   }).then((resp) => {
     if (resp && resp.ok) {
       return resp.json();
     } else {
-      throw new Error('Error when retrieving site navigations');
+      throw new Error('Error when creating page');
     }
   });
 }

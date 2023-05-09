@@ -311,7 +311,7 @@ export default {
                 const createdPage = pageData.createdPage;
                 return this.$siteNavigationService.editLayout(uiPageId, createdPage.key.name, createdPage.key.site.typeName, createdPage.key.site.name, `${this.navigationNode.uri}/${this.nodeId}`, this.navigationNode.siteKey.typeName, this.navigationNode.siteKey.name);
               } else {
-                const targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'group' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
+                const targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
                 window.open(targetPageUrl, pageData?.nodeTarget === 'SAME_TAB' && '_self' || '_blank');
               }
             }
@@ -323,7 +323,7 @@ export default {
       }
     },
     openAddElementDrawer() {
-      this.$root.$emit('open-add-element-drawer', this.nodeLabel , this.navigationNode);
+      this.$root.$emit('open-add-element-drawer', this.nodeId , this.navigationNode);
     },
     conversionRules() {
       return this.nodeLabel.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]/g, '').replace(/\s+/g, '').toLowerCase();
