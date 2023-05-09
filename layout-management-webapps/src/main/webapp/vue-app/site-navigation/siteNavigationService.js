@@ -150,7 +150,7 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   });
 }
 
-export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, startScheduleDate, endScheduleDate, nodeLabels) {
+export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, startScheduleDate, endScheduleDate, nodeLabels, target) {
   const formData = new FormData();
   if (nodeId) {
     formData.append('nodeId', nodeId);
@@ -164,6 +164,8 @@ export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, s
   formData.append('isVisible', isVisible);
 
   formData.append('isScheduled', isScheduled);
+
+  formData.append('target', target);
 
   if (startScheduleDate) {
     formData.append('startScheduleDate', startScheduleDate.getTime());
@@ -328,6 +330,42 @@ export function createPage(pageName, pageTitle, pageSiteName, pageSiteType, page
       return resp.json();
     } else {
       throw new Error('Error when creating page');
+    }
+  });
+}
+
+export function getPageByRef(pageRef) {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/byRef?pageRef=${pageRef}`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error('Error when retrieving page');
+    } else {
+      return resp.json();
+    }
+  });
+}
+
+export function updatePageLink(pageRef, newLink) {
+
+  const formData = new FormData();
+
+  formData.append('pageRef', pageRef);
+
+  formData.append('newLink', newLink);
+
+  const params = new URLSearchParams(formData).toString();
+
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/link?${params}`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error('Error when retrieving page');
     }
   });
 }
