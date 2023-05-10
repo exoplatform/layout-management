@@ -16,10 +16,7 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +35,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.layoutmanagement.rest.model.DescriptionRestEntity;
+import org.exoplatform.portal.mop.State;
+import org.exoplatform.portal.mop.service.DescriptionService;
+import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.gatein.api.Portal;
 import org.gatein.api.page.PageQuery;
 import org.picocontainer.Startable;
@@ -62,7 +64,6 @@ import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
-import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.exoplatform.portal.page.PageTemplateService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -97,6 +98,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
 
   private UserPortalConfigService  userPortalConfigService;
 
+  private DescriptionService descriptionService;
+
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
   public SiteNavigationRestService(NavigationService navigationService,
@@ -104,13 +107,15 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                    LayoutService layoutService,
                                    PageTemplateService pageTemplateService,
                                    Portal portal,
-                                   UserPortalConfigService userPortalConfigService) {
+                                   UserPortalConfigService userPortalConfigService,
+                                   DescriptionService descriptionService) {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
     this.pageTemplateService = pageTemplateService;
     this.portal = portal;
     this.userPortalConfigService = userPortalConfigService;
+    this.descriptionService = descriptionService;
   }
 
   @POST
@@ -118,14 +123,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
   @Operation(summary = "Create a navigation node", method = "POST", description = "This creates the given navigation node")
-  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node created"),
-      @ApiResponse(responseCode = "400", description = "Invalid query input"),
-      @ApiResponse(responseCode = "404", description = "Node not found"),
-      @ApiResponse(responseCode = "401", description = "User not authorized to create the navigation node"),
-      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "navigation node created"),
+          @ApiResponse(responseCode = "400", description = "Invalid query input"),
+          @ApiResponse(responseCode = "404", description = "Node not found"),
+          @ApiResponse(responseCode = "401", description = "User not authorized to create the navigation node"),
+          @ApiResponse(responseCode = "500", description = "Internal server error")})
   public Response createNode(@Parameter(description = "navigation node id")
-  @QueryParam("parentNodeId")
-  Long parentNodeId,
+                             @QueryParam("parentNodeId")
+                             Long parentNodeId,
                              @Parameter(description = "previous node id")
                              @QueryParam("previousNodeId")
                              Long previousNodeId,
@@ -152,8 +157,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              String pageRef,
                              @Parameter(description = "node target")
                              @QueryParam("target")
-                             String target) {
-    if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
+                             String target,
+                             @RequestBody(description = "descriptions object to create", required = true) DescriptionRestEntity descriptionRest) {
+
+    if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId) || descriptionRest == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
@@ -170,31 +177,37 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
         if (startScheduleDate > endScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST)
-                         .entity("end schedule date must be after start schedule date")
-                         .build();
+                  .entity("end schedule date must be after start schedule date")
+                  .build();
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
           nodeState = new NodeState(nodeLabel,
-                                    null,
-                                    startScheduleDate,
-                                    endScheduleDate,
-                                    Visibility.TEMPORAL,
-                                    StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
-                                    null,
-                                    target);
+                  null,
+                  startScheduleDate,
+                  endScheduleDate,
+                  Visibility.TEMPORAL,
+                  StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
+                  null,
+                  target);
         }
       } else {
         nodeState = new NodeState(nodeLabel,
-                                  null,
-                                  -1,
-                                  -1,
-                                  isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
-                                  StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
-                                  null,
-                                  target);
+                null,
+                -1,
+                -1,
+                isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
+                StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
+                null,
+                target);
       }
-      navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
+      NodeData[] nodeData = navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
+      Map<Locale, State> descriptions = new HashMap<>();
+      descriptionRest.getDescriptions().entrySet().forEach(description -> {
+        org.exoplatform.portal.mop.State state = new State(description.getValue(), null);
+        descriptions.put(new Locale(description.getKey()), state);
+      });
+      descriptionService.setDescriptions(nodeData[1].getId(), descriptions);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when creating a new navigation node", e);
@@ -207,14 +220,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
   @Operation(summary = "Update a navigation node", method = "PUT", description = "This updates the given navigation node")
-  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "navigation node updated"),
-      @ApiResponse(responseCode = "400", description = "Invalid query input"),
-      @ApiResponse(responseCode = "404", description = "Node not found"),
-      @ApiResponse(responseCode = "401", description = "User not authorized to update the navigation node"),
-      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "navigation node updated"),
+          @ApiResponse(responseCode = "400", description = "Invalid query input"),
+          @ApiResponse(responseCode = "404", description = "Node not found"),
+          @ApiResponse(responseCode = "401", description = "User not authorized to update the navigation node"),
+          @ApiResponse(responseCode = "500", description = "Internal server error")})
   public Response updateNode(@Parameter(description = "navigation node id")
-  @QueryParam("nodeId")
-  Long nodeId,
+                             @QueryParam("nodeId")
+                             Long nodeId,
                              @Parameter(description = "node label")
                              @QueryParam("nodeLabel")
                              String nodeLabel,
@@ -232,8 +245,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              Long startScheduleDate,
                              @Parameter(description = "endScheduleDate")
                              @QueryParam("endScheduleDate")
-                             Long endScheduleDate) {
-    if (nodeId == null || StringUtils.isBlank(nodeLabel)) {
+                             Long endScheduleDate,
+                             @RequestBody(description = "descriptions object to update", required = true) DescriptionRestEntity descriptionRest) {
+    if (nodeId == null || StringUtils.isBlank(nodeLabel) || descriptionRest == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
@@ -260,30 +274,37 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
         if (startScheduleDate > endScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST)
-                         .entity("end schedule date must be after start schedule date")
-                         .build();
+                  .entity("end schedule date must be after start schedule date")
+                  .build();
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
           nodeState = new NodeState(nodeLabel,
-                                    null,
-                                    startScheduleDate,
-                                    endScheduleDate,
-                                    Visibility.TEMPORAL,
-                                    pageKey,
-                                    null,
-                                    nodeData.getTarget());
+                  null,
+                  startScheduleDate,
+                  endScheduleDate,
+                  Visibility.TEMPORAL,
+                  pageKey,
+                  null,
+                  nodeData.getTarget());
         }
       } else {
         nodeState = new NodeState(nodeLabel,
-                                  null,
-                                  -1,
-                                  -1,
-                                  isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
-                                  pageKey,
-                                  null,
-                                  nodeData.getTarget());
+                null,
+                -1,
+                -1,
+                isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
+                pageKey,
+                null,
+                nodeData.getTarget());
       }
+
+      Map<Locale, State> descriptions = new HashMap<>();
+      descriptionRest.getDescriptions().entrySet().forEach(description -> {
+        org.exoplatform.portal.mop.State state = new State(description.getValue(), null);
+        descriptions.put(Locale.forLanguageTag(description.getKey()), state);
+      });
+      descriptionService.setDescriptions(String.valueOf(nodeId), descriptions);
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();
     } catch (Exception e) {
@@ -604,6 +625,28 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       String siteName = siteKey.getName().startsWith("/") ? siteKey.getName() : "/" + siteKey.getName();
       page.setAccessPermissions(new String[] { "*:" + siteName });
       page.setEditPermission("manager:" + siteName);
+    }
+  }
+
+  @Path("description/{nodeId}")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Retrieve node label descriptions", method = "GET", description = "This retrieves node label descriptions")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "500", description = "Internal server error"),})
+  public Response getDescriptions(@Context
+                                  HttpServletRequest request,
+                                  @Parameter(description = "Node id", required = true)
+                                  @PathParam("nodeId")
+                                  Long nodeId) {
+    try {
+      Map<Locale, State> descriptions = descriptionService.getDescriptions(String.valueOf(nodeId));
+      DescriptionRestEntity descriptionRestEntity = EntityBuilder.toDescriptionEntity(descriptions);
+      return Response.ok().entity(descriptionRestEntity).build();
+    } catch (Exception e) {
+      LOG.error("Error when retrieving node label descriptions", e);
+      return Response.serverError().build();
     }
   }
 

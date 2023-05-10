@@ -16,12 +16,20 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.commons.utils.I18N;
+import org.exoplatform.layoutmanagement.rest.model.DescriptionRestEntity;
 import org.exoplatform.layoutmanagement.rest.model.PageTemplateRestEntity;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
+import org.exoplatform.portal.jdbc.entity.DescriptionState;
+import org.exoplatform.portal.mop.State;
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.webui.core.model.SelectItemOption;
 
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EntityBuilder {
 
@@ -33,11 +41,43 @@ public class EntityBuilder {
       return null;
     }
     return new PageTemplateRestEntity(SiteNavigationUtils.getI18NLabel(userLocal, pageTemplate.getLabel()),
-                                      pageTemplate.getValue());
+            pageTemplate.getValue());
   }
 
   public static List<PageTemplateRestEntity> toRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
     return pageTemplates.stream().map(pageTemplate -> toRestEntity(pageTemplate, userLocal)).toList();
   }
 
+  public static DescriptionRestEntity toDescriptionEntity(Map<Locale, State> descriptions) {
+
+    LocaleConfigService localeConfigService = CommonsUtils.getService(LocaleConfigService.class);
+    Locale defaultLocale = localeConfigService.getDefaultLocaleConfig() == null ? Locale.ENGLISH
+            : localeConfigService.getDefaultLocaleConfig()
+            .getLocale();
+    String defaultLanguage = defaultLocale.getLanguage();
+    Map<String, String> supportedLanguages =
+            localeConfigService.getLocalConfigs() == null ? Collections.singletonMap(defaultLocale.getLanguage(),
+                    defaultLocale.getDisplayName())
+                    : localeConfigService.getLocalConfigs()
+                    .stream()
+                    .filter(localeConfig -> !StringUtils.equals(localeConfig.getLocaleName(),
+                            "ma"))
+                    .collect(Collectors.toMap(LocaleConfig::getLocaleName,
+                            localeConfig -> localeConfig.getLocale()
+                                    .getDisplayName()));
+    Map<String, String> localized = new HashMap<>();
+    DescriptionRestEntity descriptionRestEntity = new DescriptionRestEntity();
+    if (descriptions != null && descriptions.size() != 0) {
+      for (Map.Entry<Locale, org.exoplatform.portal.mop.State> entry : descriptions.entrySet()) {
+        Locale locale = entry.getKey();
+        org.exoplatform.portal.mop.State state = entry.getValue();
+        localized.put(I18N.toTagIdentifier(locale), state.getName());
+      }
+      descriptionRestEntity.setDescriptions(localized);
+    }
+    descriptionRestEntity.setDefaultLanguage(defaultLanguage);
+    descriptionRestEntity.setSupportedLanguages(supportedLanguages);
+
+    return descriptionRestEntity;
+  }
 }
