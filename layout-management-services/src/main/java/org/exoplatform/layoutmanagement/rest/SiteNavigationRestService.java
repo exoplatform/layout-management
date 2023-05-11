@@ -172,7 +172,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, PageKey.parse(pageRef), null, target);
+          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL,  StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef), null, target);
         }
       } else {
         nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef), null, target);
