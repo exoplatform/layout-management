@@ -18,7 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <div>
     <site-navigation-new-page-element
       v-if="isNewPageElement" />
-    <site-navigation-existing-page-element v-else />
+    <site-navigation-existing-page-element
+      v-else
+      :selected-page="selectedPage" />
   </div>
 </template>
 
@@ -27,12 +29,16 @@ export default {
   props: {
     elementType: {
       type: String,
-      default: 'newPage'
+      default: 'PAGE'
+    },
+    selectedPage: {
+      type: Object,
+      default: null
     }
   },
   computed: {
     isNewPageElement() {
-      return this.elementType === 'newPage';
+      return this.elementType === 'PAGE';
     }
   }
 };
