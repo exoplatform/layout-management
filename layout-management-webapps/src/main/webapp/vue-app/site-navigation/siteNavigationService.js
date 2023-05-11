@@ -274,7 +274,7 @@ export function getSiteNavigations() {
   });
 }
 
-export function createPage(pageName, pageSiteName, pageSiteType, pageType, link, pageTemplate, editPermission) {
+export function createPage(pageName, pageSiteName, pageSiteType, pageType, link, pageTemplate) {
 
   const formData = new FormData();
 
@@ -293,8 +293,6 @@ export function createPage(pageName, pageSiteName, pageSiteType, pageType, link,
   formData.append('pageSiteName', pageSiteName);
 
   formData.append('pageSiteType', pageSiteType);
-
-  formData.append('editPermission', editPermission);
 
   const params = new URLSearchParams(formData).toString();
 

@@ -39,11 +39,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.Page;
 import org.exoplatform.portal.mop.*;
 import org.exoplatform.portal.mop.navigation.*;
 import org.exoplatform.portal.mop.storage.utils.MOPUtils;
+import org.exoplatform.portal.webui.portal.UIPortal;
+import org.exoplatform.portal.webui.util.Util;
 import org.gatein.api.Portal;
 import org.gatein.api.page.PageQuery;
 import org.picocontainer.Startable;
@@ -444,7 +447,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                          editPermission,
                                          pageState.getMoveAppsPermissions(),
                                          pageState.getMoveContainersPermissions(),
-                                         pageState.getPageType(),
+                                         pageState.getType(),
                                          pageState.getLink()));
       layoutService.save(pageContext);
       return Response.ok().build();
@@ -533,12 +536,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              String link,
                              @Parameter(description = "page template : blank , normal, analytics ...")
                              @QueryParam("pageTemplate")
-                             String pageTemplate,
-                             @Parameter(description = "page edit permission", required = true)
-                             @QueryParam("editPermission")
-                             String editPermission) {
+                             String pageTemplate) {
     if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageType) || StringUtils.isBlank(pageSiteName)
-        || StringUtils.isBlank(pageSiteType)|| StringUtils.isBlank(editPermission)) {
+        || StringUtils.isBlank(pageSiteType)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
@@ -553,8 +553,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       }
       page.setName(pageName);
       page.setTitle(pageName);
-      page.setPageType(pageType);
-      page.setEditPermission(editPermission);
+      page.setType(pageType);
+      setDefaultPermission(page, new SiteKey(pageSiteType, pageSiteName));
       PageState pageState = Utils.toPageState(page);
       layoutService.save(new PageContext(page.getPageKey(), pageState), page);
       PageContext createdPage = layoutService.getPageContext(page.getPageKey());
@@ -565,6 +565,21 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     }
   }
 
+  private void setDefaultPermission(Page page, SiteKey siteKey) {
+    if (SiteType.PORTAL.equals(siteKey.getType())) {
+      page.setAccessPermissions(new String[]{ UserACL.EVERYONE });
+      if (page.getEditPermission() == null || page.getEditPermission().isEmpty()) {
+        page.setEditPermission("manager:/platform/administrators");
+      }
+    } else if (SiteType.GROUP.equals(siteKey.getType())) {
+      String siteName = siteKey.getName().startsWith("/") ? siteKey.getName() : "/" + siteKey.getName();
+      page.setAccessPermissions(new String[] { "*:" + siteName });
+      if (page.getEditPermission() == null || page.getEditPermission().isEmpty()) {
+        page.setEditPermission("manager:" + siteName);
+      }
+    }
+  }
+  
   @Override
   public void start() {
     scheduledExecutor = Executors.newScheduledThreadPool(1);

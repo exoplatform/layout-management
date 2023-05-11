@@ -173,8 +173,7 @@ export default {
           'pageType': this.elementType
         });
       } else {
-        const editPermission = `${this.navigationNode.pageEditPermission.membershipType}:${this.navigationNode.pageEditPermission.group.id}`;
-        this.$siteNavigationService.createPage(this.elementName, this.navigationNode.siteKey.name, this.navigationNode.siteKey.type, this.elementType, this.link, this.pageTemplate, editPermission)
+        this.$siteNavigationService.createPage(this.elementName, this.navigationNode.siteKey.name, this.navigationNode.siteKey.type, this.elementType, this.link, this.pageTemplate)
           .then((createdPage) => {
             const pageRef = createdPage?.key?.ref || `${createdPage?.key.site.typeName}::${createdPage?.key.site.name}::${createdPage?.pageContext?.key.name}`;
             this.$root.$emit('save-node-with-page', {
