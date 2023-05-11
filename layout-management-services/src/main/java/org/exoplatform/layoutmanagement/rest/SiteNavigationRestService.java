@@ -39,9 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.gatein.api.Portal;
-import org.gatein.api.page.Page;
 import org.gatein.api.page.PageQuery;
 import org.picocontainer.Startable;
 
@@ -49,7 +47,13 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
+import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.portal.config.UserPortalConfigService;
+import org.exoplatform.portal.config.model.Page;
+import org.exoplatform.portal.mop.PageType;
+import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.portal.mop.Utils;
 import org.exoplatform.portal.mop.Visibility;
 import org.exoplatform.portal.mop.navigation.NodeData;
 import org.exoplatform.portal.mop.navigation.NodeState;
@@ -58,6 +62,7 @@ import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
+import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.exoplatform.portal.page.PageTemplateService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -90,14 +95,22 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
 
   private Portal                   portal;
 
+  private UserPortalConfigService  userPortalConfigService;
+
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
-  public SiteNavigationRestService(NavigationService navigationService, PortalContainer container, LayoutService layoutService, PageTemplateService pageTemplateService, Portal portal) {
+  public SiteNavigationRestService(NavigationService navigationService,
+                                   PortalContainer container,
+                                   LayoutService layoutService,
+                                   PageTemplateService pageTemplateService,
+                                   Portal portal,
+                                   UserPortalConfigService userPortalConfigService) {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
     this.pageTemplateService = pageTemplateService;
     this.portal = portal;
+    this.userPortalConfigService = userPortalConfigService;
   }
 
   @POST
@@ -133,7 +146,13 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              Long startScheduleDate,
                              @Parameter(description = "endScheduleDate")
                              @QueryParam("endScheduleDate")
-                             Long endScheduleDate) {
+                             Long endScheduleDate,
+                             @Parameter(description = "page reference")
+                             @QueryParam("pageRef")
+                             String pageRef,
+                             @Parameter(description = "node target")
+                             @QueryParam("target")
+                             String target) {
     if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
@@ -156,10 +175,24 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, null, null);
+          nodeState = new NodeState(nodeLabel,
+                                    null,
+                                    startScheduleDate,
+                                    endScheduleDate,
+                                    Visibility.TEMPORAL,
+                                    StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
+                                    null,
+                                    target);
         }
       } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, null, null);
+        nodeState = new NodeState(nodeLabel,
+                                  null,
+                                  -1,
+                                  -1,
+                                  isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
+                                  StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
+                                  null,
+                                  target);
       }
       navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
       return Response.ok().build();
@@ -232,10 +265,24 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, pageKey, null);
+          nodeState = new NodeState(nodeLabel,
+                                    null,
+                                    startScheduleDate,
+                                    endScheduleDate,
+                                    Visibility.TEMPORAL,
+                                    pageKey,
+                                    null,
+                                    nodeData.getTarget());
         }
       } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, pageKey, null);
+        nodeState = new NodeState(nodeLabel,
+                                  null,
+                                  -1,
+                                  -1,
+                                  isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
+                                  pageKey,
+                                  null,
+                                  nodeData.getTarget());
       }
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();
@@ -430,7 +477,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                          accessPermissionsList,
                                          editPermission,
                                          pageState.getMoveAppsPermissions(),
-                                         pageState.getMoveContainersPermissions()));
+                                         pageState.getMoveContainersPermissions(),
+                                         pageState.getType(),
+                                         pageState.getLink()));
       layoutService.save(pageContext);
       return Response.ok().build();
     } catch (Exception e) {
@@ -457,7 +506,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.serverError().build();
     }
   }
-  
+
   @Path("/pages")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -485,11 +534,76 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                                    .withSiteName(siteName)
                                                    .withDisplayName(pageDisplayName)
                                                    .build();
-      List<Page> pages = portal.findPages(pageQuery);
+      List<org.gatein.api.page.Page> pages = portal.findPages(pageQuery);
       return Response.ok().entity(pages).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving pages", e);
       return Response.serverError().build();
+    }
+  }
+
+  @Path("/page")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Create a page", method = "POST", description = "This creates the page")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "page created"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createPage(@Parameter(description = "page name", required = true)
+  @QueryParam("pageName")
+  String pageName,
+                             @Parameter(description = "page site type", required = true)
+                             @QueryParam("pageSiteType")
+                             String pageSiteType,
+                             @Parameter(description = "page site name", required = true)
+                             @QueryParam("pageSiteName")
+                             String pageSiteName,
+                             @Parameter(description = "Page Type : GROUP, PAGE OR LINK", required = true)
+                             @QueryParam("pageType")
+                             String pageType,
+                             @Parameter(description = "link")
+                             @QueryParam("link")
+                             String link,
+                             @Parameter(description = "page template : blank , normal, analytics ...")
+                             @QueryParam("pageTemplate")
+                             String pageTemplate) {
+    if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageType) || StringUtils.isBlank(pageSiteName)
+        || StringUtils.isBlank(pageSiteType)) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+    }
+    try {
+      Page page;
+      if (PageType.PAGE.equals(PageType.valueOf(pageType))) {
+        if (StringUtils.isBlank(pageTemplate)) {
+          return Response.status(Response.Status.BAD_REQUEST).entity("pageTemplate param is mandatory for PAGE pageType").build();
+        }
+        page = userPortalConfigService.createPageTemplate(pageTemplate, pageSiteType, pageSiteName);
+      } else {
+        page = new Page(pageSiteType, pageSiteName, pageName);
+      }
+      page.setName(pageName);
+      page.setTitle(pageName);
+      page.setType(pageType);
+      setDefaultPermission(page, new SiteKey(pageSiteType, pageSiteName));
+      PageState pageState = Utils.toPageState(page);
+      layoutService.save(new PageContext(page.getPageKey(), pageState), page);
+      PageContext createdPage = layoutService.getPageContext(page.getPageKey());
+      return Response.ok().entity(createdPage).build();
+    } catch (Exception e) {
+      LOG.error("Error when creating a new page", e);
+      return Response.serverError().entity(e.getMessage()).build();
+    }
+  }
+
+  private void setDefaultPermission(Page page, SiteKey siteKey) {
+    if (SiteType.PORTAL.equals(siteKey.getType())) {
+      page.setAccessPermissions(new String[] { UserACL.EVERYONE });
+      page.setEditPermission("*:/platform/administrators");
+    } else if (SiteType.GROUP.equals(siteKey.getType())) {
+      String siteName = siteKey.getName().startsWith("/") ? siteKey.getName() : "/" + siteKey.getName();
+      page.setAccessPermissions(new String[] { "*:" + siteName });
+      page.setEditPermission("manager:" + siteName);
     }
   }
 
