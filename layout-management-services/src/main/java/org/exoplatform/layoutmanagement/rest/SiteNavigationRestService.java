@@ -566,9 +566,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   private void setDefaultPermission(Page page, SiteKey siteKey) {
     if (SiteType.PORTAL.equals(siteKey.getType())) {
       page.setAccessPermissions(new String[] { UserACL.EVERYONE });
-      if (page.getEditPermission() == null || page.getEditPermission().isEmpty()) {
-        page.setEditPermission("*:/platform/administrators");
-      }
+      page.setEditPermission("*:/platform/administrators");
     } else if (SiteType.GROUP.equals(siteKey.getType())) {
       String siteName = siteKey.getName().startsWith("/") ? siteKey.getName() : "/" + siteKey.getName();
       page.setAccessPermissions(new String[] { "*:" + siteName });
