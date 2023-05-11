@@ -642,9 +642,7 @@ public class UIPageNodeForm extends UIFormTabPane {
                                           accessPermission != null ? Arrays.asList(accessPermission) : null,
                                           editPermission,
                                           moveAppsPermissions,
-                                          moveContainersPermissions,
-                                          PageType.PAGE.name(),
-                                          null);
+                                          moveContainersPermissions);
 
       // check page is exist
       PageKey pageKey = PageKey.parse(uiForm.getOwnerType().getName() + "::" + ownerId + "::" + uiPageName.getValue());

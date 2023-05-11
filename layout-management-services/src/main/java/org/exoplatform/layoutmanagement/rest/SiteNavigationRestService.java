@@ -567,19 +567,17 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
 
   private void setDefaultPermission(Page page, SiteKey siteKey) {
     if (SiteType.PORTAL.equals(siteKey.getType())) {
-      page.setAccessPermissions(new String[]{ UserACL.EVERYONE });
+      page.setAccessPermissions(new String[] { UserACL.EVERYONE });
       if (page.getEditPermission() == null || page.getEditPermission().isEmpty()) {
-        page.setEditPermission("manager:/platform/administrators");
+        page.setEditPermission("*:/platform/administrators");
       }
     } else if (SiteType.GROUP.equals(siteKey.getType())) {
       String siteName = siteKey.getName().startsWith("/") ? siteKey.getName() : "/" + siteKey.getName();
       page.setAccessPermissions(new String[] { "*:" + siteName });
-      if (page.getEditPermission() == null || page.getEditPermission().isEmpty()) {
-        page.setEditPermission("manager:" + siteName);
-      }
+      page.setEditPermission("manager:" + siteName);
     }
   }
-  
+
   @Override
   public void start() {
     scheduledExecutor = Executors.newScheduledThreadPool(1);
