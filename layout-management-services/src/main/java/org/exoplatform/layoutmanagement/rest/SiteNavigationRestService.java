@@ -39,12 +39,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.portal.config.UserACL;
-import org.exoplatform.portal.config.UserPortalConfigService;
-import org.exoplatform.portal.config.model.Page;
-import org.exoplatform.portal.mop.*;
-import org.exoplatform.portal.mop.navigation.*;
-import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.gatein.api.Portal;
 import org.gatein.api.page.PageQuery;
 import org.picocontainer.Startable;
@@ -53,11 +47,22 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
+import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.portal.config.UserPortalConfigService;
+import org.exoplatform.portal.config.model.Page;
+import org.exoplatform.portal.mop.PageType;
+import org.exoplatform.portal.mop.SiteKey;
+import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.portal.mop.Utils;
+import org.exoplatform.portal.mop.Visibility;
+import org.exoplatform.portal.mop.navigation.NodeData;
+import org.exoplatform.portal.mop.navigation.NodeState;
 import org.exoplatform.portal.mop.page.PageContext;
 import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
+import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.exoplatform.portal.page.PageTemplateService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -170,10 +175,24 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL,  StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef), null, target);
+          nodeState = new NodeState(nodeLabel,
+                                    null,
+                                    startScheduleDate,
+                                    endScheduleDate,
+                                    Visibility.TEMPORAL,
+                                    StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
+                                    null,
+                                    target);
         }
       } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef), null, target);
+        nodeState = new NodeState(nodeLabel,
+                                  null,
+                                  -1,
+                                  -1,
+                                  isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
+                                  StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
+                                  null,
+                                  target);
       }
       navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
       return Response.ok().build();
@@ -246,10 +265,24 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         } else if (now > startScheduleDate) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
-          nodeState = new NodeState(nodeLabel, null, startScheduleDate, endScheduleDate, Visibility.TEMPORAL, pageKey, null, nodeData.getTarget());
+          nodeState = new NodeState(nodeLabel,
+                                    null,
+                                    startScheduleDate,
+                                    endScheduleDate,
+                                    Visibility.TEMPORAL,
+                                    pageKey,
+                                    null,
+                                    nodeData.getTarget());
         }
       } else {
-        nodeState = new NodeState(nodeLabel, null, -1, -1, isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN, pageKey, null, nodeData.getTarget());
+        nodeState = new NodeState(nodeLabel,
+                                  null,
+                                  -1,
+                                  -1,
+                                  isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
+                                  pageKey,
+                                  null,
+                                  nodeData.getTarget());
       }
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();
@@ -473,7 +506,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.serverError().build();
     }
   }
-  
+
   @Path("/pages")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -515,11 +548,11 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   @RolesAllowed("users")
   @Operation(summary = "Create a page", method = "POST", description = "This creates the page")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "page created"),
-          @ApiResponse(responseCode = "400", description = "Invalid query input"),
-          @ApiResponse(responseCode = "500", description = "Internal server error") })
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response createPage(@Parameter(description = "page name", required = true)
-                             @QueryParam("pageName")
-                             String pageName,
+  @QueryParam("pageName")
+  String pageName,
                              @Parameter(description = "page site type", required = true)
                              @QueryParam("pageSiteType")
                              String pageSiteType,
