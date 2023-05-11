@@ -47,11 +47,14 @@ export default {
     }
   },
   watch: {
-    pageTemplate(){
-      this.$root.$emit('page-template-changed', this.pageTemplate);
+    pageTemplate() {
+      if (this.pageTemplate) {
+        this.$root.$emit('page-template-changed', this.pageTemplate);
+      }
     }
   },
   created() {
+    this.$root.$on('reset-element-drawer', this.reset);
     this.getPageTemplates();
   },
   methods: {
@@ -60,6 +63,9 @@ export default {
         .then(pageTemplates => {
           this.pageTemplates = pageTemplates || [];
         });
+    },
+    reset() {
+      this.pageTemplate = 'empty';
     }
   }
 };

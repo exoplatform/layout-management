@@ -71,7 +71,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </template>
         <template v-else>
           <site-navigation-page-element
-            :element-type="elementType" />
+            :element-type="elementType"
+            :selected-page="selectedPage" />
         </template>
       </v-card>
     </template>
@@ -156,7 +157,15 @@ export default {
       this.$refs.siteNavigationAddElementDrawer.open();
     },
     close() {
+      this.reset();
       this.$refs.siteNavigationAddElementDrawer.close();
+    },
+    reset(){
+      this.selectedPage = null;
+      this.elementType = 'PAGE';
+      this.link = '';
+      this.openMode = 'SAME_TAB';
+      this.$root.$emit('reset-element-drawer');
     },
     changePageTemplate(pageTemplate) {
       this.pageTemplate = pageTemplate;
