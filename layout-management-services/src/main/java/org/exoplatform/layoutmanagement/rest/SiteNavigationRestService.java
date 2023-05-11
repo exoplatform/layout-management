@@ -45,8 +45,6 @@ import org.exoplatform.portal.config.model.Page;
 import org.exoplatform.portal.mop.*;
 import org.exoplatform.portal.mop.navigation.*;
 import org.exoplatform.portal.mop.storage.utils.MOPUtils;
-import org.exoplatform.portal.webui.portal.UIPortal;
-import org.exoplatform.portal.webui.util.Util;
 import org.gatein.api.Portal;
 import org.gatein.api.page.PageQuery;
 import org.picocontainer.Startable;
