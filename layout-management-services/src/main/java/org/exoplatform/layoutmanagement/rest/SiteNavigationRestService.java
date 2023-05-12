@@ -57,7 +57,7 @@ import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.mop.State;
 import org.exoplatform.portal.mop.Utils;
 import org.exoplatform.portal.mop.Visibility;
-import org.exoplatform.portal.mop.description.DescriptionService;
+import org.exoplatform.portal.mop.service.DescriptionService;
 import org.exoplatform.portal.mop.navigation.NodeData;
 import org.exoplatform.portal.mop.navigation.NodeState;
 import org.exoplatform.portal.mop.page.PageContext;
@@ -176,6 +176,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (!SiteNavigationUtils.canEditNavigation(currentIdentity, parentNodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
+      Map<Locale, State> descriptions = new HashMap<>();
+      if (nodeLabelRestEntity.getLabels() != null) {
+        nodeLabel = null;
+        nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
+          org.exoplatform.portal.mop.State state = new State(label.getValue(), null);
+          descriptions.put(new Locale(label.getKey()), state);
+        });
+      }
       NodeState nodeState;
       long now = System.currentTimeMillis();
       if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
@@ -206,11 +214,6 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   target);
       }
       NodeData[] nodeData = navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
-      Map<Locale, State> descriptions = new HashMap<>();
-      nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
-        org.exoplatform.portal.mop.State state = new State(label.getValue(), null);
-        descriptions.put(new Locale(label.getKey()), state);
-      });
       descriptionService.setDescriptions(nodeData[1].getId(), descriptions);
       return Response.ok().build();
     } catch (Exception e) {
@@ -274,7 +277,16 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
+      Map<Locale, State> descriptions = new HashMap<>();
+      if (nodeLabelRestEntity.getLabels() != null) {
+        nodeLabel = null;
+        nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
+          org.exoplatform.portal.mop.State state = new State(label.getValue(), null);
+          descriptions.put(new Locale(label.getKey()), state);
+        });
+      }
       NodeState nodeState;
+      nodeLabel = nodeLabelRestEntity.getLabels() == null ? nodeLabel : null;
       long now = System.currentTimeMillis();
       if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
         if (startScheduleDate > endScheduleDate) {
@@ -303,12 +315,6 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   null,
                                   nodeData.getTarget());
       }
-
-      Map<Locale, State> descriptions = new HashMap<>();
-      nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
-        org.exoplatform.portal.mop.State state = new State(label.getValue(), null);
-        descriptions.put(Locale.forLanguageTag(label.getKey()), state);
-      });
       descriptionService.setDescriptions(String.valueOf(nodeId), descriptions);
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();

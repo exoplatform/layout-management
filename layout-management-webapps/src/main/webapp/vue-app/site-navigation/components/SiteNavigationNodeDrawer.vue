@@ -189,13 +189,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       v-model="valuesPerLanguage"
       :default-language="defaultLanguage"
       :supported-languages="supportedLanguages"
-      @input="updateDescriptions" />
+      @input="updateNodeLabels" />
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      labels: null,
       supportedLanguages: {},
       valuesPerLanguage: {},
       defaultLanguage: '',
@@ -263,7 +264,7 @@ export default {
     open(parentNavigationNode) {
       this.navigationNode = parentNavigationNode;
       const siteKey = parentNavigationNode.siteKey;
-      this.getDescriptions();
+      this.getNodeLabels();
       if (siteKey.typeName === 'portal') {
         this.parentNavigationNodeUrl = `/portal/${siteKey.name}/${parentNavigationNode.uri}`;
       } else {
@@ -316,12 +317,12 @@ export default {
       }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
-      const descriptions = {
-        descriptions: this.valuesPerLanguage
+      const nodeLabels = {
+        labels: this.labels
       };
       if (this.editMode) {
         const pageRef = this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}` : '';
-        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, descriptions)
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels)
           .then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           })
@@ -329,7 +330,7 @@ export default {
             this.close();
           });
       } else {
-        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, pageData?.pageRef, pageData?.nodeTarget || 'SAME_TAB', descriptions)
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, pageData?.pageRef, pageData?.nodeTarget || 'SAME_TAB', nodeLabels)
           .then(() => {
             if (pageData?.pageRef) {
               if (pageData?.pageType === 'PAGE' && pageData?.createdPage) {
@@ -362,22 +363,23 @@ export default {
     openTranslationDrawer() {
       this.$refs.translationDrawer.open();
     },
-    getDescriptions() {
-      this.$siteNavigationService.getDescriptions(this.navigationNode.id)
+    getNodeLabels() {
+      this.$siteNavigationService.getNodeLabels(this.navigationNode.id)
         .then(data => {
-          if (this.editMode && data.descriptions != null) {
-            this.valuesPerLanguage = data.descriptions;
+          if (this.editMode && data.labels != null) {
+            this.valuesPerLanguage = data.labels;
           } else {
             this.valuesPerLanguage = {
-              'en': '',
+              'en': null,
             };
           }
           this.defaultLanguage = data.defaultLanguage;
           this.supportedLanguages = data.supportedLanguages;
         });
     },
-    updateDescriptions(translations) {
+    updateNodeLabels(translations) {
       this.valuesPerLanguage = translations;
+      this.labels = this.valuesPerLanguage;
     }
   }
 };

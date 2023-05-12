@@ -76,6 +76,9 @@ public class EntityBuilder {
         State state = entry.getValue();
         localized.put(I18N.toTagIdentifier(locale), state.getName());
       }
+      if (!descriptions.containsKey(defaultLocale)){
+        localized.put(I18N.toTagIdentifier(defaultLocale), null);
+      }
       descriptionRestEntity.setLabels(localized);
     }
     descriptionRestEntity.setDefaultLanguage(defaultLanguage);

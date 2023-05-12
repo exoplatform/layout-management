@@ -100,7 +100,7 @@ export function moveNode(nodeId, previousNodeId) {
   });
 }
 
-export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, isScheduled, startScheduleDate, endScheduleDate, pageRef, target, descriptions) {
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, isScheduled, startScheduleDate, endScheduleDate, pageRef, target, nodeLabels) {
   const formData = new FormData();
   if (parentNodeId) {
     formData.append('parentNodeId', parentNodeId);
@@ -140,7 +140,7 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(descriptions),
+    body: JSON.stringify(nodeLabels),
   }).then((resp) => {
     if (resp && resp.ok) {
       return resp.ok;
@@ -150,7 +150,7 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   });
 }
 
-export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, startScheduleDate, endScheduleDate, descriptions) {
+export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, startScheduleDate, endScheduleDate, nodeLabels) {
   const formData = new FormData();
   if (nodeId) {
     formData.append('nodeId', nodeId);
@@ -180,12 +180,26 @@ export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, s
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(descriptions),
+    body: JSON.stringify(nodeLabels),
   }).then((resp) => {
     if (resp?.ok) {
       return resp.ok;
     } else {
       throw resp;
+    }
+  });
+}
+
+export function getNodeLabels(nodeId) {
+  
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node/${nodeId}/labels`, {
+    credentials: 'include',
+    method: 'GET'
+  }).then(resp => {
+    if (resp && resp.ok) {
+      return resp.json();
+    } else {
+      throw new Error('Error when retrieving node labels');
     }
   });
 }
@@ -312,19 +326,6 @@ export function createPage(pageName, pageSiteName, pageSiteType, pageType, link,
       return resp.json();
     } else {
       throw new Error('Error when creating page');
-    }
-  });
-}
-
-export function getDescriptions(nodeId) {
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/description/${nodeId}`, {
-    credentials: 'include',
-    method: 'GET'
-  }).then(resp => {
-    if (resp && resp.ok) {
-      return resp.json();
-    } else {
-      throw new Error('Error when retrieving descriptions');
     }
   });
 }
