@@ -16,12 +16,24 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
-import org.exoplatform.layoutmanagement.rest.model.PageTemplateRestEntity;
-import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
-import org.exoplatform.webui.core.model.SelectItemOption;
-
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.commons.utils.I18N;
+import org.exoplatform.layoutmanagement.rest.model.NodeLabelRestEntity;
+import org.exoplatform.layoutmanagement.rest.model.PageTemplateRestEntity;
+import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
+import org.exoplatform.portal.mop.State;
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
+import org.exoplatform.webui.core.model.SelectItemOption;
 
 public class EntityBuilder {
 
@@ -40,4 +52,37 @@ public class EntityBuilder {
     return pageTemplates.stream().map(pageTemplate -> toRestEntity(pageTemplate, userLocal)).toList();
   }
 
+  public static NodeLabelRestEntity toNodeLabelRestEntity(Map<Locale, State> nodeLabels) {
+    LocaleConfigService localeConfigService = CommonsUtils.getService(LocaleConfigService.class);
+    Locale defaultLocale = localeConfigService.getDefaultLocaleConfig() == null ? Locale.ENGLISH
+                                                                                : localeConfigService.getDefaultLocaleConfig()
+                                                                                                     .getLocale();
+    String defaultLanguage = defaultLocale.getLanguage();
+    Map<String, String> supportedLanguages =
+                                           localeConfigService.getLocalConfigs() == null ? Collections.singletonMap(defaultLocale.getLanguage(),
+                                                                                                                    defaultLocale.getDisplayName())
+                                                                                         : localeConfigService.getLocalConfigs()
+                                                                                                              .stream()
+                                                                                                              .filter(localeConfig -> !StringUtils.equals(localeConfig.getLocaleName(),
+                                                                                                                                                          "ma"))
+                                                                                                              .collect(Collectors.toMap(LocaleConfig::getLocaleName,
+                                                                                                                                        localeConfig -> localeConfig.getLocale()
+                                                                                                                                                                    .getDisplayName()));
+    Map<String, String> localized = new HashMap<>();
+    NodeLabelRestEntity nodeLabelRestEntity = new NodeLabelRestEntity();
+    if (nodeLabels != null && nodeLabels.size() != 0) {
+      for (Map.Entry<Locale, State> entry : nodeLabels.entrySet()) {
+        Locale locale = entry.getKey();
+        State state = entry.getValue();
+        localized.put(I18N.toTagIdentifier(locale), state.getName());
+      }
+      if (!nodeLabels.containsKey(defaultLocale)) {
+        localized.put(I18N.toTagIdentifier(defaultLocale), null);
+      }
+      nodeLabelRestEntity.setLabels(localized);
+    }
+    nodeLabelRestEntity.setDefaultLanguage(defaultLanguage);
+    nodeLabelRestEntity.setSupportedLanguages(supportedLanguages);
+    return nodeLabelRestEntity;
+  }
 }
