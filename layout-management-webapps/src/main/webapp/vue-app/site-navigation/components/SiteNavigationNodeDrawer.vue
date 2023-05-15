@@ -327,6 +327,7 @@ export default {
             this.$root.$emit('refresh-navigation-nodes');
           })
           .finally(() => {
+            this.$root.$emit('close-add-element-drawer');
             this.close();
           });
       } else {
@@ -338,13 +339,19 @@ export default {
                 const createdPage = pageData.createdPage;
                 return this.$siteNavigationService.editLayout(uiPageId, createdPage.key.name, createdPage.key.site.typeName, createdPage.key.site.name, `${this.navigationNode.uri}/${this.nodeId}`, this.navigationNode.siteKey.typeName, this.navigationNode.siteKey.name);
               } else {
-                const targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
+                let targetPageUrl ;
+                if (pageData?.pageType === 'LINK' ) {
+                  targetPageUrl = pageData?.createdPage?.state?.link;
+                } else {
+                  targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
+                }
                 window.open(targetPageUrl, pageData?.nodeTarget === 'SAME_TAB' && '_self' || '_blank');
               }
             }
             this.$root.$emit('refresh-navigation-nodes');
           })
           .finally(() => {
+            this.$root.$emit('close-add-element-drawer');
             this.close();
           });
       }
