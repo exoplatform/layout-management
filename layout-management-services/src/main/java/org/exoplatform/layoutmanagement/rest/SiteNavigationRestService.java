@@ -176,12 +176,12 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (!SiteNavigationUtils.canEditNavigation(currentIdentity, parentNodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      Map<Locale, State> descriptions = new HashMap<>();
+      Map<Locale, State> nodeLabels = new HashMap<>();
       if (nodeLabelRestEntity.getLabels() != null) {
         nodeLabel = null;
         nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
-          org.exoplatform.portal.mop.State state = new State(label.getValue(), null);
-          descriptions.put(new Locale(label.getKey()), state);
+          State state = new State(label.getValue(), null);
+          nodeLabels.put(new Locale(label.getKey()), state);
         });
       }
       NodeState nodeState;
@@ -214,7 +214,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   target);
       }
       NodeData[] nodeData = navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
-      descriptionService.setDescriptions(nodeData[1].getId(), descriptions);
+      descriptionService.setDescriptions(nodeData[1].getId(), nodeLabels);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when creating a new navigation node", e);
@@ -277,16 +277,15 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      Map<Locale, State> descriptions = new HashMap<>();
+      Map<Locale, State> nodeLabels = new HashMap<>();
       if (nodeLabelRestEntity.getLabels() != null) {
         nodeLabel = null;
         nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
-          org.exoplatform.portal.mop.State state = new State(label.getValue(), null);
-          descriptions.put(new Locale(label.getKey()), state);
+          State state = new State(label.getValue(), null);
+          nodeLabels.put(new Locale(label.getKey()), state);
         });
       }
       NodeState nodeState;
-      nodeLabel = nodeLabelRestEntity.getLabels() == null ? nodeLabel : null;
       long now = System.currentTimeMillis();
       if (isVisible && isScheduled && startScheduleDate != null && endScheduleDate != null) {
         if (startScheduleDate > endScheduleDate) {
@@ -315,7 +314,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   null,
                                   nodeData.getTarget());
       }
-      descriptionService.setDescriptions(String.valueOf(nodeId), descriptions);
+      descriptionService.setDescriptions(String.valueOf(nodeId), nodeLabels);
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();
     } catch (Exception e) {
@@ -445,8 +444,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                 @PathParam("nodeId")
                                 Long nodeId) {
     try {
-      Map<Locale, State> descriptions = descriptionService.getDescriptions(String.valueOf(nodeId));
-      NodeLabelRestEntity nodeLabelRestEntity = EntityBuilder.toNodeLabelRestEntity(descriptions);
+      Map<Locale, State> nodeLabels = descriptionService.getDescriptions(String.valueOf(nodeId));
+      NodeLabelRestEntity nodeLabelRestEntity = EntityBuilder.toNodeLabelRestEntity(nodeLabels);
       return Response.ok().entity(nodeLabelRestEntity).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving node labels", e);

@@ -52,7 +52,7 @@ public class EntityBuilder {
     return pageTemplates.stream().map(pageTemplate -> toRestEntity(pageTemplate, userLocal)).toList();
   }
 
-  public static NodeLabelRestEntity toNodeLabelRestEntity(Map<Locale, State> descriptions) {
+  public static NodeLabelRestEntity toNodeLabelRestEntity(Map<Locale, State> nodeLabels) {
     LocaleConfigService localeConfigService = CommonsUtils.getService(LocaleConfigService.class);
     Locale defaultLocale = localeConfigService.getDefaultLocaleConfig() == null ? Locale.ENGLISH
                                                                                 : localeConfigService.getDefaultLocaleConfig()
@@ -69,20 +69,20 @@ public class EntityBuilder {
                                                                                                                                         localeConfig -> localeConfig.getLocale()
                                                                                                                                                                     .getDisplayName()));
     Map<String, String> localized = new HashMap<>();
-    NodeLabelRestEntity descriptionRestEntity = new NodeLabelRestEntity();
-    if (descriptions != null && descriptions.size() != 0) {
-      for (Map.Entry<Locale, State> entry : descriptions.entrySet()) {
+    NodeLabelRestEntity nodeLabelRestEntity = new NodeLabelRestEntity();
+    if (nodeLabels != null && nodeLabels.size() != 0) {
+      for (Map.Entry<Locale, State> entry : nodeLabels.entrySet()) {
         Locale locale = entry.getKey();
         State state = entry.getValue();
         localized.put(I18N.toTagIdentifier(locale), state.getName());
       }
-      if (!descriptions.containsKey(defaultLocale)){
+      if (!nodeLabels.containsKey(defaultLocale)) {
         localized.put(I18N.toTagIdentifier(defaultLocale), null);
       }
-      descriptionRestEntity.setLabels(localized);
+      nodeLabelRestEntity.setLabels(localized);
     }
-    descriptionRestEntity.setDefaultLanguage(defaultLanguage);
-    descriptionRestEntity.setSupportedLanguages(supportedLanguages);
-    return descriptionRestEntity;
+    nodeLabelRestEntity.setDefaultLanguage(defaultLanguage);
+    nodeLabelRestEntity.setSupportedLanguages(supportedLanguages);
+    return nodeLabelRestEntity;
   }
 }
