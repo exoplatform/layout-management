@@ -27,7 +27,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-icon
           size="16"
           class="clickable"
-          @click="close()">
+          @click="back">
           fas fa-arrow-left
         </v-icon>
         <span class="ms-2"> {{ $t('siteNavigation.addElementDrawer.title') }}</span>
@@ -109,6 +109,7 @@ export default {
       pageTemplate: 'empty',
       selectedPage: null,
       loading: false,
+      resetDrawer: true,
     };
   },
   computed: {
@@ -146,18 +147,26 @@ export default {
   },
   created() {
     this.$root.$on('open-add-element-drawer', this.open);
+    this.$root.$on('close-add-element-drawer', this.close);
     this.$root.$on('page-template-changed', this.changePageTemplate);
     this.$root.$on('existing-page-selected', this.changeSelectedPage);
 
   },
   methods: {
     open(elementName, navigationNode) {
+      this.resetDrawer = true;
       this.elementName = elementName;
       this.navigationNode = navigationNode;
       this.$refs.siteNavigationAddElementDrawer.open();
     },
     close() {
-      this.reset();
+      if (this.resetDrawer) {
+        this.reset();
+      }
+      this.$refs.siteNavigationAddElementDrawer.close();
+    },
+    back() {
+      this.resetDrawer = false;
       this.$refs.siteNavigationAddElementDrawer.close();
     },
     reset(){
