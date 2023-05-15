@@ -16,6 +16,8 @@
  */
 package org.exoplatform.layoutmanagement.rest.model;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,10 +25,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageTemplateRestEntity {
+public class NodeLabelRestEntity {
+  private Map<String, String> supportedLanguages;
 
-  private String  label;
+  private Map<String, String> labels;
 
-  private String value;
-
+  private String              defaultLanguage;
 }
