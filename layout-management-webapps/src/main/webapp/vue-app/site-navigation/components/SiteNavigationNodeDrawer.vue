@@ -271,7 +271,7 @@ export default {
         this.parentNavigationNodeUrl = `/portal/g/${siteKey.name.replaceAll('/', ':')}/${parentNavigationNode.uri}`;
       }
       if (this.editMode) {
-        this.nodeLabel = parentNavigationNode.label;
+        this.nodeLabel= (/[#,{}]/.test(parentNavigationNode.label)) ? parentNavigationNode.name : parentNavigationNode.label;
         this.nodeId = parentNavigationNode.name;
         this.nodeType = parentNavigationNode.pageKey ? 'pageOrLink' : 'Group';
         this.visible = parentNavigationNode.visibility !== 'HIDDEN';

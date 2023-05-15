@@ -32,9 +32,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title
-              :title="navigationNode.label"
+              :title="nodeLabel"
               class="font-weight-bold text-truncate">
-              {{ navigationNode.label }}
+              {{ nodeLabel }}
             </v-list-item-title>
             <v-list-item-subtitle
               :title="navigationNodeUri"
@@ -85,6 +85,9 @@ export default {
     };
   },
   computed: {
+    nodeLabel() {
+      return (/[#,{}]/.test(this.navigationNode.label)) ? this.navigationNode.name : this.navigationNode.label ;
+    },
     highlightNode() {
       return this.navigationNode.uri === eXo.env.portal.selectedNodeUri;
     },
