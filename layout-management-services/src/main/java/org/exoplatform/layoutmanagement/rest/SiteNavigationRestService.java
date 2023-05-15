@@ -585,6 +585,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       page.setName(pageName);
       page.setTitle(pageName);
       page.setType(pageType);
+      page.setLink(PageType.LINK.equals(PageType.valueOf(pageType)) ?  link : null);
       setDefaultPermission(page, new SiteKey(pageSiteType, pageSiteName));
       PageState pageState = Utils.toPageState(page);
       layoutService.save(new PageContext(page.getPageKey(), pageState), page);
