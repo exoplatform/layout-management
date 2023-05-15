@@ -15,170 +15,191 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <exo-drawer
-    id="siteNavigationAddNodeDrawer"
-    ref="siteNavigationAddNodeDrawer"
-    right
-    allow-expand
-    @closed="close">
-    <template slot="title">
-      <div class="d-flex">
-        <v-icon
-          size="16"
-          class="clickable"
-          @click="close()">
-          fas fa-arrow-left
-        </v-icon>
-        <span> {{ title }} </span>
-      </div>
-    </template>
-    <template slot="content">
-      <v-form
-        v-model="isValidInputs">
-        <v-card-text class="d-flex pb-2">
-          <v-label>
-            <span class="text-color font-weight-bold">
-              {{ $t('siteNavigation.label.nodeLabel.title') }} *              
-            </span>
-            <p class="caption">{{ $t('siteNavigation.label.nodeLabel.description') }} </p>
-          </v-label>
-        </v-card-text>
-        <v-card-text class="d-flex py-0">
-          <v-text-field
-            v-model="nodeLabel"
-            class="pt-0"
-            type="text"
-            required="required"
-            :rules="[nodeLabelRules.required]"
-            outlined
-            dense 
-            @blur="blurOnNodeLabel" />
-        </v-card-text>
-        <v-card-text class="d-flex flex-grow-1 pb-2">
-          <v-label>
-            <span class="text-color font-weight-bold mr-6">
-              {{ $t('siteNavigation.label.nodeId.title') }} *              
-            </span>
-            <p
-              v-if="nodeId && nodeId.length"
-              class="caption text-break">
-              {{ nodeUrl }}
-            </p>
-          </v-label>
-        </v-card-text>
-        <v-card-text class="d-flex py-0">
-          <v-text-field
-            v-model="nodeId"
-            class="pt-0"
-            type="text"
-            required="required"
-            :rules="nodeIdRules"
-            :disabled="disableNodeId"
-            outlined
-            dense />
-        </v-card-text>
-        <v-card-text class="d-flex flex-grow-1 pb-2">
-          <v-label>
-            <span class="text-color font-weight-bold pt-2">
-              {{ $t('siteNavigation.label.visibility.title') }} 
-            </span>
-          </v-label>
-          <v-tooltip bottom>
-            <template #activator="{ on, attrs }">
-              <v-icon
-                v-on="on"
-                v-bind="attrs"
-                color="black"
-                size="24"
-                class="pl-2">
-                fa-info-circle
-              </v-icon>
-            </template>
-            <span>{{ $t('siteNavigation.label.visibility.info') }}</span>
-          </v-tooltip>
-        </v-card-text>
-        <v-card-text>
-          <div class="d-flex flex-row">
-            <v-switch      
-              v-model="visible"
-              class="mt-0 me-1" />
-            <span class="caption pt-1">
-              {{ $t('siteNavigation.label.visibility.visible') }}
-            </span>
-          </div>
-          <div
-            class="d-flex flex-row"
-            v-if="visible">
-            <v-switch   
-              v-model="isScheduled" 
-              class="mt-0 me-1" />
-            <span class="caption pt-1">
-              {{ $t('siteNavigation.label.visibility.scheduleVisibility') }}
-            </span>
-          </div>
-        </v-card-text>
-        <v-card-text class="pt-0" v-if="visible && isScheduled">
-          <site-navigation-schedule-date-pickers
-            :start-schedule-date="startScheduleDate"
-            :end-schedule-date="endScheduleDate"
-            :start-schedule-time="startScheduleTime"
-            :end-schedule-time="endScheduleTime"
-            @change="updateDates" />
-        </v-card-text>
-        <v-card-text class="d-flex flex-grow-1 text-no-wrap text-left font-weight-bold pb-2">
-          <v-label>
-            <span class="text-color font-weight-bold">
-              {{ $t('siteNavigation.label.nodeType.title') }}
-            </span>
-          </v-label>
-        </v-card-text>
-        <v-card-text class="d-flex flex-row">
-          <div class="d-flex flex-column">
-            <v-radio-group
-              v-model="nodeType"
-              class="mt-0">
-              <v-radio
-                :label="$t('siteNavigation.label.nodeType.group')"
-                value="Group" />
-              <v-radio
-                :label="$t('siteNavigation.label.nodeType.pageOrLink')"
-                value="pageOrLink" />
-            </v-radio-group>
-          </div>
-        </v-card-text>
-      </v-form>
-    </template>
-    <template slot="footer">
-      <div class="d-flex justify-end">
-        <v-btn
-          class="btn ms-2"
-          @click="close">
-          {{ $t('siteNavigation.label.btn.cancel') }}
-        </v-btn>
-        <v-btn
-          :disabled="disabled"
-          v-if="displayNextBtn"
-          :loading="loading"
-          class="btn btn-primary ms-2"
-          @click="openAddElementDrawer">
-          {{ $t('siteNavigation.label.btn.next') }}
-        </v-btn>
-        <v-btn
-          v-else
-          :disabled="disabled"
-          :loading="loading"
-          @click="saveNode"
-          class="btn btn-primary ms-2">
-          {{ $t('siteNavigation.label.btn.save') }}
-        </v-btn>
-      </div>
-    </template>
-  </exo-drawer>
+  <div>
+    <exo-drawer
+      id="siteNavigationAddNodeDrawer"
+      ref="siteNavigationAddNodeDrawer"
+      right
+      allow-expand
+      @closed="close">
+      <template slot="title">
+        <div class="d-flex">
+          <v-icon
+            size="16"
+            class="clickable"
+            @click="close()">
+            fas fa-arrow-left
+          </v-icon>
+          <span> {{ title }} </span>
+        </div>
+      </template>
+      <template slot="content">
+        <v-form
+          v-model="isValidInputs">
+          <v-card-text class="d-flex pb-2">
+            <v-label>
+              <span class="text-color font-weight-bold">
+                {{ $t('siteNavigation.label.nodeLabel.title') }} *              
+              </span>
+              <p class="caption">{{ $t('siteNavigation.label.nodeLabel.description') }} </p>
+            </v-label>
+          </v-card-text>
+          <v-card-text class="d-flex py-0">
+            <v-text-field
+              v-model="nodeLabel"
+              class="pt-0"
+              type="text"
+              required="required"
+              :rules="[nodeLabelRules.required]"
+              outlined
+              dense 
+              @blur="blurOnNodeLabel">
+              <template #append>
+                <v-btn
+                  class="mt-n2 pt-2px"
+                  icon
+                  @click="openTranslationDrawer">
+                  <v-icon color="primary">fas fa-language</v-icon>
+                </v-btn>
+              </template>
+            </v-text-field>
+          </v-card-text>
+          <v-card-text class="d-flex flex-grow-1 pb-2">
+            <v-label>
+              <span class="text-color font-weight-bold mr-6">
+                {{ $t('siteNavigation.label.nodeId.title') }} *              
+              </span>
+              <p
+                v-if="nodeId && nodeId.length"
+                class="caption text-break">
+                {{ nodeUrl }}
+              </p>
+            </v-label>
+          </v-card-text>
+          <v-card-text class="d-flex py-0">
+            <v-text-field
+              v-model="nodeId"
+              class="pt-0"
+              type="text"
+              required="required"
+              :rules="nodeIdRules"
+              :disabled="disableNodeId"
+              outlined
+              dense />
+          </v-card-text>
+          <v-card-text class="d-flex flex-grow-1 pb-2">
+            <v-label>
+              <span class="text-color font-weight-bold pt-2">
+                {{ $t('siteNavigation.label.visibility.title') }} 
+              </span>
+            </v-label>
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-icon
+                  v-on="on"
+                  v-bind="attrs"
+                  color="black"
+                  size="24"
+                  class="pl-2">
+                  fa-info-circle
+                </v-icon>
+              </template>
+              <span>{{ $t('siteNavigation.label.visibility.info') }}</span>
+            </v-tooltip>
+          </v-card-text>
+          <v-card-text>
+            <div class="d-flex flex-row">
+              <v-switch      
+                v-model="visible"
+                class="mt-0 me-1" />
+              <span class="caption pt-1">
+                {{ $t('siteNavigation.label.visibility.visible') }}
+              </span>
+            </div>
+            <div
+              class="d-flex flex-row"
+              v-if="visible">
+              <v-switch   
+                v-model="isScheduled" 
+                class="mt-0 me-1" />
+              <span class="caption pt-1">
+                {{ $t('siteNavigation.label.visibility.scheduleVisibility') }}
+              </span>
+            </div>
+          </v-card-text>
+          <v-card-text class="pt-0" v-if="visible && isScheduled">
+            <site-navigation-schedule-date-pickers
+              :start-schedule-date="startScheduleDate"
+              :end-schedule-date="endScheduleDate"
+              :start-schedule-time="startScheduleTime"
+              :end-schedule-time="endScheduleTime"
+              @change="updateDates" />
+          </v-card-text>
+          <v-card-text class="d-flex flex-grow-1 text-no-wrap text-left font-weight-bold pb-2">
+            <v-label>
+              <span class="text-color font-weight-bold">
+                {{ $t('siteNavigation.label.nodeType.title') }}
+              </span>
+            </v-label>
+          </v-card-text>
+          <v-card-text class="d-flex flex-row">
+            <div class="d-flex flex-column">
+              <v-radio-group
+                v-model="nodeType"
+                class="mt-0">
+                <v-radio
+                  :label="$t('siteNavigation.label.nodeType.group')"
+                  value="Group" />
+                <v-radio
+                  :label="$t('siteNavigation.label.nodeType.pageOrLink')"
+                  value="pageOrLink" />
+              </v-radio-group>
+            </div>
+          </v-card-text>
+        </v-form>
+      </template>
+      <template slot="footer">
+        <div class="d-flex justify-end">
+          <v-btn
+            class="btn ms-2"
+            @click="close">
+            {{ $t('siteNavigation.label.btn.cancel') }}
+          </v-btn>
+          <v-btn
+            :disabled="disabled"
+            v-if="displayNextBtn"
+            :loading="loading"
+            class="btn btn-primary ms-2"
+            @click="openAddElementDrawer">
+            {{ $t('siteNavigation.label.btn.next') }}
+          </v-btn>
+          <v-btn
+            v-else
+            :disabled="disabled"
+            :loading="loading"
+            @click="saveNode"
+            class="btn btn-primary ms-2">
+            {{ $t('siteNavigation.label.btn.save') }}
+          </v-btn>
+        </div>
+      </template>
+    </exo-drawer>
+    <translation-drawer
+      ref="translationDrawer"
+      v-model="valuesPerLanguage"
+      :default-language="defaultLanguage"
+      :supported-languages="supportedLanguages"
+      @input="updateNodeLabels" />
+  </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      labels: null,
+      supportedLanguages: {},
+      valuesPerLanguage: {},
+      defaultLanguage: '',
       startScheduleDate: new Date().getTime(),
       endScheduleDate: new Date().getTime(),
       startScheduleTime: new Date(new Date().getTime() + 900000),
@@ -243,6 +264,7 @@ export default {
     open(parentNavigationNode) {
       this.navigationNode = parentNavigationNode;
       const siteKey = parentNavigationNode.siteKey;
+      this.getNodeLabels();
       if (siteKey.typeName === 'portal') {
         this.parentNavigationNodeUrl = `/portal/${siteKey.name}/${parentNavigationNode.uri}`;
       } else {
@@ -276,6 +298,8 @@ export default {
       this.endScheduleDate = new Date().getTime();
       this.startScheduleTime = new Date(new Date().getTime() + 900000);
       this.endScheduleTime = new Date(new Date().getTime() + 1800000);
+      this.valuesPerLanguage = {};
+      this.supportedLanguages = {};
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     saveNode(pageData) {
@@ -293,9 +317,12 @@ export default {
       }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
+      const nodeLabels = {
+        labels: this.labels
+      };
       if (this.editMode) {
         const pageRef = this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}` : '';
-        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels)
           .then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           })
@@ -303,7 +330,7 @@ export default {
             this.close();
           });
       } else {
-        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, pageData?.pageRef, pageData?.nodeTarget || 'SAME_TAB')
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, pageData?.pageRef, pageData?.nodeTarget || 'SAME_TAB', nodeLabels)
           .then(() => {
             if (pageData?.pageRef) {
               if (pageData?.pageType === 'PAGE' && pageData?.createdPage) {
@@ -332,7 +359,28 @@ export default {
       if (this.nodeId == null) {
         this.nodeId = this.conversionRules();
       }
+    },
+    openTranslationDrawer() {
+      this.$refs.translationDrawer.open();
+    },
+    getNodeLabels() {
+      this.$siteNavigationService.getNodeLabels(this.navigationNode.id)
+        .then(data => {
+          if (this.editMode && data.labels != null) {
+            this.valuesPerLanguage = data.labels;
+          } else {
+            this.valuesPerLanguage = {
+              'en': null,
+            };
+          }
+          this.defaultLanguage = data.defaultLanguage;
+          this.supportedLanguages = data.supportedLanguages;
+        });
+    },
+    updateNodeLabels(translations) {
+      this.valuesPerLanguage = translations;
+      this.labels = this.valuesPerLanguage;
     }
-  },
+  }
 };
 </script>
