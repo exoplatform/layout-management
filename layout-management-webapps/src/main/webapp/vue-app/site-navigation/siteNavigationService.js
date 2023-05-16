@@ -296,11 +296,13 @@ export function getSiteNavigations() {
   });
 }
 
-export function createPage(pageName, pageSiteName, pageSiteType, pageType, link, pageTemplate) {
+export function createPage(pageName, pageTitle, pageSiteName, pageSiteType, pageType, link, pageTemplate) {
 
   const formData = new FormData();
 
   formData.append('pageName', pageName);
+
+  formData.append('pageTitle', pageTitle);
 
   formData.append('pageType', pageType);
 

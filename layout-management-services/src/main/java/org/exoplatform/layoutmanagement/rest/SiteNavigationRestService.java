@@ -16,10 +16,7 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -606,6 +603,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   public Response createPage(@Parameter(description = "page name", required = true)
   @QueryParam("pageName")
   String pageName,
+                             @Parameter(description = "page name", required = true)
+                             @QueryParam("pageTitle")
+                             String pageTitle,
                              @Parameter(description = "page site type", required = true)
                              @QueryParam("pageSiteType")
                              String pageSiteType,
@@ -621,11 +621,12 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "page template : blank , normal, analytics ...")
                              @QueryParam("pageTemplate")
                              String pageTemplate) {
-    if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageType) || StringUtils.isBlank(pageSiteName)
+    if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageTitle) || StringUtils.isBlank(pageType) || StringUtils.isBlank(pageSiteName)
         || StringUtils.isBlank(pageSiteType)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
+      pageName = pageName + "_" + UUID.randomUUID();
       Page page;
       if (PageType.PAGE.equals(PageType.valueOf(pageType))) {
         if (StringUtils.isBlank(pageTemplate)) {
@@ -636,7 +637,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         page = new Page(pageSiteType, pageSiteName, pageName);
       }
       page.setName(pageName);
-      page.setTitle(pageName);
+      page.setTitle(pageTitle);
       page.setType(pageType);
       page.setLink(PageType.LINK.equals(PageType.valueOf(pageType)) ?  link : null);
       setDefaultPermission(page, new SiteKey(pageSiteType, pageSiteName));
