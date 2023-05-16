@@ -16,7 +16,11 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -621,8 +625,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "page template : blank , normal, analytics ...")
                              @QueryParam("pageTemplate")
                              String pageTemplate) {
-    if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageTitle) || StringUtils.isBlank(pageType) || StringUtils.isBlank(pageSiteName)
-        || StringUtils.isBlank(pageSiteType)) {
+    if (StringUtils.isBlank(pageName) || StringUtils.isBlank(pageTitle) || StringUtils.isBlank(pageType)
+        || StringUtils.isBlank(pageSiteName) || StringUtils.isBlank(pageSiteType)) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
@@ -639,7 +643,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       page.setName(pageName);
       page.setTitle(pageTitle);
       page.setType(pageType);
-      page.setLink(PageType.LINK.equals(PageType.valueOf(pageType)) ?  link : null);
+      page.setLink(PageType.LINK.equals(PageType.valueOf(pageType)) ? link : null);
       setDefaultPermission(page, new SiteKey(pageSiteType, pageSiteName));
       PageState pageState = Utils.toPageState(page);
       layoutService.save(new PageContext(page.getPageKey(), pageState), page);
