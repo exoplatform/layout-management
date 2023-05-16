@@ -106,6 +106,7 @@ export default {
               || ( !url.length && this.$t('siteNavigation.required.error.message') || this.$t('siteNavigation.label.invalidLink'))],
       navigationNode: null,
       elementName: null,
+      elementTitle: null,
       pageTemplate: 'empty',
       selectedPage: null,
       loading: false,
@@ -153,9 +154,11 @@ export default {
 
   },
   methods: {
-    open(elementName, navigationNode) {
+
+    open(elementName, elementTitle, navigationNode) {
       this.resetDrawer = true;
       this.elementName = elementName;
+      this.elementTitle = elementTitle;
       this.navigationNode = navigationNode;
       this.$refs.siteNavigationAddElementDrawer.open();
     },
@@ -191,7 +194,7 @@ export default {
           'pageType': this.elementType
         });
       } else {
-        this.$siteNavigationService.createPage(this.elementName, this.navigationNode.siteKey.name, this.navigationNode.siteKey.type, this.elementType, this.link, this.pageTemplate)
+        this.$siteNavigationService.createPage(this.elementName, this.elementTitle, this.navigationNode.siteKey.name, this.navigationNode.siteKey.type, this.elementType, this.link, this.pageTemplate)
           .then((createdPage) => {
             const pageRef = createdPage?.key?.ref || `${createdPage?.key.site.typeName}::${createdPage?.key.site.name}::${createdPage?.pageContext?.key.name}`;
             this.$root.$emit('save-node-with-page', {
