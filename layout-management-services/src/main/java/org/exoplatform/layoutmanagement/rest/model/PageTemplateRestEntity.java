@@ -27,6 +27,6 @@ public class PageTemplateRestEntity {
 
   private String  label;
 
-  private String value;
+  private String  value;
 
 }

@@ -16,9 +16,6 @@
  */
 package org.exoplatform.layoutmanagement.utils;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.model.PortalConfig;
@@ -28,6 +25,9 @@ import org.exoplatform.portal.mop.page.PageContext;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.services.resources.ResourceBundleService;
 import org.exoplatform.services.security.Identity;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SiteNavigationUtils {
 

@@ -40,7 +40,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.gatein.api.Portal;
 import org.gatein.api.page.PageQuery;
@@ -68,7 +67,6 @@ import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
-import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.exoplatform.portal.page.PageTemplateService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -103,7 +101,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   private Portal                   portal;
 
   private UserPortalConfigService  userPortalConfigService;
+
   private DescriptionService       descriptionService;
+
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
   public SiteNavigationRestService(NavigationService navigationService,

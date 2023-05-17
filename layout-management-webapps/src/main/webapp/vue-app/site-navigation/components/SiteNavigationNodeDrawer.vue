@@ -300,6 +300,7 @@ export default {
       this.endScheduleTime = new Date(new Date().getTime() + 1800000);
       this.valuesPerLanguage = {};
       this.supportedLanguages = {};
+      this.labels = null;
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     saveNode(pageData) {
@@ -317,6 +318,15 @@ export default {
       }
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
+      if (this.labels == null) {
+        this.labels = {
+          'en': this.nodeLabel,
+        };
+        if (this.defaultLanguage !== eXo.env.portal.language) {
+          this.labels[eXo.env.portal.language] = this.nodeLabel;
+        }
+      }
+      this.labels[eXo.env.portal.language] = this.nodeLabel;
       const nodeLabels = {
         labels: this.labels
       };
@@ -368,6 +378,10 @@ export default {
       }
     },
     openTranslationDrawer() {
+      this.valuesPerLanguage[eXo.env.portal.language] = this.nodeLabel;
+      if (this.defaultLanguage !== eXo.env.portal.language && this.valuesPerLanguage[this.defaultLanguage] == null) {
+        this.valuesPerLanguage[this.defaultLanguage] = this.nodeLabel;
+      }
       this.$refs.translationDrawer.open();
     },
     getNodeLabels() {
@@ -386,7 +400,11 @@ export default {
     },
     updateNodeLabels(translations) {
       this.valuesPerLanguage = translations;
+      if (this.valuesPerLanguage[this.defaultLanguage] === '') {
+        this.valuesPerLanguage[this.defaultLanguage] = this.nodeLabel;
+      }
       this.labels = this.valuesPerLanguage;
+      this.nodeLabel = this.valuesPerLanguage[eXo.env.portal.language];
     }
   }
 };
