@@ -46,11 +46,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 <script>
 export default {
+  props: {
+    selectedPage: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
       allSites: true,
       selectedSiteNavigation: null,
-      selectedPage: null,
     };
   },
   computed: {
@@ -60,6 +65,11 @@ export default {
     selectSiteChipClass() {
       return !this.allSites &&'primary' || '';
     },
-  }
+  },
+  watch: {
+    selectedPage(){
+      this.$root.$emit('existing-page-selected', this.selectedPage);
+    }
+  },
 };
 </script>

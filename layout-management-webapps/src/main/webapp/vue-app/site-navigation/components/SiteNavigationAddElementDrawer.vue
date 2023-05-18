@@ -27,7 +27,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-icon
           size="16"
           class="clickable"
-          @click="close()">
+          @click="back">
           fas fa-arrow-left
         </v-icon>
         <span class="ms-2"> {{ $t('siteNavigation.addElementDrawer.title') }}</span>
@@ -71,7 +71,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </template>
         <template v-else>
           <site-navigation-page-element
-            :element-type="elementType" />
+            :element-type="elementType"
+            :selected-page="selectedPage" />
         </template>
       </v-card>
     </template>
@@ -84,7 +85,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-btn>
         <v-btn
           :loading="loading"
-          class="btn btn-primary ms-2">
+          class="btn btn-primary ms-2"
+          @click="createElement">
           {{ $t('siteNavigation.label.btn.save') }}
         </v-btn>
       </div>
@@ -97,11 +99,18 @@ export default {
 
   data() {
     return {
-      elementType: 'newPage',
-      openMode: 'sameTab',
+      elementType: 'PAGE',
+      openMode: 'SAME_TAB',
       link: '',
       linkRules: [url => !!(url && url.match(/^((https?:\/\/)?(www\.)?[a-zA-Z0-9]+\.[^\s]{2,})|(javascript:)|(\/portal\/)/))
               || ( !url.length && this.$t('siteNavigation.required.error.message') || this.$t('siteNavigation.label.invalidLink'))],
+      navigationNode: null,
+      elementName: null,
+      elementTitle: null,
+      pageTemplate: 'empty',
+      selectedPage: null,
+      loading: false,
+      resetDrawer: true,
     };
   },
   computed: {
@@ -109,7 +118,7 @@ export default {
       return [
         {
           text: this.$t('siteNavigation.label.newPage'),
-          value: 'newPage',
+          value: 'PAGE',
         },
         {
           text: this.$t('siteNavigation.label.existingPage'),
@@ -117,7 +126,7 @@ export default {
         },
         {
           text: this.$t('siteNavigation.label.link'),
-          value: 'link',
+          value: 'LINK',
         },
       ];
     },
@@ -125,27 +134,84 @@ export default {
       return [
         {
           text: this.$t('siteNavigation.label.sameTab'),
-          value: 'sameTab',
+          value: 'SAME_TAB',
         },
         {
           text: this.$t('siteNavigation.label.newTab'),
-          value: 'newTab',
+          value: 'NEW_TAB',
         },
       ];
     },
     isLinkElement() {
-      return this.elementType === 'link';
+      return this.elementType === 'LINK';
     },
   },
   created() {
     this.$root.$on('open-add-element-drawer', this.open);
+    this.$root.$on('close-add-element-drawer', this.close);
+    this.$root.$on('page-template-changed', this.changePageTemplate);
+    this.$root.$on('existing-page-selected', this.changeSelectedPage);
+
   },
   methods: {
-    open() {
+
+    open(elementName, elementTitle, navigationNode) {
+      this.resetDrawer = true;
+      this.elementName = elementName;
+      this.elementTitle = elementTitle;
+      this.navigationNode = navigationNode;
       this.$refs.siteNavigationAddElementDrawer.open();
     },
     close() {
+      if (this.resetDrawer) {
+        this.reset();
+      }
       this.$refs.siteNavigationAddElementDrawer.close();
+    },
+    back() {
+      this.resetDrawer = false;
+      this.$refs.siteNavigationAddElementDrawer.close();
+    },
+    reset(){
+      this.selectedPage = null;
+      this.elementType = 'PAGE';
+      this.link = '';
+      this.openMode = 'SAME_TAB';
+      this.$root.$emit('reset-element-drawer');
+    },
+    changePageTemplate(pageTemplate) {
+      this.pageTemplate = pageTemplate;
+    },
+    changeSelectedPage(selectedPage) {
+      this.selectedPage = selectedPage;
+    },
+    createElement() {
+      if (this.elementType === 'existingPage') {
+        const pageRef = this.selectedPage?.pageContext?.key?.ref || `${this.selectedPage?.pageContext?.key.site.typeName}::${this.selectedPage?.pageContext?.key.site.name}::${this.selectedPage?.pageContext?.key.name}`;
+        this.$root.$emit('save-node-with-page', {
+          'pageRef': pageRef,
+          'nodeTarget': this.openMode,
+          'pageType': this.elementType
+        });
+      } else {
+        this.$siteNavigationService.createPage(this.elementName, this.elementTitle, this.navigationNode.siteKey.name, this.navigationNode.siteKey.type, this.elementType, this.link, this.pageTemplate)
+          .then((createdPage) => {
+            const pageRef = createdPage?.key?.ref || `${createdPage?.key.site.typeName}::${createdPage?.key.site.name}::${createdPage?.pageContext?.key.name}`;
+            this.$root.$emit('save-node-with-page', {
+              'pageRef': pageRef,
+              'nodeTarget': this.openMode,
+              'pageType': this.elementType,
+              'createdPage': createdPage
+            });
+          }).catch(() => {
+            const message = this.$t('siteNavigation.label.pageCreation.error');
+            this.$root.$emit('navigation-node-notification-alert', {
+              message,
+              type: 'error',
+            });
+          });
+      }
+      this.loading = false;
     }
   }
 };

@@ -231,6 +231,7 @@ export default {
       this.editMode = true;
       this.open(navigationNode);
     });
+    this.$root.$on('save-node-with-page', this.saveNode);
   },
   methods: {
     updateDates(startDate, endDate, startTime, endTime) {
@@ -277,7 +278,7 @@ export default {
       this.endScheduleTime = new Date(new Date().getTime() + 1800000);
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
-    saveNode() {
+    saveNode(pageData) {
       let startScheduleDate = null;
       let endScheduleDate = null;
       if (this.isScheduled) {
@@ -293,26 +294,43 @@ export default {
       const nodeChildrenLength = this.navigationNode.children.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
       if (this.editMode) {
-        const pageRef = this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}` : '';
+        const pageRef = pageData?.pageRef ||  (this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey?.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey?.name}` : '');
         this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
           .then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           })
           .finally(() => {
+            this.$root.$emit('close-add-element-drawer');
             this.close();
           });
       } else {
-        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate)
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, pageData?.pageRef, pageData?.nodeTarget || 'SAME_TAB')
           .then(() => {
+            if (pageData?.pageRef) {
+              if (pageData?.pageType === 'PAGE' && pageData?.createdPage) {
+                const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
+                const createdPage = pageData.createdPage;
+                return this.$siteNavigationService.editLayout(uiPageId, createdPage.key.name, createdPage.key.site.typeName, createdPage.key.site.name, `${this.navigationNode.uri}/${this.nodeId}`, this.navigationNode.siteKey.typeName, this.navigationNode.siteKey.name);
+              } else {
+                let targetPageUrl ;
+                if (pageData?.pageType === 'LINK' ) {
+                  targetPageUrl = pageData?.createdPage?.state?.link;
+                } else {
+                  targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
+                }
+                window.open(targetPageUrl, pageData?.nodeTarget === 'SAME_TAB' && '_self' || '_blank');
+              }
+            }
             this.$root.$emit('refresh-navigation-nodes');
           })
           .finally(() => {
+            this.$root.$emit('close-add-element-drawer');
             this.close();
           });
       }
     },
     openAddElementDrawer() {
-      this.$root.$emit('open-add-element-drawer', this.open);
+      this.$root.$emit('open-add-element-drawer', this.nodeId, this.valuesPerLanguage['en'] || this.nodeLabel,  this.navigationNode);
     },
     conversionRules() {
       return this.nodeLabel.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]/g, '').replace(/\s+/g, '').toLowerCase();
