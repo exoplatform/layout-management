@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -242,6 +243,9 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @Parameter(description = "pageRef")
                              @QueryParam("pageRef")
                              String pageRef,
+                             @Parameter(description = "node target")
+                             @QueryParam("target")
+                             String target,
                              @Parameter(description = "isVisible")
                              @QueryParam("isVisible")
                              boolean isVisible,
@@ -303,7 +307,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                     Visibility.TEMPORAL,
                                     pageKey,
                                     null,
-                                    nodeData.getTarget());
+                                    target);
         }
       } else {
         nodeState = new NodeState(nodeLabel,
@@ -313,7 +317,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
                                   pageKey,
                                   null,
-                                  nodeData.getTarget());
+                                  target);
       }
       descriptionService.setDescriptions(String.valueOf(nodeId), nodeLabels);
       navigationService.updateNode(nodeId, nodeState);
@@ -654,6 +658,68 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       return Response.serverError().entity(e.getMessage()).build();
     }
   }
+  
+  @Path("/page")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Retrieve page by reference", method = "GET", description = "This retrieves page by reference")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response getPageByRef(@Context
+  HttpServletRequest httpRequest,
+                                @Parameter(description = "page reference", required = true)
+                                @QueryParam("pageRef")
+                                String pageRef) {
+    try {
+      if (StringUtils.isBlank(pageRef)) {
+        return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+      }
+      return Response.ok().entity(layoutService.getPageContext(PageKey.parse(pageRef))).build();
+    } catch (Exception e) {
+      LOG.error("Error when retrieving page with reference {} ", pageRef, e);
+      return Response.serverError().build();
+    }
+  }
+  
+  @Path("/page/link")
+  @PATCH
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Update page link", method = "GET", description = "This updates page link")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response updatePageLink(@Context
+  HttpServletRequest httpRequest,
+                                 @Parameter(description = "page display name", required = true)
+                                 @QueryParam("pageRef")
+                                 String pageRef,
+                                 @Parameter(description = "page new Link")
+                                 @QueryParam("link")
+                                 String link) {
+    try {
+      if (StringUtils.isBlank(pageRef) || StringUtils.isBlank(link)) {
+        return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+      }
+      PageContext pageContext = layoutService.getPageContext(PageKey.parse(pageRef));
+      PageState pageState = pageContext.getState();
+      pageContext.setState(new PageState(pageState.getDisplayName(),
+                                         pageState.getDescription(),
+                                         pageState.getShowMaxWindow(),
+                                         pageState.getFactoryId(),
+                                         pageState.getAccessPermissions(),
+                                         pageState.getEditPermission(),
+                                         pageState.getMoveAppsPermissions(),
+                                         pageState.getMoveContainersPermissions(),
+                                         pageState.getType(),
+                                         link));
+      layoutService.save(pageContext);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when updating  page link with reference {} ", pageRef, e);
+      return Response.serverError().build();
+    }
+  }
 
   private void setDefaultPermission(Page page, SiteKey siteKey) {
     if (SiteType.PORTAL.equals(siteKey.getType())) {
@@ -665,7 +731,6 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       page.setEditPermission("manager:" + siteName);
     }
   }
-
   @Override
   public void start() {
     scheduledExecutor = Executors.newScheduledThreadPool(1);
