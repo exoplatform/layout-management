@@ -152,18 +152,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   value="Group" />
                 <div class="d-flex">
                   <v-radio
-                      :label="$t('siteNavigation.label.nodeType.pageOrLink')"
-                      value="pageOrLink" />
+                    :label="$t('siteNavigation.label.nodeType.pageOrLink')"
+                    value="pageOrLink" />
                   <a
-                      v-if="this.navigationNode && this.navigationNode.pageKey && this.editMode"
-                      class="mx-4"
-                      @click="openAddElementDrawer">
+                    v-if="this.navigationNode && this.navigationNode.pageKey && this.editMode"
+                    class="mx-4"
+                    @click="openAddElementDrawer">
                     <v-icon
-                        class="pb-1"
-                        size="13">
+                      class="pb-1"
+                      size="13">
                       fas fa-edit
                     </v-icon>
-                    {{ $t('siteNavigation.label.editElement')}}
+                    {{ $t('siteNavigation.label.editElement') }}
                   </a>
                 </div>
               </v-radio-group>

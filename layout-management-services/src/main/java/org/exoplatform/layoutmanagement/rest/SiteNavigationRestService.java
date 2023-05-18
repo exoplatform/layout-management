@@ -659,7 +659,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     }
   }
   
-  @Path("/page/byRef")
+  @Path("/page")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
@@ -668,7 +668,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response getPageByRef(@Context
   HttpServletRequest httpRequest,
-                                @Parameter(description = "page display name", required = true)
+                                @Parameter(description = "page reference", required = true)
                                 @QueryParam("pageRef")
                                 String pageRef) {
     try {
@@ -677,16 +677,16 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       }
       return Response.ok().entity(layoutService.getPageContext(PageKey.parse(pageRef))).build();
     } catch (Exception e) {
-      LOG.error("Error when retrieving page with ref {} ", pageRef, e);
+      LOG.error("Error when retrieving page with reference {} ", pageRef, e);
       return Response.serverError().build();
     }
   }
   
   @Path("/page/link")
-  @PUT
+  @PATCH
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @Operation(summary = "Retrieve page by reference", method = "GET", description = "This retrieves page by reference")
+  @Operation(summary = "Update page link", method = "GET", description = "This updates page link")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response updatePageLink(@Context
@@ -695,10 +695,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                  @QueryParam("pageRef")
                                  String pageRef,
                                  @Parameter(description = "page new Link")
-                                 @QueryParam("newLink")
-                                 String newLink) {
+                                 @QueryParam("link")
+                                 String link) {
     try {
-      if (StringUtils.isBlank(pageRef) || StringUtils.isBlank(newLink)) {
+      if (StringUtils.isBlank(pageRef) || StringUtils.isBlank(link)) {
         return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
       }
       PageContext pageContext = layoutService.getPageContext(PageKey.parse(pageRef));
@@ -712,11 +712,11 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                          pageState.getMoveAppsPermissions(),
                                          pageState.getMoveContainersPermissions(),
                                          pageState.getType(),
-                                         newLink));
+                                         link));
       layoutService.save(pageContext);
       return Response.ok().build();
     } catch (Exception e) {
-      LOG.error("Error when retrieving page with ref {} ", pageRef, e);
+      LOG.error("Error when updating  page link with reference {} ", pageRef, e);
       return Response.serverError().build();
     }
   }

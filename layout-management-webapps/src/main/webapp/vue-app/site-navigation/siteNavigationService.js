@@ -335,7 +335,7 @@ export function createPage(pageName, pageTitle, pageSiteName, pageSiteType, page
 }
 
 export function getPageByRef(pageRef) {
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/byRef?pageRef=${pageRef}`, {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page?pageRef=${pageRef}`, {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
@@ -347,25 +347,25 @@ export function getPageByRef(pageRef) {
   });
 }
 
-export function updatePageLink(pageRef, newLink) {
+export function updatePageLink(pageRef, link) {
 
   const formData = new FormData();
 
   formData.append('pageRef', pageRef);
 
-  formData.append('newLink', newLink);
+  formData.append('link', link);
 
   const params = new URLSearchParams(formData).toString();
 
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/link?${params}`, {
-    method: 'PUT',
+    method: 'PATCH',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json'
     },
   }).then(resp => {
     if (!resp || !resp.ok) {
-      throw new Error('Error when retrieving page');
+      throw new Error('Error when updating page link');
     }
   });
 }

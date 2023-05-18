@@ -49,8 +49,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <template>
           <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
           <v-select
-            v-model="openMode"
-            :items="openModes"
+            v-model="target"
+            :items="TargetTypes"
             item-text="text"
             item-value="value"
             dense
@@ -100,7 +100,7 @@ export default {
   data() {
     return {
       elementType: 'PAGE',
-      openMode: 'SAME_TAB',
+      target: 'SAME_TAB',
       link: '',
       linkRules: [url => !!(url && url.match(/^((https?:\/\/)?(www\.)?[a-zA-Z0-9]+\.[^\s]{2,})|(javascript:)|(\/portal\/)/))
               || ( !url.length && this.$t('siteNavigation.required.error.message') || this.$t('siteNavigation.label.invalidLink'))],
@@ -132,7 +132,7 @@ export default {
         },
       ];
     },
-    openModes() {
+    TargetTypes() {
       return [
         {
           text: this.$t('siteNavigation.label.sameTab'),
@@ -159,12 +159,12 @@ export default {
 
   },
   methods: {
-    open(elementName, elementTitle, navigationNode,editMode) {
+    open(elementName, elementTitle, navigationNode, editMode) {
       this.resetDrawer = true;
       this.elementName = elementName;
       this.elementTitle = elementTitle;
       this.navigationNode = navigationNode;
-      this.openMode = navigationNode?.target;
+      this.target = navigationNode?.target;
       this.editMode = editMode;
       if (editMode && this.navigationNode?.pageKey) {
         const pageRef = this.navigationNode.pageKey.ref ||`${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}`;
@@ -200,7 +200,7 @@ export default {
       this.pageToEdit = null;
       this.elementType = 'PAGE';
       this.link = '';
-      this.openMode = 'SAME_TAB';
+      this.target = 'SAME_TAB';
       this.$root.$emit('reset-element-drawer');
     },
     changePageTemplate(pageTemplate) {
@@ -221,7 +221,7 @@ export default {
         const pageRef = this.selectedPage?.pageContext?.key?.ref || `${this.selectedPage?.pageContext?.key.site.typeName}::${this.selectedPage?.pageContext?.key.site.name}::${this.selectedPage?.pageContext?.key.name}`;
         this.$root.$emit('save-node-with-page', {
           'pageRef': pageRef,
-          'nodeTarget': this.openMode,
+          'nodeTarget': this.target,
           'pageType': this.elementType
         });
       } else {
@@ -230,7 +230,7 @@ export default {
             const pageRef = createdPage?.key?.ref || `${createdPage?.key.site.typeName}::${createdPage?.key.site.name}::${createdPage?.pageContext?.key.name}`;
             this.$root.$emit('save-node-with-page', {
               'pageRef': pageRef,
-              'nodeTarget': this.openMode,
+              'nodeTarget': this.target,
               'pageType': this.elementType,
               'createdPage': createdPage
             });
@@ -257,7 +257,7 @@ export default {
         const pageRef = this.selectedPage?.pageContext?.key?.ref || `${(this.selectedPage?.pageContext?.key?.site.typeName || this.pageToEdit?.key.site.typeName)}::${(this.selectedPage?.pageContext?.key?.site.name || this.pageToEdit?.key.site.name)}::${(this.selectedPage?.pageContext?.key?.name || this.pageToEdit?.key.name)}`;
         this.$root.$emit('save-node-with-page', {
           'pageRef': pageRef,
-          'nodeTarget': this.openMode,
+          'nodeTarget': this.target,
           'pageType': this.elementType
         });
       }
@@ -268,11 +268,11 @@ export default {
         .then(() => {
           this.$root.$emit('save-node-with-page', {
             'pageRef': pageRef,
-            'nodeTarget': this.openMode,
+            'nodeTarget': this.target,
             'pageType': this.elementType
           });
         }).catch(() => {
-          const message = this.$t('siteNavigation.label.pageUpdating.error');
+          const message = this.$t('siteNavigation.label.pageUpdate.error');
           this.$root.$emit('navigation-node-notification-alert', {
             message,
             type: 'error',
