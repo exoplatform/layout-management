@@ -30,7 +30,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       width="100%"
       max-width="100%"
       item-text="displayName"
-      item-value="name"
       return-object
       persistent-hint
       hide-selected
@@ -142,6 +141,9 @@ export default {
       this.$refs.selectPage.isFocused = false;
     });
   },
+  created() {
+    this.$root.$on('set-selected-page', this.emitSelectedValue);
+  },
   methods: {
     remove() {
       this.page = null;
@@ -165,6 +167,10 @@ export default {
           this.waitForEndTyping();
         }
       }, this.endTypingKeywordTimeout);
+    },
+    emitSelectedValue(value) {
+      this.page = value;
+      this.pages.push(this.page);
     },
   }
 };
