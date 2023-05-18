@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       ref="selectPage"
       v-model="page"
       :placeholder="suggesterLabels.placeholder"
-      :items="pages"
+      :items="items"
       :loading="loadingSuggestions"
       hide-no-data
       append-icon=""
@@ -109,7 +109,13 @@ export default {
         placeholder: this.$t('siteNavigation.label.pagesSuggester.searchPlaceholder'),
         noData: this.$t('siteNavigation.label.pagesSuggester.noData'),
       };
-    }
+    },
+    items() {
+      this.pages.forEach(page => {
+        page.displayName = page.displayName || page.name;
+      });
+      return this.pages.slice();
+    },
   },
   watch: {
     searchTerm() {
