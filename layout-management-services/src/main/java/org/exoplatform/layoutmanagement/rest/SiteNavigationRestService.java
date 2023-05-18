@@ -40,6 +40,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.gatein.api.Portal;
 import org.gatein.api.page.PageQuery;
 import org.picocontainer.Startable;
@@ -47,6 +48,7 @@ import org.picocontainer.Startable;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.layoutmanagement.rest.model.NodeLabelRestEntity;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
@@ -55,7 +57,9 @@ import org.exoplatform.portal.mop.PageType;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.mop.Utils;
+import org.exoplatform.portal.mop.State;
 import org.exoplatform.portal.mop.Visibility;
+import org.exoplatform.portal.mop.service.DescriptionService;
 import org.exoplatform.portal.mop.navigation.NodeData;
 import org.exoplatform.portal.mop.navigation.NodeState;
 import org.exoplatform.portal.mop.page.PageContext;
@@ -63,7 +67,6 @@ import org.exoplatform.portal.mop.page.PageKey;
 import org.exoplatform.portal.mop.page.PageState;
 import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.portal.mop.service.NavigationService;
-import org.exoplatform.portal.mop.storage.utils.MOPUtils;
 import org.exoplatform.portal.page.PageTemplateService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -75,6 +78,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -98,6 +102,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
 
   private UserPortalConfigService  userPortalConfigService;
 
+  private DescriptionService       descriptionService;
+
   private final Map<Long, String>  navigationNodeToDeleteQueue = new HashMap<>();
 
   public SiteNavigationRestService(NavigationService navigationService,
@@ -105,13 +111,15 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                    LayoutService layoutService,
                                    PageTemplateService pageTemplateService,
                                    Portal portal,
-                                   UserPortalConfigService userPortalConfigService) {
+                                   UserPortalConfigService userPortalConfigService,
+                                   DescriptionService descriptionService) {
     this.navigationService = navigationService;
     this.container = container;
     this.layoutService = layoutService;
     this.pageTemplateService = pageTemplateService;
     this.portal = portal;
     this.userPortalConfigService = userPortalConfigService;
+    this.descriptionService = descriptionService;
   }
 
   @POST
@@ -153,8 +161,11 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              String pageRef,
                              @Parameter(description = "node target")
                              @QueryParam("target")
-                             String target) {
-    if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId)) {
+                             String target,
+                             @RequestBody(description = "node labels", required = true)
+                             NodeLabelRestEntity nodeLabelRestEntity) {
+
+    if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId) || nodeLabelRestEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
@@ -165,6 +176,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       Identity currentIdentity = ConversationState.getCurrent().getIdentity();
       if (!SiteNavigationUtils.canEditNavigation(currentIdentity, parentNodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      Map<Locale, State> nodeLabels = new HashMap<>();
+      if (nodeLabelRestEntity.getLabels() != null) {
+        nodeLabel = null;
+        nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
+          State state = new State(label.getValue(), null);
+          nodeLabels.put(new Locale(label.getKey()), state);
+        });
       }
       NodeState nodeState;
       long now = System.currentTimeMillis();
@@ -195,7 +214,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   null,
                                   target);
       }
-      navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
+      NodeData[] nodeData = navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
+      descriptionService.setDescriptions(nodeData[1].getId(), nodeLabels);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when creating a new navigation node", e);
@@ -233,8 +253,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              Long startScheduleDate,
                              @Parameter(description = "endScheduleDate")
                              @QueryParam("endScheduleDate")
-                             Long endScheduleDate) {
-    if (nodeId == null || StringUtils.isBlank(nodeLabel)) {
+                             Long endScheduleDate,
+                             @RequestBody(description = "node labels", required = true)
+                             NodeLabelRestEntity nodeLabelRestEntity) {
+    if (nodeId == null || StringUtils.isBlank(nodeLabel) || nodeLabelRestEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
     try {
@@ -255,6 +277,14 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       Identity currentIdentity = ConversationState.getCurrent().getIdentity();
       if (!SiteNavigationUtils.canEditNavigation(currentIdentity, nodeData)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      Map<Locale, State> nodeLabels = new HashMap<>();
+      if (nodeLabelRestEntity.getLabels() != null) {
+        nodeLabel = null;
+        nodeLabelRestEntity.getLabels().entrySet().forEach(label -> {
+          State state = new State(label.getValue(), null);
+          nodeLabels.put(new Locale(label.getKey()), state);
+        });
       }
       NodeState nodeState;
       long now = System.currentTimeMillis();
@@ -285,6 +315,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   null,
                                   nodeData.getTarget());
       }
+      descriptionService.setDescriptions(String.valueOf(nodeId), nodeLabels);
       navigationService.updateNode(nodeId, nodeState);
       return Response.ok().build();
     } catch (Exception e) {
@@ -397,6 +428,28 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       }
     } catch (Exception e) {
       LOG.error("Error when undo deleting the navigation node with id {}", nodeId, e);
+      return Response.serverError().build();
+    }
+  }
+
+  @Path("node/{nodeId}/labels")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("users")
+  @Operation(summary = "Retrieve node labels", method = "GET", description = "This retrieves node labels")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response getNodeLabels(@Context
+  HttpServletRequest request,
+                                @Parameter(description = "Node id", required = true)
+                                @PathParam("nodeId")
+                                Long nodeId) {
+    try {
+      Map<Locale, State> nodeLabels = descriptionService.getDescriptions(String.valueOf(nodeId));
+      NodeLabelRestEntity nodeLabelRestEntity = EntityBuilder.toNodeLabelRestEntity(nodeLabels);
+      return Response.ok().entity(nodeLabelRestEntity).build();
+    } catch (Exception e) {
+      LOG.error("Error when retrieving node labels", e);
       return Response.serverError().build();
     }
   }
