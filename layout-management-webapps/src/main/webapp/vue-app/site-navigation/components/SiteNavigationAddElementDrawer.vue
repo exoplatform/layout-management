@@ -50,7 +50,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
           <v-select
             v-model="target"
-            :items="TargetTypes"
+            :items="targetTypes"
             item-text="text"
             item-value="value"
             dense
@@ -132,7 +132,7 @@ export default {
         },
       ];
     },
-    TargetTypes() {
+    targetTypes() {
       return [
         {
           text: this.$t('siteNavigation.label.sameTab'),
