@@ -170,6 +170,7 @@ export default {
         const pageRef = this.navigationNode.pageKey.ref ||`${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}`;
         this.$siteNavigationService.getPageByRef(pageRef).then((page) => {
           this.selectedPage = page.state;
+          this.selectedPage.displayName = page.state.displayName || page.key.name;
           this.pageToEdit = page;
           this.elementType = page.state?.type === 'LINK' && 'LINK' || 'existingPage';
           this.link = page?.state?.link;
