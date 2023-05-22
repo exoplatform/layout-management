@@ -150,9 +150,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 <v-radio
                   :label="$t('siteNavigation.label.nodeType.group')"
                   value="Group" />
-                <v-radio
-                  :label="$t('siteNavigation.label.nodeType.pageOrLink')"
-                  value="pageOrLink" />
+                <div class="d-flex">
+                  <v-radio
+                    :label="$t('siteNavigation.label.nodeType.pageOrLink')"
+                    value="pageOrLink" />
+                  <a
+                    v-if="this.navigationNode && this.navigationNode.pageKey && this.editMode"
+                    class="mx-4"
+                    @click="openAddElementDrawer">
+                    <v-icon
+                      class="pb-1"
+                      size="13">
+                      fas fa-edit
+                    </v-icon>
+                    {{ $t('siteNavigation.label.editElement') }}
+                  </a>
+                </div>
               </v-radio-group>
             </div>
           </v-card-text>
@@ -284,7 +297,7 @@ export default {
           this.endScheduleTime = new Date(parentNavigationNode.endPublicationTime);
         }
       }
-      this.$refs.siteNavigationAddNodeDrawer.open();
+      this.$nextTick().then(() => this.$refs.siteNavigationAddNodeDrawer.open());
     },
     close() {
       this.nodeId = null;
@@ -332,8 +345,9 @@ export default {
       };
       if (this.editMode) {
         const pageRef = pageData?.pageRef ||  (this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey?.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey?.name}` : '');
-        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels)
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.nodeTarget || this.navigationNode.target)
           .then(() => {
+            this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
           })
           .finally(() => {
@@ -341,23 +355,9 @@ export default {
             this.close();
           });
       } else {
-        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.nodeTarget || 'SAME_TAB')
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.pageRef && pageData?.nodeTarget || 'SAME_TAB')
           .then(() => {
-            if (pageData?.pageRef) {
-              if (pageData?.pageType === 'PAGE' && pageData?.createdPage) {
-                const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
-                const createdPage = pageData.createdPage;
-                return this.$siteNavigationService.editLayout(uiPageId, createdPage.key.name, createdPage.key.site.typeName, createdPage.key.site.name, `${this.navigationNode.uri}/${this.nodeId}`, this.navigationNode.siteKey.typeName, this.navigationNode.siteKey.name);
-              } else {
-                let targetPageUrl ;
-                if (pageData?.pageType === 'LINK' ) {
-                  targetPageUrl = pageData?.createdPage?.state?.link;
-                } else {
-                  targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
-                }
-                window.open(targetPageUrl, pageData?.nodeTarget === 'SAME_TAB' && '_self' || '_blank');
-              }
-            }
+            this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
           })
           .finally(() => {
@@ -367,7 +367,7 @@ export default {
       }
     },
     openAddElementDrawer() {
-      this.$root.$emit('open-add-element-drawer', this.nodeId, this.valuesPerLanguage['en'] || this.nodeLabel,  this.navigationNode);
+      this.$root.$emit('open-add-element-drawer', this.nodeId, this.valuesPerLanguage['en'] || this.nodeLabel,  this.navigationNode, this.navigationNode?.pageKey && this.editMode || false);
     },
     conversionRules() {
       return this.nodeLabel.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]/g, '').replace(/\s+/g, '').toLowerCase();
@@ -405,6 +405,23 @@ export default {
       }
       this.labels = this.valuesPerLanguage;
       this.nodeLabel = this.valuesPerLanguage[eXo.env.portal.language];
+    },
+    openTargetPage(pageData) {
+      if (pageData?.pageRef) {
+        if (pageData?.pageType === 'PAGE' && pageData?.createdPage) {
+          const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
+          const createdPage = pageData.createdPage;
+          return this.$siteNavigationService.editLayout(uiPageId, createdPage.key.name, createdPage.key.site.typeName, createdPage.key.site.name, `${this.navigationNode.uri}/${this.nodeId}`, this.navigationNode.siteKey.typeName, this.navigationNode.siteKey.name);
+        } else {
+          let targetPageUrl ;
+          if (pageData?.pageType === 'LINK' ) {
+            targetPageUrl = pageData?.createdPage?.state?.link;
+          } else {
+            targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
+          }
+          window.open(targetPageUrl, pageData?.nodeTarget === 'SAME_TAB' && '_self' || '_blank');
+        }
+      }
     }
   }
 };
