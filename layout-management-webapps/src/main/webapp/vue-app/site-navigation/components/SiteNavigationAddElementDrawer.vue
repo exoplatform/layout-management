@@ -147,7 +147,7 @@ export default {
     isLinkElement() {
       return this.elementType === 'LINK';
     },
-    drawerTitle(){
+    drawerTitle() {
       return this.editMode && this.$t('siteNavigation.label.editElement') || this.$t('siteNavigation.addElementDrawer.title');
     }
   },
@@ -195,7 +195,7 @@ export default {
       this.resetDrawer = false;
       this.$refs.siteNavigationAddElementDrawer.close();
     },
-    reset(){
+    reset() {
       this.selectedPage = null;
       this.pageToEdit = null;
       this.elementType = 'PAGE';
