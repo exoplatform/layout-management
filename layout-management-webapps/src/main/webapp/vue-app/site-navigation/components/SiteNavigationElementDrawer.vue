@@ -35,6 +35,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </template>
     <template slot="content">
       <v-card class="mx-4 my-4 px-2 py-2 elevation-0">
+        <v-form
+          v-model="isValidForm">
         <template>
           <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.selectElementType') }}</span>
           <v-select
@@ -74,6 +76,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             :element-type="elementType"
             :selected-page="selectedPage" />
         </template>
+        </v-form>
       </v-card>
     </template>
     <template slot="footer">
@@ -85,6 +88,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-btn>
         <v-btn
           :loading="loading"
+          :disabled="disabled"
           class="btn btn-primary ms-2"
           @click="saveElement">
           {{ $t('siteNavigation.label.btn.save') }}
@@ -113,6 +117,7 @@ export default {
       resetDrawer: true,
       editMode: false,
       pageToEdit: false,
+      isValidForm: true,
     };
   },
   computed: {
@@ -147,8 +152,11 @@ export default {
     isLinkElement() {
       return this.elementType === 'LINK';
     },
-    drawerTitle(){
+    drawerTitle() {
       return this.editMode && this.$t('siteNavigation.label.editElement') || this.$t('siteNavigation.addElementDrawer.title');
+    },
+    disabled() {
+      return !this.isValidForm || this.isLinkElement && !this.link || this.elementType === 'existingPage' && !this.selectedPage || false;
     }
   },
   created() {
@@ -195,7 +203,7 @@ export default {
       this.resetDrawer = false;
       this.$refs.siteNavigationAddElementDrawer.close();
     },
-    reset(){
+    reset() {
       this.selectedPage = null;
       this.pageToEdit = null;
       this.elementType = 'PAGE';
