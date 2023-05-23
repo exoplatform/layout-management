@@ -116,24 +116,24 @@ export default {
     canMoveDownChildNode(navigationNode) {
       return this.navigationNode.children.indexOf(navigationNode) < this.navigationNode.children.length - 1;
     }, 
-    moveUpChildNode(navigationNode) {
+    moveUpChildNode(navigationNodeId) {
       if (this.navigationNode.children.length) {
-        const index = this.navigationNode.children.findIndex(navNode => navNode.id === navigationNode.id);
+        const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = index > 1 ? this.navigationNode.children[index - 2].id : null;
-          this.$siteNavigationService.moveNode(navigationNode.id, null, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         }
   
       }
     },
-    moveDownChildNode(navigationNode) {
+    moveDownChildNode(navigationNodeId) {
       if (this.navigationNode.children.length) {
-        const index = this.navigationNode.children.findIndex(navNode => navNode.id === navigationNode.id);
+        const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = this.navigationNode.children[index + 1].id;
-          this.$siteNavigationService.moveNode(navigationNode.id, null, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         } 

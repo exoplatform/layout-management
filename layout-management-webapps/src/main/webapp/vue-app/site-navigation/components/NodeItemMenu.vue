@@ -222,10 +222,10 @@ export default {
   },
   methods: {
     moveUpNode() {
-      this.$root.$emit('moveup-node', this.navigationNode);
+      this.$root.$emit('moveup-node', this.navigationNode.id);
     },
     moveDownNode() {
-      this.$root.$emit('movedown-node', this.navigationNode);
+      this.$root.$emit('movedown-node', this.navigationNode.id);
     },
     deleteNode() {
       this.$root.$emit('delete-node', this.navigationNode.id);
