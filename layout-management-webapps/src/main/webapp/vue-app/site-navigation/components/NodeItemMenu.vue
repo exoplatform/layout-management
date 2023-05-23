@@ -86,6 +86,34 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-list-item>
       <v-divider />
       <v-list-item
+        class="subtitle-2" 
+        @click="cutNode">
+        <v-icon
+          size="13"
+          class="pe-1">
+          fas fa-cut
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.cutNode') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        v-if="pasteMode"
+        class="subtitle-2" 
+        @click="pasteNode">
+        <v-icon
+          size="16"
+          class="pe-1">
+          fas fa-paste
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.pasteNode') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-divider />
+      <v-list-item
         @click="moveUpNode()"
         v-if="canMoveUp">
         <v-icon
@@ -148,6 +176,14 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    nodeToPaste: {
+      type: Object,
+      default: null,
+    },
+    pasteMode: {
+      type: String,
+      default: null,
+    }
   },
   data: () => ({
     displayActionMenu: false,
@@ -212,6 +248,27 @@ export default {
     },
     openManageAccessDrawer(){
       this.$root.$emit('open-site-navigation-manage-access-drawer', JSON.parse(JSON.stringify(this.navigationNode)));
+    },
+    cutNode() {
+      this.$root.$emit('cut-node', this.navigationNode);
+    },
+    pasteNode() {
+      if (this.navigationNode.children.length) {
+        const index = this.navigationNode.children.findIndex(navNode => navNode.name === this.nodeToPaste.name);
+        if (index !== -1) {
+          const message = this.$t('siteNavigation.label.pasteNode.error');
+          this.$root.$emit('navigation-node-notification-alert', {
+            message,
+            type: 'error',
+          });
+          return;
+        } 
+      }
+      if (this.pasteMode === 'Cut') {
+        this.$siteNavigationService.moveNode(this.nodeToPaste.id, this.navigationNode.id, null).then(() => {
+          this.$root.$emit('refresh-navigation-nodes');
+        });
+      }
     }
   }
 };
