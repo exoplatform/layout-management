@@ -47,7 +47,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               :navigation-node="navigationNode"
               :hover="hover"
               :can-move-up="canMoveUp"
-              :can-move-down="canMoveDown" />
+              :can-move-down="canMoveDown"
+              :node-to-paste="nodeToPaste"
+              :paste-mode="pasteMode" />
           </v-list-item-action>
         </v-list-item>
       </div>
@@ -82,6 +84,8 @@ export default {
   data() {
     return {
       displayChildren: false,
+      nodeToPaste: null,
+      pasteMode: null
     };
   },
   computed: {
@@ -103,6 +107,7 @@ export default {
     this.$root.$on('delete-node', this.deleteChildNode);
     this.$root.$on('moveup-node', this.moveUpChildNode);
     this.$root.$on('movedown-node', this.moveDownChildNode);
+    this.$root.$on('cut-node', this.cutNode);
   },
   methods: {
     canMoveUpChildNode(navigationNode) {
@@ -116,7 +121,7 @@ export default {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = index > 1 ? this.navigationNode.children[index - 2].id : null;
-          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         }
@@ -128,7 +133,7 @@ export default {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = this.navigationNode.children[index + 1].id;
-          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         } 
@@ -152,6 +157,10 @@ export default {
       }).slice(0, -1); // Remove last element
       this.displayChildren = currentNodeParentTree.includes(this.navigationNode.uri);
     },
+    cutNode(navigationNode) {
+      this.pasteMode = 'Cut';
+      this.nodeToPaste = navigationNode;
+    }
   }
 };
 </script>
