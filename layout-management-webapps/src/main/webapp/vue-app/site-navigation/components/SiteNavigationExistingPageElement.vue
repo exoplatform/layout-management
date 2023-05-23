@@ -41,6 +41,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       :all-sites="allSites"
       :site-type="selectedSiteNavigation && selectedSiteNavigation.key.type"
       :site-name="selectedSiteNavigation && selectedSiteNavigation.key.name" />
+    <span v-if="!selectedPage" class="caption mt-n3 mx-2 position-absolute error-color">
+        {{ $t('siteNavigation.required.error.message') }}
+      </span>
   </div>
 </template>
 
