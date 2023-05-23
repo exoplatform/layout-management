@@ -88,7 +88,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-btn>
         <v-btn
           :loading="loading"
-          :disabled="disableSave"
+          :disabled="disabled"
           class="btn btn-primary ms-2"
           @click="saveElement">
           {{ $t('siteNavigation.label.btn.save') }}
@@ -155,7 +155,7 @@ export default {
     drawerTitle(){
       return this.editMode && this.$t('siteNavigation.label.editElement') || this.$t('siteNavigation.addElementDrawer.title');
     },
-    disableSave(){
+    disabled(){
       return !this.isValidForm || this.isLinkElement && !this.link || this.elementType === 'existingPage' && !this.selectedPage || false;
     }
   },
