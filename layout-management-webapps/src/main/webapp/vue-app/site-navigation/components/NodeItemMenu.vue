@@ -26,7 +26,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-btn
         v-show="hover"
         v-bind="attrs"
-        class="pull-right"
         icon
         v-on="on">
         <v-icon>mdi-dots-vertical</v-icon>

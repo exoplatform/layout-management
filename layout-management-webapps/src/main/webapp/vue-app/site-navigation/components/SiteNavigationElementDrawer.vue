@@ -37,45 +37,45 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-card class="mx-4 my-4 px-2 py-2 elevation-0">
         <v-form
           v-model="isValidForm">
-        <template>
-          <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.selectElementType') }}</span>
-          <v-select
-            v-model="elementType"
-            :items="elementTypes"
-            item-text="text"
-            item-value="value"
-            dense
-            class="caption pt-1 mb-5"
-            outlined />
-        </template>
-        <template>
-          <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
-          <v-select
-            v-model="target"
-            :items="targetTypes"
-            item-text="text"
-            item-value="value"
-            dense
-            class="caption pt-1 mb-5"
-            outlined />
-        </template>
-        <template v-if="isLinkElement">
-          <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.link') }}</span>
-          <v-text-field
-            v-model="link"
-            :placeholder="$t('siteNavigation.label.enterUrl') "
-            :rules="linkRules"
-            class="pt-0"
-            type="text"
-            required
-            outlined
-            dense />
-        </template>
-        <template v-else>
-          <site-navigation-page-element
-            :element-type="elementType"
-            :selected-page="selectedPage" />
-        </template>
+          <template>
+            <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.selectElementType') }}</span>
+            <v-select
+              v-model="elementType"
+              :items="elementTypes"
+              item-text="text"
+              item-value="value"
+              dense
+              class="caption pt-1 mb-5"
+              outlined />
+          </template>
+          <template>
+            <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
+            <v-select
+              v-model="target"
+              :items="targetTypes"
+              item-text="text"
+              item-value="value"
+              dense
+              class="caption pt-1 mb-5"
+              outlined />
+          </template>
+          <template v-if="isLinkElement">
+            <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.link') }}</span>
+            <v-text-field
+              v-model="link"
+              :placeholder="$t('siteNavigation.label.enterUrl') "
+              :rules="linkRules"
+              class="pt-0"
+              type="text"
+              required
+              outlined
+              dense />
+          </template>
+          <template v-else>
+            <site-navigation-page-element
+              :element-type="elementType"
+              :selected-page="selectedPage" />
+          </template>
         </v-form>
       </v-card>
     </template>
