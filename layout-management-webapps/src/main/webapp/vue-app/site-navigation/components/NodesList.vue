@@ -89,6 +89,13 @@ export default {
           sortable: false
         },
         {
+          text: this.$t('siteNavigation.label.lastUpdated'),
+          align: 'center',
+          value: 'nodeType',
+          width: '120',
+          sortable: false
+        },
+        {
           text: this.$t('siteNavigation.label.visibility'),
           align: 'center',
           value: 'visibility',

@@ -206,7 +206,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                     Visibility.TEMPORAL,
                                     StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
                                     null,
-                                    target);
+                                    target,
+                                    System.currentTimeMillis());
         }
       } else {
         nodeState = new NodeState(nodeLabel,
@@ -216,7 +217,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
                                   StringUtils.isBlank(pageRef) ? null : PageKey.parse(pageRef),
                                   null,
-                                  target);
+                                  target,
+                                  System.currentTimeMillis());
       }
       NodeData[] nodeData = navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
       descriptionService.setDescriptions(nodeData[1].getId(), nodeLabels);
@@ -310,7 +312,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                     Visibility.TEMPORAL,
                                     pageKey,
                                     null,
-                                    target);
+                                    target,
+                                    System.currentTimeMillis());
         }
       } else {
         nodeState = new NodeState(nodeLabel,
@@ -320,7 +323,8 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                                   isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
                                   pageKey,
                                   null,
-                                  target);
+                                  target,
+                                  System.currentTimeMillis());
       }
       descriptionService.setDescriptions(String.valueOf(nodeId), nodeLabels);
       navigationService.updateNode(nodeId, nodeState);
