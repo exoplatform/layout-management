@@ -470,10 +470,12 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
   public Response moveNode(@Parameter(description = "node id")
   @QueryParam("nodeId")
   Long nodeId,
+                           @Parameter(description = "destination parent id")
+                           @QueryParam("destinationParentId")
+                           Long destinationParentId,
                            @Parameter(description = "previous id")
                            @QueryParam("previousNodeId")
                            Long previousNodeId) {
-
     try {
       if (nodeId == null) {
         return Response.status(Response.Status.BAD_REQUEST).entity("Node id is mandatory").build();
@@ -487,7 +489,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       long parentId = Long.parseLong(nodeData.getParentId());
-      navigationService.moveNode(nodeId, parentId, parentId, previousNodeId);
+      if (destinationParentId == null) {
+        destinationParentId = parentId;
+      }
+      navigationService.moveNode(nodeId, parentId, destinationParentId, previousNodeId);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when moving the navigation node with id {}", nodeId, e);

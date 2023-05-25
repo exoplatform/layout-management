@@ -78,10 +78,13 @@ export function editLayout(uiPageId, pageName, pageSiteType, pageSiteName, nodeU
   });
 }
 
-export function moveNode(nodeId, previousNodeId) {
+export function moveNode(nodeId, destinationParentId, previousNodeId) {
   const formData = new FormData();
   if (nodeId) {
     formData.append('nodeId', nodeId);
+  }
+  if (destinationParentId) {
+    formData.append('destinationParentId', destinationParentId);
   }
   if (previousNodeId) {
     formData.append('previousNodeId', previousNodeId);
