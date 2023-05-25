@@ -1,0 +1,236 @@
+<!--
+Copyright (C) 2023 eXo Platform SAS.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+-->
+<template>
+  <div class="d-contents">
+    <tr>
+      <td>
+        <v-list-item
+          dense
+          :class="`${highlightNode ? 'px-0 light-grey-background ' : 'px-0 '} ${ hasChildren && ' ' || 'pt-4'}`">
+          <v-list-item-action
+            class="me-2 my-0"
+            :class="extraClass">
+            <v-icon
+              v-if="hasChildren"
+              size="23"
+              @click="displayChildren = !displayChildren">
+              {{ icon }}
+            </v-icon>
+            <div v-else class="ms-3 me-2"></div>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title
+              :title="navigationNode.label"
+              class="font-weight-bold text-truncate">
+              {{ navigationNode.label }}
+            </v-list-item-title>
+            <v-list-item-subtitle
+              :title="navigationNodeUri"
+              class="text-truncate">
+              {{ navigationNodeUri }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </td>
+      <td class="align-center">
+        <site-navigation-node-item-menu
+          :navigation-node="navigationNode"
+          hover
+          :can-move-up="canMoveUp"
+          :can-move-down="canMoveDown"
+          :node-to-paste="nodeToPaste"
+          :paste-mode="pasteMode" />
+      </td>
+      <td class="align-center">
+        <span>
+          {{ $t(`siteNavigation.label.${navigationNodeType}`) }}
+        </span>
+      </td>
+      <td class="align-center">
+        <v-icon
+          :title="visibilityIcon.title"
+          color="grey"
+          dark
+          size="20"
+          class="px-2">
+          {{ visibilityIcon.icon }}
+        </v-icon>
+      </td>
+      <td class="align-center">
+        <v-icon
+          :title="accessIcon.title"
+          color="grey"
+          dark
+          size="20"
+          class="px-2">
+          {{ accessIcon.icon }}
+        </v-icon>
+      </td>
+    </tr>
+    <template v-if="displayChildren">
+      <site-navigation-nodes-list-table-item
+        v-for="child in navigationNode.children"
+        :key="child.id"
+        :navigation-node="child"
+        :can-move-up="canMoveUpChildNode(child)"
+        :can-move-down="canMoveDownChildNode(child)"
+        :margin="margin+2" />
+    </template>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    navigationNode: {
+      type: Object,
+      default: null,
+    },
+    canMoveUp: {
+      type: Boolean,
+      default: () => false,
+    },
+    canMoveDown: {
+      type: Boolean,
+      default: () => false,
+    },
+    margin: {
+      type: Number,
+      default: () => 0,
+    },
+  },
+  data() {
+    return {
+      displayChildren: false,
+      nodeToPaste: null,
+      pasteMode: null
+    };
+  },
+  computed: {
+    extraClass() {
+      return `ms-${this.margin + 2}`;
+    },
+    highlightNode() {
+      return this.navigationNode.uri === eXo.env.portal.selectedNodeUri;
+    },
+    icon() {
+      return this.displayChildren && 'mdi-menu-down' || 'mdi-menu-right';
+    },
+    hasChildren() {
+      return this.navigationNode?.children?.length;
+    },
+    navigationNodeUri() {
+      return `/${this.navigationNode.uri}`;
+    },
+    navigationNodeType() {
+      return !this.navigationNode.pageKey && 'group' || this.navigationNode.pageLink && 'link' ||  this.navigationNode.pageKey && 'page';
+    },
+    visibilityIcon() {
+      switch (this.navigationNode?.visibility) {
+      case 'TEMPORAL':
+        return {
+          icon: 'fas fa-calendar-alt',
+          title: this.$t('siteNavigation.label.visibility.scheduled'),
+        };
+      case 'HIDDEN':
+        return {
+          icon: 'fas fa-eye-slash',
+          title: this.$t('siteNavigation.label.visibility.hidden'),
+        };
+      default:
+        return {
+          icon: 'fas fa-eye',
+          title: this.$t('siteNavigation.label.visibility.displayed'),
+        };
+      }
+    },
+    accessIcon() {
+      if (!this.navigationNode.pageAccessPermissions || this.navigationNode.pageAccessPermissions[0].membershipType === 'Everyone') {
+        return {
+          icon: 'fas fa-layer-group',
+          title: this.$t('siteNavigation.label.access.all'),
+        };
+      } else {
+        return {
+          icon: 'fas fa-user-lock',
+          title: this.$t('siteNavigation.label.access.specific'),
+        };
+      }
+    },
+  },
+  created() {
+    this.displayCurrentNodeParentTree();
+    this.$root.$on('delete-node', this.deleteChildNode);
+    this.$root.$on('moveup-node', this.moveUpChildNode);
+    this.$root.$on('movedown-node', this.moveDownChildNode);
+    this.$root.$on('cut-node', this.cutNode);
+  },
+  methods: {
+    canMoveUpChildNode(navigationNode) {
+      return this.navigationNode.children.indexOf(navigationNode) > 0;
+    },
+    canMoveDownChildNode(navigationNode) {
+      return this.navigationNode.children.indexOf(navigationNode) < this.navigationNode.children.length - 1;
+    },
+    moveUpChildNode(navigationNodeId) {
+      if (this.navigationNode.children.length) {
+        const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
+        if (index !== -1) {
+          const previousNodeId = index > 1 ? this.navigationNode.children[index - 2].id : null;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          });
+        }
+
+      }
+    },
+    moveDownChildNode(navigationNodeId) {
+      if (this.navigationNode.children.length) {
+        const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
+        if (index !== -1) {
+          const previousNodeId = this.navigationNode.children[index + 1].id;
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+            this.$root.$emit('refresh-navigation-nodes');
+          });
+        }
+      }
+    },
+    deleteChildNode(navigationNodeId) {
+      if (this.navigationNode.children.length) {
+        const index = this.navigationNode.children.findIndex(child => child.id === navigationNodeId);
+        if (index >= 0) {
+          this.navigationNode.children.splice(index, 1);
+        }
+      }
+    },
+    displayCurrentNodeParentTree() {
+      const currentUri = eXo.env.portal.selectedNodeUri;
+      const splittedCurrentUri = currentUri.split('/');
+      let nodeUri = '';
+      const currentNodeParentTree = splittedCurrentUri.map(subPath => {
+        nodeUri += `${subPath}/`;
+        return nodeUri.slice(0, -1); // Remove trailing slash
+      }).slice(0, -1); // Remove last element
+      this.displayChildren = currentNodeParentTree.includes(this.navigationNode.uri);
+    },
+    cutNode(navigationNode) {
+      this.pasteMode = 'Cut';
+      this.nodeToPaste = navigationNode;
+    }
+  }
+};
+</script>
