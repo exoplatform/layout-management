@@ -91,7 +91,7 @@ export default {
         {
           text: this.$t('siteNavigation.label.lastUpdated'),
           align: 'center',
-          value: 'nodeType',
+          value: 'lastUpdated',
           width: '120',
           sortable: false
         },
