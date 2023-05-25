@@ -26,11 +26,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <span>{{ $t('siteNavigation.drawer.title') }}</span>
     </template>
     <template slot="content">
-      <v-chip
-        class="ms-4 mt-3 mb-4 primary">
-        {{ siteName }}
-      </v-chip>
-      <site-navigation-nodes-list :navigation-nodes="navigationNodes" />
+      <div :class="$refs.siteNavigationDrawer?.expand ? 'singlePageApplication' : ' ' ">
+        <v-chip
+          class="ms-4 mt-3 mb-4 primary">
+          {{ siteName }}
+        </v-chip>
+        <site-navigation-nodes-list
+          :navigation-nodes="navigationNodes"
+          :expanded="$refs.siteNavigationDrawer?.expand"
+          :loading="loading" />
+      </div>
     </template>
   </exo-drawer>
 </template>
@@ -42,6 +47,7 @@ export default {
       navigationNodes: [],
       siteName: eXo.env.portal.siteKeyName,
       siteType: eXo.env.portal.siteKeyType,
+      loading: false,
     };
   },
   created() {
@@ -58,9 +64,11 @@ export default {
       this.$refs.siteNavigationDrawer.close();
     },
     getNavigationNodes() {
+      this.loading = true;
       return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
+          this.loading = false;
         });
     },
   }
