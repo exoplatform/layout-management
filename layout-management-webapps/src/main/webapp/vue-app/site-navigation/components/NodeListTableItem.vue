@@ -178,6 +178,7 @@ export default {
     this.$root.$on('moveup-node', this.moveUpChildNode);
     this.$root.$on('movedown-node', this.moveDownChildNode);
     this.$root.$on('cut-node', this.cutNode);
+    this.$root.$on('copy-node', this.copyNode);
   },
   methods: {
     canMoveUpChildNode(navigationNode) {
@@ -229,6 +230,10 @@ export default {
     },
     cutNode(navigationNode) {
       this.pasteMode = 'Cut';
+      this.nodeToPaste = navigationNode;
+    },
+    copyNode(navigationNode) {
+      this.pasteMode = 'Copy';
       this.nodeToPaste = navigationNode;
     }
   }
