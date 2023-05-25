@@ -36,7 +36,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <site-navigation-site-suggester
       v-if="!allSites"
       v-model="selectedSiteNavigation"
-      class="mb-6"/>
+      class="mb-6" />
     <span v-if="!allSites && !selectedSiteNavigation" class="caption mt-n6 mx-2 position-absolute error-color">
       {{ $t('siteNavigation.required.error.message') }}
     </span>
