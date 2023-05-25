@@ -99,6 +99,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-title>
       </v-list-item>
       <v-list-item
+        class="subtitle-2" 
+        @click="copyNode">
+        <v-icon
+          size="13"
+          class="pe-1">
+          fas fa-copy
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.copyNode') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
         v-if="pasteMode"
         class="subtitle-2" 
         @click="pasteNode">
@@ -187,6 +200,7 @@ export default {
   },
   data: () => ({
     displayActionMenu: false,
+    nodeLabels: {}
   }),
   computed: {
     pageName() {
@@ -252,6 +266,9 @@ export default {
     cutNode() {
       this.$root.$emit('cut-node', this.navigationNode);
     },
+    copyNode() {
+      this.$root.$emit('copy-node', this.navigationNode);
+    },
     pasteNode() {
       if (this.navigationNode.children.length) {
         const index = this.navigationNode.children.findIndex(navNode => navNode.name === this.nodeToPaste.name);
@@ -268,7 +285,40 @@ export default {
         this.$siteNavigationService.moveNode(this.nodeToPaste.id, this.navigationNode.id, null).then(() => {
           this.$root.$emit('refresh-navigation-nodes');
         });
+      } else if (this.pasteMode === 'Copy') {
+        this.pasteCopiedNode(this.navigationNode.id, this.nodeToPaste);
       }
+    },
+    pasteCopiedNode(navigationNodeId, nodeToPaste) {
+      let pageRef = null;
+      if (nodeToPaste.pageKey) {
+        pageRef = nodeToPaste.pageKey?.ref ? nodeToPaste.pageKey?.ref : `${ nodeToPaste.pageKey.site.typeName}::${ nodeToPaste.pageKey.site.name}::${nodeToPaste.pageKey?.name}`;
+      }
+      const visible = nodeToPaste.visibility !== 'HIDDEN';
+      const isScheduled = nodeToPaste.visibility === 'TEMPORAL';
+      const startScheduleDate = nodeToPaste.startPublicationTime !== -1 ? new Date(nodeToPaste.startPublicationTime) : null;
+      const endScheduleDate = nodeToPaste.endPublicationTime !== -1 ? new Date(nodeToPaste.endPublicationTime) : null;
+      const isPasteMode = true;
+      this.$siteNavigationService.getNodeLabels(nodeToPaste.id)
+        .then(data => {
+          this.nodeLabels = {
+            labels: data.labels
+          };
+        })
+        .then(() => {
+          this.$siteNavigationService.createNode(navigationNodeId, null, nodeToPaste.label, nodeToPaste.name, visible, isScheduled, startScheduleDate, endScheduleDate, this.nodeLabels, pageRef, nodeToPaste.target, isPasteMode)
+            .then(navigationNodes => {
+              if (nodeToPaste.children.length > 0) {
+                nodeToPaste.children.forEach(children => {
+                  this.pasteCopiedNode(navigationNodes[1].id, children);
+                });
+              }
+            })
+            .finally(() => {
+              this.$root.$emit('refresh-navigation-nodes');
+            });
+        });
+
     }
   }
 };
