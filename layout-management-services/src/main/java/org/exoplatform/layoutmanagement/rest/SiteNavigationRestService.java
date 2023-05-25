@@ -164,7 +164,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @QueryParam("target")
                              String target,
                              @RequestBody(description = "node labels", required = true)
-                             NodeLabelRestEntity nodeLabelRestEntity) {
+                             NodeLabelRestEntity nodeLabelRestEntity,
+                             @Parameter(description = "isPasteMode")
+                             @QueryParam("isPasteMode")
+                             boolean isPasteMode) {
 
     if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId) || nodeLabelRestEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
@@ -193,7 +196,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
           return Response.status(Response.Status.BAD_REQUEST)
                          .entity("end schedule date must be after start schedule date")
                          .build();
-        } else if (now > startScheduleDate) {
+        } else if (now > startScheduleDate && !isPasteMode) {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
           nodeState = new NodeState(nodeLabel,
@@ -217,7 +220,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
       }
       NodeData[] nodeData = navigationService.createNode(parentNodeId, previousNodeId, nodeId, nodeState);
       descriptionService.setDescriptions(nodeData[1].getId(), nodeLabels);
-      return Response.ok().build();
+      return Response.ok().entity(nodeData).build();
     } catch (Exception e) {
       LOG.error("Error when creating a new navigation node", e);
       return Response.serverError().entity(e.getMessage()).build();
