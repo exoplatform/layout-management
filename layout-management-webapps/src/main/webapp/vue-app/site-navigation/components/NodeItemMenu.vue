@@ -199,6 +199,7 @@ export default {
   },
   data: () => ({
     displayActionMenu: false,
+    nodeLabels: {}
   }),
   computed: {
     pageName() {
@@ -290,24 +291,33 @@ export default {
     pasteCopiedNode(navigationNodeId, nodeToPaste) {
       let pageRef = null;
       if (nodeToPaste.pageKey) {
-        pageRef = (nodeToPaste.pageKey?.ref ? nodeToPaste.pageKey?.ref : `${ nodeToPaste.pageKey.site.typeName}::${ nodeToPaste.pageKey.site.name}::${nodeToPaste.pageKey?.name}`);
+        pageRef = nodeToPaste.pageKey?.ref ? nodeToPaste.pageKey?.ref : `${ nodeToPaste.pageKey.site.typeName}::${ nodeToPaste.pageKey.site.name}::${nodeToPaste.pageKey?.name}`;
       }
       const visible = nodeToPaste.visibility !== 'HIDDEN';
       const isScheduled = nodeToPaste.visibility === 'TEMPORAL';
       const startScheduleDate = nodeToPaste.startPublicationTime !== -1 ? new Date(nodeToPaste.startPublicationTime) : null;
       const endScheduleDate = nodeToPaste.endPublicationTime !== -1 ? new Date(nodeToPaste.endPublicationTime) : null;
       const isPasteMode = true;
-      this.$siteNavigationService.createNode(navigationNodeId, null, nodeToPaste.label, nodeToPaste.name, visible, isScheduled, startScheduleDate, endScheduleDate, {}, pageRef, nodeToPaste.target, isPasteMode)
-        .then(navigationNodes => {
-          if (nodeToPaste.children.length > 0) {
-            nodeToPaste.children.forEach(children => {
-              this.pasteCopiedNode(navigationNodes[1].id, children);
-            });
-          }
+      this.$siteNavigationService.getNodeLabels(nodeToPaste.id)
+        .then(data => {
+          this.nodeLabels = {
+            labels: data.labels
+          };
         })
-        .finally(() => {
-          this.$root.$emit('refresh-navigation-nodes');
+        .then(() => {
+          this.$siteNavigationService.createNode(navigationNodeId, null, nodeToPaste.label, nodeToPaste.name, visible, isScheduled, startScheduleDate, endScheduleDate, this.nodeLabels, pageRef, nodeToPaste.target, isPasteMode)
+            .then(navigationNodes => {
+              if (nodeToPaste.children.length > 0) {
+                nodeToPaste.children.forEach(children => {
+                  this.pasteCopiedNode(navigationNodes[1].id, children);
+                });
+              }
+            })
+            .finally(() => {
+              this.$root.$emit('refresh-navigation-nodes');
+            });
         });
+
     }
   }
 };
