@@ -62,7 +62,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </td>
       <td class="align-center">
         <span>
-          {{ lastUpdatedDate }}
+          {{ updatedDate }}
         </span>
       </td>
       <td class="align-center">
@@ -184,8 +184,8 @@ export default {
         };
       }
     },
-    lastUpdatedDate() {
-      return this.formatDate(this.navigationNode.lastModifiedDate);
+    updatedDate() {
+      return this.formatDate(this.navigationNode.updatedDate);
     },
   },
   created() {
