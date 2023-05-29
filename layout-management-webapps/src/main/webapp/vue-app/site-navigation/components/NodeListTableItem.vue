@@ -18,49 +18,61 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <div class="d-contents">
     <tr>
       <td>
-        <v-list-item
-          dense
-          :class="`${highlightNode ? 'px-0 light-grey-background ' : 'px-0 '} ${ hasChildren && ' ' || 'pt-4'}`">
-          <v-list-item-action
-            class="me-2 my-0"
-            :class="extraClass">
-            <v-icon
-              v-if="hasChildren"
-              size="23"
-              @click="displayChildren = !displayChildren">
-              {{ icon }}
-            </v-icon>
-            <div v-else class="ms-3 me-2"></div>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title
-              :title="navigationNode.label"
-              class="font-weight-bold text-truncate">
-              {{ navigationNode.label }}
-            </v-list-item-title>
-            <v-list-item-subtitle
-              :title="navigationNodeUri"
-              class="text-truncate">
-              {{ navigationNodeUri }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+        <v-hover>
+          <v-row
+            slot-scope="{ hover }"
+            class="d-flex pt-2 px-0 v-list-item v-list-item--dense"
+            :class="`${highlightNode ? 'light-grey-background ' : ' '}`">
+            <v-col
+              :cols="cols"
+              class="my-0 py-0 px-0">
+              <v-icon
+                v-if="hasChildren"
+                size="23"
+                class="align-center px-0"
+                :class="!$vuetify.rtl ? 'pull-right' : 'pull-left'"
+                @click="displayChildren = !displayChildren">
+                {{ icon }}
+              </v-icon>
+              <div v-else class="ms-3 me-2"></div>
+            </v-col>
+            <v-col
+              class="my-0 py-0">
+              <v-list-item class="px-0">
+                <v-list-item-content>
+                  <v-list-item-title
+                    :title="navigationNode.label"
+                    class="font-weight-bold text-truncate">
+                    {{ navigationNode.label }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle
+                    :title="navigationNodeUri"
+                    class="text-truncate">
+                    {{ navigationNodeUri }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-col>
+            <v-col
+              cols="1"
+              class="my-0 py-0">
+              <site-navigation-node-item-menu
+                :navigation-node="navigationNode"
+                :hover="hover"
+                :can-move-up="canMoveUp"
+                :can-move-down="canMoveDown"
+                :node-to-paste="nodeToPaste"
+                :paste-mode="pasteMode" />
+            </v-col>
+          </v-row>
+        </v-hover>
       </td>
-      <td class="align-center">
-        <site-navigation-node-item-menu
-          :navigation-node="navigationNode"
-          hover
-          :can-move-up="canMoveUp"
-          :can-move-down="canMoveDown"
-          :node-to-paste="nodeToPaste"
-          :paste-mode="pasteMode" />
-      </td>
-      <td class="align-center">
+      <td class="align-center text-light-color font-weight-bold">
         <span>
           {{ $t(`siteNavigation.label.${navigationNodeType}`) }}
         </span>
       </td>
-      <td class="align-center">
+      <td class="align-center text-light-color font-weight-bold">
         <span>
           {{ updatedDate }}
         </span>
@@ -93,7 +105,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         :navigation-node="child"
         :can-move-up="canMoveUpChildNode(child)"
         :can-move-down="canMoveDownChildNode(child)"
-        :margin="margin+2" />
+        :cols="cols + 1" />
     </template>
   </div>
 </template>
@@ -113,9 +125,9 @@ export default {
       type: Boolean,
       default: () => false,
     },
-    margin: {
+    cols: {
       type: Number,
-      default: () => 0,
+      default: () => 1,
     },
   },
   data() {
@@ -134,9 +146,6 @@ export default {
     };
   },
   computed: {
-    extraClass() {
-      return `ms-${this.margin + 2}`;
-    },
     highlightNode() {
       return this.navigationNode.uri === eXo.env.portal.selectedNodeUri;
     },
