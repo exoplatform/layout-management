@@ -69,16 +69,8 @@ export default {
       return [
         {
           text: this.$t('siteNavigation.label.node'),
-          align: 'center',
           value: 'node',
           width: '300',
-          sortable: false
-        },
-        {
-          text: this.$t('siteNavigation.label.actions'),
-          align: 'center',
-          value: 'actions',
-          width: '120',
           sortable: false
         },
         {
