@@ -415,14 +415,21 @@ export default {
         } else {
           let targetPageUrl ;
           if (pageData?.pageType === 'LINK' ) {
-            targetPageUrl = pageData?.createdPage?.state?.link;
+            targetPageUrl =  this.urlVerify(pageData?.createdPage?.state?.link) ;
           } else {
-            targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}/${this.nodeId}`;
+            targetPageUrl = `/portal${this.navigationNode.siteKey.type === 'GROUP' ? '/g' : ''}/${this.navigationNode.siteKey.name.replaceAll('/', ':')}/${this.navigationNode.uri}`;
+            targetPageUrl =  !this.editMode && `${targetPageUrl}/${this.nodeId}` || targetPageUrl;
           }
           window.open(targetPageUrl, pageData?.nodeTarget === 'SAME_TAB' && '_self' || '_blank');
         }
       }
-    }
+    },
+    urlVerify(url) {
+      if (!url.match(/^((https?:\/\/))|(javascript:)|(\/portal\/)/)) {
+        url = `//${url}`;
+      }
+      return url ;
+    },
   }
 };
 </script>
