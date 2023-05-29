@@ -61,6 +61,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </span>
       </td>
       <td class="align-center">
+        <span>
+          {{ lastUpdatedDate }}
+        </span>
+      </td>
+      <td class="align-center">
         <v-icon
           :title="visibilityIcon.title"
           color="grey"
@@ -117,7 +122,15 @@ export default {
     return {
       displayChildren: false,
       nodeToPaste: null,
-      pasteMode: null
+      pasteMode: null,
+      lang: eXo.env.portal.language || 'en',
+      fullDateFormat: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      },
     };
   },
   computed: {
@@ -170,6 +183,9 @@ export default {
           title: this.$t('siteNavigation.label.access.specific'),
         };
       }
+    },
+    lastUpdatedDate() {
+      return this.formatDate(this.navigationNode.lastModifiedDate);
     },
   },
   created() {
@@ -235,7 +251,10 @@ export default {
     copyNode(navigationNode) {
       this.pasteMode = 'Copy';
       this.nodeToPaste = navigationNode;
-    }
+    },
+    formatDate(time) {
+      return !time && '--' || this.$dateUtil.formatDateObjectToDisplay(new Date(time),this.fullDateFormat, this.lang);
+    },
   }
 };
 </script>
