@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-hover>
           <v-row
             slot-scope="{ hover }"
-            class="d-flex pt-2 px-0 v-list-item v-list-item--dense"
+            class="d-flex pt-2 px-0 text-truncate v-list-item v-list-item--dense d-flex flex-nowrap"
             :class="`${highlightNode ? 'light-grey-background ' : ' '}`">
             <v-col
               :cols="cols"
@@ -37,7 +37,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               <div v-else class="ms-3 me-2"></div>
             </v-col>
             <v-col
-              class="my-0 py-0">
+              class="my-0 py-0 text-truncate">
               <v-list-item class="px-0">
                 <v-list-item-content>
                   <v-list-item-title
