@@ -15,53 +15,66 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <div :class="hasChildren ? 'ms-4' : 'ms-7'">
+  <div>
     <v-hover>
-      <div slot-scope="{ hover }">
-        <v-list-item
-          dense
-          :class="highlightNode ? 'px-0 light-grey-background' : 'px-0'">
-          <v-list-item-action class="me-2 my-0">
-            <v-icon
-              v-if="hasChildren"
-              size="24"
-              @click="displayChildren = !displayChildren">
-              {{ icon }}
-            </v-icon>
-            <div v-else class="mfs-3 mfe-2"></div>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title
-              :title="navigationNode.label"
-              class="font-weight-bold text-truncate">
-              {{ navigationNode.label }}
-            </v-list-item-title>
-            <v-list-item-subtitle
-              :title="navigationNodeUri"
-              class="text-truncate">
-              {{ navigationNodeUri }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
-          <v-list-item-action class="mx-0 my-0">
-            <site-navigation-node-item-menu
-              :navigation-node="navigationNode"
-              :hover="hover"
-              :can-move-up="canMoveUp"
-              :can-move-down="canMoveDown"
-              :node-to-paste="nodeToPaste"
-              :paste-mode="pasteMode" />
-          </v-list-item-action>
-        </v-list-item>
-      </div>
+      <v-row
+        slot-scope="{ hover }"
+        class="d-flex pt-2 px-0 text-truncate v-list-item v-list-item--dense d-flex flex-nowrap"
+        :class="`${highlightNode ? ' light-grey-background ' : ' '}`">
+        <v-col
+          :cols="cols"
+          class="my-0 py-0 px-0">
+          <v-icon
+            v-if="hasChildren"
+            size="23"
+            class="px-0"
+            :class="!$vuetify.rtl ? 'pull-right' : 'pull-left'"
+            @click="displayChildren = !displayChildren">
+            {{ icon }}
+          </v-icon>
+          <div v-else class="ms-3 me-2"></div>
+        </v-col>
+        <v-col
+          class="my-0 py-0 text-truncate">
+          <v-list-item class="px-0" >
+            <v-list-item-content>
+              <v-list-item-title
+                :title="navigationNode.label"
+                class="font-weight-bold text-truncate"
+                style="max-width: 250px">
+                {{ navigationNode.label }}
+              </v-list-item-title>
+              <v-list-item-subtitle
+                :title="navigationNodeUri"
+                class="text-truncate"
+                style="max-width: 250px">
+                {{ navigationNodeUri }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-col>
+        <v-col
+          cols="1"
+          class="my-0 py-0">
+          <site-navigation-node-item-menu
+            :navigation-node="navigationNode"
+            :hover="hover"
+            :can-move-up="canMoveUp"
+            :can-move-down="canMoveDown"
+            :node-to-paste="nodeToPaste"
+            :paste-mode="pasteMode" />
+        </v-col>
+      </v-row>
     </v-hover>
-    <div v-if="displayChildren">
+    <template v-if="displayChildren">
       <site-navigation-node-item
         v-for="child in navigationNode.children"
         :key="child.id"
         :navigation-node="child"
         :can-move-up="canMoveUpChildNode(child)"
-        :can-move-down="canMoveDownChildNode(child)" />
-    </div>
+        :can-move-down="canMoveDownChildNode(child)"
+        :cols="cols + 1" />
+    </template>
   </div>
 </template>
 
@@ -79,6 +92,10 @@ export default {
     canMoveDown: {
       type: Boolean,
       default: () => false,
+    },
+    cols: {
+      type: Number,
+      default: () => 1,
     },
   },
   data() {
