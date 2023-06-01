@@ -27,10 +27,29 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </template>
     <template slot="content">
       <div :class="$refs.siteNavigationDrawer?.expand ? 'singlePageApplication' : ' ' ">
-        <v-chip
-          class="ms-4 mt-3 mb-4 primary">
-          {{ siteName }}
-        </v-chip>
+        <v-toolbar
+          color="white"
+          flat
+          dense>
+          <v-chip
+            class="ms-4 mt-3 mb-4 primary">
+            {{ siteName }}
+          </v-chip>
+          <v-spacer />
+          <select
+            id="siteNavigationDrawerFilterSelect"
+            v-model="filter"
+            v-if="$refs.siteNavigationDrawer?.expand"
+            class="ignore-vuetify-classes width-auto pa-0 me-5 mb-0"
+            @change="getNavigationNodes">
+            <option
+              v-for="item in navigationsFilter"
+              :key="item.value"
+              :value="item.value">
+              {{ item.text }}
+            </option>
+          </select>
+        </v-toolbar>
         <site-navigation-nodes-list
           :navigation-nodes="navigationNodes"
           :expanded="$refs.siteNavigationDrawer?.expand"
@@ -48,7 +67,26 @@ export default {
       siteName: eXo.env.portal.siteKeyName,
       siteType: eXo.env.portal.siteKeyType,
       loading: false,
+      filter: 'ALL',
+
     };
+  },
+  computed: {
+    navigationsFilter() {
+      return [{
+        text: this.$t('siteNavigation.label.all'),
+        value: 'ALL',
+      },{
+        text: this.$t('siteNavigation.label.group'),
+        value: 'GROUP',
+      },{
+        text: this.$t('siteNavigation.label.page'),
+        value: 'PAGE',
+      },{
+        text: this.$t('siteNavigation.label.link'),
+        value: 'LINK',
+      }];
+    },
   },
   created() {
     this.$root.$on('navigation-node-deleted', this.getNavigationNodes);
@@ -65,7 +103,7 @@ export default {
     },
     getNavigationNodes() {
       this.loading = true;
-      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
+      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true, this.filter)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
           this.loading = false;
