@@ -16,19 +16,36 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <template>
-  <v-list>
-    <v-list-item
-      v-for="navigationNode in navigationNodes"
-      :key="navigationNode.id"
-      class="px-1">
-      <v-list-item-content class="text-truncate py-0 px-3">
-        <site-navigation-node-item
-          :navigation-node="navigationNode"
-          :can-move-up="canMoveUpNode(navigationNode)"
-          :can-move-down="canMoveDownNode(navigationNode)" />
-      </v-list-item-content>
-    </v-list-item>
-  </v-list>
+  <div>
+    <template v-if="expanded">
+      <v-data-table
+        :headers="headers"
+        :items="navigationNodes"
+        :loading="loading"
+        disable-pagination
+        hide-default-footer>
+        <template slot="item" slot-scope="props">
+          <site-navigation-nodes-list-table-item
+            :navigation-node="props.item"
+            :can-move-up="canMoveUpNode(props.item)"
+            :can-move-down="canMoveDownNode(props.item)" />
+        </template>
+      </v-data-table>
+    </template>
+    <v-list v-else>
+      <v-list-item
+        v-for="navigationNode in navigationNodes"
+        :key="navigationNode.id"
+        class="px-1">
+        <v-list-item-content class="text-truncate py-0 px-3">
+          <site-navigation-node-item
+            :navigation-node="navigationNode"
+            :can-move-up="canMoveUpNode(navigationNode)"
+            :can-move-down="canMoveDownNode(navigationNode)" />
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </div>
 </template>
 
 <script>
@@ -37,6 +54,47 @@ export default {
     navigationNodes: {
       type: Object,
       default: null
+    },
+    expanded: {
+      type: Boolean,
+      default: false
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+  },
+  computed: {
+    headers() {
+      return [
+        {
+          text: this.$t('siteNavigation.label.node'),
+          value: 'node',
+          width: '300',
+          sortable: false
+        },
+        {
+          text: this.$t('siteNavigation.label.nodeType'),
+          align: 'center',
+          value: 'nodeType',
+          width: '120',
+          sortable: false
+        },
+        {
+          text: this.$t('siteNavigation.label.visibility'),
+          align: 'center',
+          value: 'visibility',
+          width: '120',
+          sortable: false
+        },
+        {
+          text: this.$t('siteNavigation.label.access'),
+          align: 'center',
+          value: 'access',
+          width: '120',
+          sortable: false
+        }
+      ];
     },
   },
   created() {
