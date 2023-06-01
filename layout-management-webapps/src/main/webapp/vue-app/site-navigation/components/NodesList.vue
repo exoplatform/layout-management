@@ -32,11 +32,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </template>
       </v-data-table>
     </template>
-    <v-list v-else>
+    <v-list v-else class="ms-4">
       <v-list-item
         v-for="navigationNode in navigationNodes"
         :key="navigationNode.id"
-        class="px-1">
+        class="px-1 text-truncate">
         <v-list-item-content class="text-truncate py-0 px-3">
           <site-navigation-node-item
             :navigation-node="navigationNode"
