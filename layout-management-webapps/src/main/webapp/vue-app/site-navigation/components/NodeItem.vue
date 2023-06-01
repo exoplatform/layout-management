@@ -54,7 +54,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-list-item>
         </v-col>
         <v-col
-          cols="1"
+          cols="2"
           class="my-0 py-0">
           <site-navigation-node-item-menu
             :navigation-node="navigationNode"
