@@ -48,18 +48,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </v-list-item>
       <v-divider />
       <v-list-item
-        @click="deleteNode()">
-        <v-icon
-          size="13"
-          class="pe-1">
-          fas fa-trash
-        </v-icon>
-        <v-list-item-title
-          class="subtitle-2">
-          <span class="ps-1">{{ $t('siteNavigation.label.delete') }}</span>
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item
         @click="$root.$emit('open-site-navigation-add-node-drawer', navigationNode)">
         <v-icon
           size="13"
@@ -81,6 +69,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-list-item-title
           class="subtitle-2">
           <span class="ps-1">{{ $t('siteNavigation.drawer.editNode.title') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        @click="deleteNode()">
+        <v-icon
+          size="13"
+          class="pe-1">
+          fas fa-trash
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteNavigation.label.delete') }}</span>
         </v-list-item-title>
       </v-list-item>
       <v-divider />
