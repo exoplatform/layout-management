@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <v-snackbar
     :value="displayAlerts"
+    class="z-index-modal"
     color="transparent"
     elevation="0"
     app
