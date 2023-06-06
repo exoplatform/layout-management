@@ -40,8 +40,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             id="siteNavigationDrawerFilterSelect"
             v-model="filter"
             v-if="$refs.siteNavigationDrawer?.expand"
-            class="ignore-vuetify-classes width-auto pa-0 me-5 mb-0"
-            @change="getNavigationNodes">
+            class="ignore-vuetify-classes width-auto pa-0 me-5 mb-0">
             <option
               v-for="item in navigationsFilter"
               :key="item.value"
@@ -51,9 +50,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </select>
         </v-toolbar>
         <site-navigation-nodes-list
-          :navigation-nodes="navigationNodes"
+          :navigation-nodes="navigationNodesToDisplay"
           :expanded="$refs.siteNavigationDrawer?.expand"
-          :loading="loading" />
+          :loading="loading"
+          :hide-children="hideChildren" />
       </div>
     </template>
   </exo-drawer>
@@ -64,6 +64,7 @@ export default {
   data() {
     return {
       navigationNodes: [],
+      navigationNodesToDisplay: [],
       siteName: eXo.env.portal.siteKeyName,
       siteType: eXo.env.portal.siteKeyType,
       loading: false,
@@ -87,6 +88,14 @@ export default {
         value: 'LINK',
       }];
     },
+    hideChildren(){
+      return this.filter !== 'ALL';
+    }
+  },
+  watch: {
+    filter() {
+      this.filterNavigationNodes();
+    },
   },
   created() {
     this.$root.$on('navigation-node-deleted', this.getNavigationNodes);
@@ -103,11 +112,54 @@ export default {
     },
     getNavigationNodes() {
       this.loading = true;
-      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true, this.filter)
+      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
+          this.filterNavigationNodes();
           this.loading = false;
         });
+    },
+    filterNavigationNodes(){
+      this.navigationNodesToDisplay = [];
+      if (this.filter === 'PAGE') {
+        this.filterPageNavigationNodes(this.navigationNodes);
+      } else if ( this.filter === 'LINK') {
+        this.filterLinkNavigationNodes(this.navigationNodes);
+      } else if ( this.filter === 'GROUP') {
+        this.filterGroupNavigationNodes(this.navigationNodes);
+      } else {
+        this.navigationNodesToDisplay = this.navigationNodes;
+      }
+    },
+    filterPageNavigationNodes(navigationNodes){
+      navigationNodes.forEach(child => {
+        if (child.children.length > 0) {
+          this.filterPageNavigationNodes(child.children);
+        }
+        if (child.pageKey && !child.pageLink) {
+          this.navigationNodesToDisplay.push(child);
+        }
+      });
+    },
+    filterLinkNavigationNodes(navigationNodes){
+      navigationNodes.forEach(child => {
+        if (child.children.length > 0) {
+          this.filterLinkNavigationNodes(child.children);
+        }
+        if (child.pageKey && child.pageLink) {
+          this.navigationNodesToDisplay.push(child);
+        }
+      });
+    },
+    filterGroupNavigationNodes(navigationNodes){
+      navigationNodes.forEach(child => {
+        if (child.children.length > 0) {
+          this.filterGroupNavigationNodes(child.children);
+        }
+        if (!child.pageKey && !child.pageLink) {
+          this.navigationNodesToDisplay.push(child);
+        }
+      });
     },
   }
 };

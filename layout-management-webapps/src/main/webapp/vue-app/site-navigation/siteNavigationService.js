@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getNavigationNodes(siteType, siteName, includeGlobal, expandPageDetails, filter) {
+export function getNavigationNodes(siteType, siteName, includeGlobal, expandPageDetails) {
   const formData = new FormData();
   if (siteName) {
     formData.append('siteName', siteName);
@@ -25,10 +25,6 @@ export function getNavigationNodes(siteType, siteName, includeGlobal, expandPage
   formData.append('expandPageDetails', expandPageDetails);
 
   formData.append('temporalCheck', false);
-
-  if (siteName) {
-    formData.append('filter', filter);
-  }
 
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/navigations/${siteType || 'portal'}?${params}`, {
