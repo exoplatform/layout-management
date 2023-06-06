@@ -16,29 +16,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <v-app v-if="canManageSiteNavigation">
-    <v-hover>
-      <div slot-scope="{ hover }" class="mx-2">
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn
-              v-bind="attrs"
-              v-on="on"
-              size="16"
-              outlined
-              icon>
-              <v-icon
-                v-show="hover"
-                class="mb-2 text-color"
-                size="16"
-                @click="openSiteNavigationDrawer">
-                fas fa-sitemap
-              </v-icon>
-            </v-btn>
-          </template>
-          {{ $t('siteNavigation.button.tooltip.label') }}
-        </v-tooltip>
-      </div>
-    </v-hover>
+    <v-btn
+      :title="$t('siteNavigation.button.tooltip.label')"
+      size="16"
+      outlined
+      icon
+      class="mx-2">
+      <v-icon
+        class="mb-2 text-color"
+        size="16"
+        @click="openSiteNavigationDrawer">
+        fas fa-sitemap
+      </v-icon>
+    </v-btn>
     <site-navigation-drawer />
     <site-navigation-manage-access-drawer />
     <site-navigation-node-drawer />
