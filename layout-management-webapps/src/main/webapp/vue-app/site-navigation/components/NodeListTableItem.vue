@@ -27,7 +27,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               :cols="cols"
               class="my-0 py-0 px-0">
               <v-icon
-                v-if="hasChildren"
+                v-if="hasChildren && !hideChildren"
                 size="23"
                 class="align-center px-0"
                 :class="!$vuetify.rtl ? 'pull-right' : 'pull-left'"
@@ -105,7 +105,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         :navigation-node="child"
         :can-move-up="canMoveUpChildNode(child)"
         :can-move-down="canMoveDownChildNode(child)"
-        :cols="cols + 1" />
+        :cols="cols + 1"
+        :hide-children="hideChildren" />
     </template>
   </div>
 </template>
@@ -128,6 +129,10 @@ export default {
     cols: {
       type: Number,
       default: () => 1,
+    },
+    hideChildren: {
+      type: Boolean,
+      default: true
     },
   },
   data() {
