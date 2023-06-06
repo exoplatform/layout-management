@@ -94,7 +94,7 @@ export default {
   },
   watch: {
     filter() {
-      this.filterNavigationNodes();
+      this.getNavigationNodes();
     },
   },
   created() {
