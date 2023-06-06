@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <v-app v-if="canManageSiteNavigation">
+  <v-app v-if="canManageSiteNavigation && !isMobile">
     <v-btn
       :title="$t('siteNavigation.button.tooltip.label')"
       size="16"
@@ -42,6 +42,11 @@ export default {
     canManageSiteNavigation: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.width < 768 ;
     },
   },
   methods: {
