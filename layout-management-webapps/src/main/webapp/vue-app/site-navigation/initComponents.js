@@ -18,7 +18,6 @@
 import SiteNavigation from './components/SiteNavigation.vue';
 import SiteNavigationDrawer from './components/SiteNavigationDrawer.vue';
 import SiteNavigationNodesList from './components/NodesList.vue';
-import SiteNavigationNodeItem from './components/NodeItem.vue';
 import SiteNavigationNodeItemMenu from './components/NodeItemMenu.vue';
 import SiteNavigationNotificationAlert from './snackbar/SiteNavigationNotificationAlert.vue';
 import SiteNavigationNotificationAlerts from './snackbar/SiteNavigationNotificationAlerts.vue';
@@ -41,7 +40,6 @@ const components = {
   'site-navigation': SiteNavigation,
   'site-navigation-drawer': SiteNavigationDrawer,
   'site-navigation-nodes-list': SiteNavigationNodesList,
-  'site-navigation-node-item': SiteNavigationNodeItem,
   'site-navigation-node-item-menu': SiteNavigationNodeItemMenu,
   'site-navigation-notification-alert': SiteNavigationNotificationAlert,
   'site-navigation-notification-alerts': SiteNavigationNotificationAlerts,

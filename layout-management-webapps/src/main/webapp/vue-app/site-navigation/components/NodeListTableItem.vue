@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <v-row
             slot-scope="{ hover }"
             class="d-flex pt-2 px-0 text-truncate v-list-item v-list-item--dense d-flex flex-nowrap"
-            :class="`${highlightNode ? 'light-grey-background ' : ' '}`">
+            :class="`${highlightNode ? 'light-grey-background ' : ' ' } ${expanded ? ' ' : ' ms-4 me-1 '} `">
             <v-col
               :cols="cols"
               class="my-0 py-0 px-0">
@@ -54,7 +54,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               </v-list-item>
             </v-col>
             <v-col
-              cols="1"
+              cols="2"
               class="my-0 py-0">
               <site-navigation-node-item-menu
                 :navigation-node="navigationNode"
@@ -67,17 +67,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-row>
         </v-hover>
       </td>
-      <td class="align-center text-light-color font-weight-bold">
+      <td v-if="expanded" class="align-center text-light-color font-weight-bold">
         <span>
           {{ $t(`siteNavigation.label.${navigationNodeType}`) }}
         </span>
       </td>
-      <td class="align-center">
+      <td v-if="expanded" class="align-center">
         <span>
           {{ updatedDate }}
         </span>
       </td>
-      <td class="align-center">
+      <td v-if="expanded" class="align-center">
         <v-icon
           :title="visibilityIcon.title"
           color="grey"
@@ -87,7 +87,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           {{ visibilityIcon.icon }}
         </v-icon>
       </td>
-      <td class="align-center">
+      <td v-if="expanded" class="align-center">
         <v-icon
           :title="accessIcon.title"
           color="grey"
@@ -106,7 +106,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         :can-move-up="canMoveUpChildNode(child)"
         :can-move-down="canMoveDownChildNode(child)"
         :cols="cols + 1"
-        :hide-children="hideChildren" />
+        :hide-children="hideChildren"
+        :expanded="expanded" />
     </template>
   </div>
 </template>
@@ -133,6 +134,10 @@ export default {
     hideChildren: {
       type: Boolean,
       default: true
+    },
+    expanded: {
+      type: Boolean,
+      default: false
     },
   },
   data() {
@@ -210,6 +215,9 @@ export default {
     this.$root.$on('cut-node', this.cutNode);
     this.$root.$on('site-navigation-hide-nodes-tree', () => {
       this.displayChildren = false;
+    });
+    this.$root.$on('site-navigation-drawer-opened', () => {
+      this.displayCurrentNodeParentTree();
     });
   },
   methods: {

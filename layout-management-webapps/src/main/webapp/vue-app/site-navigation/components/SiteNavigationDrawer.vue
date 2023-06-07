@@ -69,7 +69,6 @@ export default {
       siteType: eXo.env.portal.siteKeyType,
       loading: false,
       filter: 'ALL',
-
     };
   },
   computed: {
@@ -107,8 +106,10 @@ export default {
   methods: {
     open() {
       this.$refs.siteNavigationDrawer.open();
+      this.$nextTick().then(() =>  this.$root.$emit('site-navigation-drawer-opened'));
     },
     close() {
+      this.$root.$emit('site-navigation-hide-nodes-tree');
       this.$refs.siteNavigationDrawer.close();
     },
     getNavigationNodes() {
