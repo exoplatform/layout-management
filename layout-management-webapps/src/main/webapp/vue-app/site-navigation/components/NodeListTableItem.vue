@@ -98,7 +98,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-icon>
       </td>
     </tr>
-    <template v-if="displayChildren">
+    <template v-if="displayChildren && !hideChildren">
       <site-navigation-nodes-list-table-item
         v-for="child in navigationNode.children"
         :key="child.id"
@@ -208,6 +208,9 @@ export default {
     this.$root.$on('moveup-node', this.moveUpChildNode);
     this.$root.$on('movedown-node', this.moveDownChildNode);
     this.$root.$on('cut-node', this.cutNode);
+    this.$root.$on('site-navigation-hide-nodes-tree', () => {
+      this.displayChildren = false;
+    });
   },
   methods: {
     canMoveUpChildNode(navigationNode) {

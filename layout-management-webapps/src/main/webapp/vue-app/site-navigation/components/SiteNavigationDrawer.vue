@@ -94,7 +94,8 @@ export default {
   },
   watch: {
     filter() {
-      this.getNavigationNodes();
+      this.$root.$emit('site-navigation-hide-nodes-tree');
+      this.$nextTick().then (() => this.getNavigationNodes());
     },
   },
   created() {
