@@ -17,36 +17,23 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 <template>
   <div>
-    <template v-if="expanded">
+    <template>
       <v-data-table
-        :headers="headers"
+        :headers="expanded && headers || []"
         :items="navigationNodes"
         :loading="loading"
         disable-pagination
         hide-default-footer>
         <template slot="item" slot-scope="props">
-          <site-navigation-nodes-list-table-item
+          <site-navigation-node-item
             :navigation-node="props.item"
             :can-move-up="canMoveUpNode(props.item)"
             :can-move-down="canMoveDownNode(props.item)"
-            :hide-children="hideChildren" />
+            :hide-children="hideChildren"
+            :expanded="expanded" />
         </template>
       </v-data-table>
     </template>
-    <v-list v-else class="ms-4">
-      <v-list-item
-        v-for="navigationNode in navigationNodes"
-        :key="navigationNode.id"
-        class="px-1 text-truncate">
-        <v-list-item-content class="text-truncate py-0 px-3">
-          <site-navigation-node-item
-            :navigation-node="navigationNode"
-            :can-move-up="canMoveUpNode(navigationNode)"
-            :can-move-down="canMoveDownNode(navigationNode)"
-            :hide-children="hideChildren" />
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
   </div>
 </template>
 
@@ -76,7 +63,7 @@ export default {
         {
           text: this.$t('siteNavigation.label.node'),
           value: 'node',
-          width: '300',
+          width: this.expanded && '300' || '100',
           sortable: false
         },
         {

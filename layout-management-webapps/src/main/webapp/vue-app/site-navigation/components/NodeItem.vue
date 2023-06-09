@@ -15,58 +15,90 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
-    <v-hover>
-      <v-row
-        slot-scope="{ hover }"
-        class="d-flex pt-2 px-0 text-truncate v-list-item v-list-item--dense d-flex flex-nowrap"
-        :class="`${highlightNode ? ' light-grey-background ' : ' '}`">
-        <v-col
-          :cols="cols"
-          class="my-0 py-0 px-0">
-          <v-icon
-            v-if="hasChildren && !hideChildren"
-            size="23"
-            class="px-0"
-            :class="!$vuetify.rtl ? 'pull-right' : 'pull-left'"
-            @click="displayChildren = !displayChildren">
-            {{ icon }}
-          </v-icon>
-          <div v-else class="ms-3 me-2"></div>
-        </v-col>
-        <v-col
-          class="my-0 py-0 text-truncate">
-          <v-list-item class="px-0">
-            <v-list-item-content>
-              <v-list-item-title
-                :title="navigationNode.label"
-                class="font-weight-bold text-truncate"
-                style="max-width: 250px">
-                {{ navigationNode.label }}
-              </v-list-item-title>
-              <v-list-item-subtitle
-                :title="navigationNodeUri"
-                class="text-truncate"
-                style="max-width: 250px">
-                {{ navigationNodeUri }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-col>
-        <v-col
-          cols="2"
-          class="my-0 py-0">
-          <site-navigation-node-item-menu
-            :navigation-node="navigationNode"
-            :hover="hover"
-            :can-move-up="canMoveUp"
-            :can-move-down="canMoveDown"
-            :node-to-paste="nodeToPaste"
-            :paste-mode="pasteMode" />
-        </v-col>
-      </v-row>
-    </v-hover>
-    <template v-if="displayChildren">
+  <div class="d-contents">
+    <tr>
+      <td>
+        <v-hover>
+          <v-row
+            slot-scope="{ hover }"
+            class="d-flex pt-2 px-0 text-truncate v-list-item v-list-item--dense d-flex flex-nowrap"
+            :class="extraClass">
+            <v-col
+              :cols="cols"
+              class="my-0 py-0 px-0">
+              <v-icon
+                v-if="hasChildren && !hideChildren"
+                size="23"
+                class="align-center px-0"
+                :class="!$vuetify.rtl ? 'pull-right' : 'pull-left'"
+                @click="displayChildren = !displayChildren">
+                {{ icon }}
+              </v-icon>
+              <div v-else class="ms-3 me-2"></div>
+            </v-col>
+            <v-col
+              class="my-0 py-0 text-truncate">
+              <v-list-item class="px-0">
+                <v-list-item-content>
+                  <v-list-item-title
+                    :title="navigationNode.label"
+                    class="font-weight-bold text-truncate">
+                    {{ navigationNode.label }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle
+                    :title="navigationNodeUri"
+                    class="text-truncate">
+                    {{ navigationNodeUri }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-col>
+            <v-col
+              cols="2"
+              class="my-0 py-0">
+              <site-navigation-node-item-menu
+                :navigation-node="navigationNode"
+                :hover="hover"
+                :can-move-up="canMoveUp"
+                :can-move-down="canMoveDown"
+                :node-to-paste="nodeToPaste"
+                :paste-mode="pasteMode" />
+            </v-col>
+          </v-row>
+        </v-hover>
+      </td>
+      <td v-if="expanded" class="align-center text-light-color font-weight-bold">
+        <span>
+          {{ $t(`siteNavigation.label.${navigationNodeType}`) }}
+        </span>
+      </td>
+      <td v-if="expanded" class="align-center">
+        <span>
+          {{ updatedDate }}
+        </span>
+      </td>
+      <td v-if="expanded" class="align-center">
+        <v-icon
+          :title="visibilityIcon.title"
+          color="grey"
+          dark
+          size="20"
+          class="px-2">
+          {{ visibilityIcon.icon }}
+        </v-icon>
+      </td>
+      <td v-if="expanded" class="align-center">
+        <v-icon
+          :title="accessIcon.title"
+          color="grey"
+          dark
+          size="20"
+          class="px-2">
+          {{ accessIcon.icon }}
+        </v-icon>
+      </td>
+    </tr>
+    <template v-if="displayChildren && !hideChildren">
       <site-navigation-node-item
         v-for="child in navigationNode.children"
         :key="child.id"
@@ -74,7 +106,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         :can-move-up="canMoveUpChildNode(child)"
         :can-move-down="canMoveDownChildNode(child)"
         :cols="cols + 1"
-        :hide-children="hideChildren" />
+        :hide-children="hideChildren"
+        :expanded="expanded" />
     </template>
   </div>
 </template>
@@ -102,12 +135,24 @@ export default {
       type: Boolean,
       default: true
     },
+    expanded: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
       displayChildren: false,
       nodeToPaste: null,
-      pasteMode: null
+      pasteMode: null,
+      lang: eXo.env.portal.language || 'en',
+      fullDateFormat: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      },
     };
   },
   computed: {
@@ -123,6 +168,47 @@ export default {
     navigationNodeUri() {
       return `/${this.navigationNode.uri}`;
     },
+    navigationNodeType() {
+      return !this.navigationNode.pageKey && 'group' || this.navigationNode.pageLink && 'link' ||  this.navigationNode.pageKey && 'page';
+    },
+    visibilityIcon() {
+      switch (this.navigationNode?.visibility) {
+      case 'TEMPORAL':
+        return {
+          icon: 'fas fa-calendar-alt',
+          title: this.$t('siteNavigation.label.visibility.scheduled'),
+        };
+      case 'HIDDEN':
+        return {
+          icon: 'fas fa-eye-slash',
+          title: this.$t('siteNavigation.label.visibility.hidden'),
+        };
+      default:
+        return {
+          icon: 'fas fa-eye',
+          title: this.$t('siteNavigation.label.visibility.displayed'),
+        };
+      }
+    },
+    accessIcon() {
+      if (!this.navigationNode.pageAccessPermissions || this.navigationNode.pageAccessPermissions[0].membershipType === 'Everyone') {
+        return {
+          icon: 'fas fa-layer-group',
+          title: this.$t('siteNavigation.label.access.all'),
+        };
+      } else {
+        return {
+          icon: 'fas fa-user-lock',
+          title: this.$t('siteNavigation.label.access.specific'),
+        };
+      }
+    },
+    updatedDate() {
+      return this.formatDate(this.navigationNode.updatedDate);
+    },
+    extraClass() {
+      return `${this.highlightNode ? 'light-grey-background ' : ' ' } ${this.expanded ? ' ' : ' ms-4 me-1 '} `;
+    },
   },
   created() {
     this.displayCurrentNodeParentTree();
@@ -130,7 +216,12 @@ export default {
     this.$root.$on('moveup-node', this.moveUpChildNode);
     this.$root.$on('movedown-node', this.moveDownChildNode);
     this.$root.$on('cut-node', this.cutNode);
-    this.$root.$on('copy-node', this.copyNode);
+    this.$root.$on('site-navigation-hide-nodes-tree', () => {
+      this.displayChildren = false;
+    });
+    this.$root.$on('site-navigation-drawer-opened', () => {
+      this.displayCurrentNodeParentTree();
+    });
   },
   methods: {
     canMoveUpChildNode(navigationNode) {
@@ -138,17 +229,17 @@ export default {
     },
     canMoveDownChildNode(navigationNode) {
       return this.navigationNode.children.indexOf(navigationNode) < this.navigationNode.children.length - 1;
-    }, 
+    },
     moveUpChildNode(navigationNodeId) {
       if (this.navigationNode.children.length) {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = index > 1 ? this.navigationNode.children[index - 2].id : null;
-          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         }
-  
+
       }
     },
     moveDownChildNode(navigationNodeId) {
@@ -156,10 +247,10 @@ export default {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = this.navigationNode.children[index + 1].id;
-          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
-        } 
+        }
       }
     },
     deleteChildNode(navigationNodeId) {
@@ -187,7 +278,10 @@ export default {
     copyNode(navigationNode) {
       this.pasteMode = 'Copy';
       this.nodeToPaste = navigationNode;
-    }
+    },
+    formatDate(time) {
+      return !time && '--' || this.$dateUtil.formatDateObjectToDisplay(new Date(time),this.fullDateFormat, this.lang);
+    },
   }
 };
 </script>
