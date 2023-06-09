@@ -62,8 +62,8 @@ export default {
   },
   methods: {
     openSiteNavigationDrawer() {
-	  this.siteNavigationDrawerOpened = true;
-	  this.$nextTick().then(() => this.$root.$emit('open-site-navigation-drawer'));
+      this.siteNavigationDrawerOpened = true;
+      this.$nextTick().then(() => this.$root.$emit('open-site-navigation-drawer'));
     }
   }
 };
