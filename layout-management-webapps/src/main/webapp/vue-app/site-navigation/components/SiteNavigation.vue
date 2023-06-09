@@ -16,19 +16,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <v-app v-if="canManageSiteNavigation && !isMobile">
-    <v-btn
-      :title="$t('siteNavigation.button.tooltip.label')"
-      size="16"
-      outlined
-      icon
-      class="mx-2">
-      <v-icon
-        class="mb-2 text-color"
-        size="16"
-        @click="openSiteNavigationDrawer">
-        fas fa-sitemap
-      </v-icon>
-    </v-btn>
+    <v-tooltip bottom>
+      <template #activator="{ on, attrs }">
+        <v-btn
+          size="16"
+          outlined
+          icon
+          class="mx-2">
+          <v-icon
+            v-on="on"
+            v-bind="attrs"
+            class="mb-2 text-color"
+            size="16"
+            @click="openSiteNavigationDrawer">
+            fas fa-sitemap
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>{{ $t('siteNavigation.button.tooltip.label') }}</span>
+    </v-tooltip>
     <site-navigation-drawer />
     <site-navigation-manage-access-drawer />
     <site-navigation-node-drawer />
