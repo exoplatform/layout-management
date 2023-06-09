@@ -28,7 +28,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <site-navigation-nodes-list-table-item
             :navigation-node="props.item"
             :can-move-up="canMoveUpNode(props.item)"
-            :can-move-down="canMoveDownNode(props.item)" />
+            :can-move-down="canMoveDownNode(props.item)"
+            :hide-children="hideChildren" />
         </template>
       </v-data-table>
     </template>
@@ -41,7 +42,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <site-navigation-node-item
             :navigation-node="navigationNode"
             :can-move-up="canMoveUpNode(navigationNode)"
-            :can-move-down="canMoveDownNode(navigationNode)" />
+            :can-move-down="canMoveDownNode(navigationNode)"
+            :hide-children="hideChildren" />
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -60,6 +62,10 @@ export default {
       default: false
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    hideChildren: {
       type: Boolean,
       default: false
     },
