@@ -35,15 +35,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </template>
       <span>{{ $t('siteNavigation.button.tooltip.label') }}</span>
     </v-tooltip>
-    <site-navigation-drawer />
-    <site-navigation-manage-access-drawer />
-    <site-navigation-node-drawer />
-    <site-navigation-element-drawer />
-    <site-navigation-notification-alerts />
+    <site-navigation-drawer v-if="siteNavigationDrawerOpened" />
+    <site-navigation-manage-access-drawer v-if="siteNavigationDrawerOpened" />
+    <site-navigation-node-drawer v-if="siteNavigationDrawerOpened" />
+    <site-navigation-element-drawer v-if="siteNavigationDrawerOpened" />
+    <site-navigation-notification-alerts v-if="siteNavigationDrawerOpened" />
   </v-app>
 </template>
 <script>
 export default {
+  data () {
+    return {
+      siteNavigationDrawerOpened: false,
+    };
+  },
   props: {
     canManageSiteNavigation: {
       type: Boolean,
@@ -56,8 +61,9 @@ export default {
     },
   },
   methods: {
-    openSiteNavigationDrawer(){
-      this.$root.$emit('open-site-navigation-drawer');
+    openSiteNavigationDrawer() {
+      this.siteNavigationDrawerOpened = true;
+      this.$nextTick().then(() => this.$root.$emit('open-site-navigation-drawer'));
     }
   }
 };
