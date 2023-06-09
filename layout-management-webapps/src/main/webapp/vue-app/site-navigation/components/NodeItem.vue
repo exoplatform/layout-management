@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <v-row
             slot-scope="{ hover }"
             class="d-flex pt-2 px-0 text-truncate v-list-item v-list-item--dense d-flex flex-nowrap"
-            :class="`${highlightNode ? 'light-grey-background ' : ' ' } ${expanded ? ' ' : ' ms-4 me-1 '} `">
+            :class="extraClass">
             <v-col
               :cols="cols"
               class="my-0 py-0 px-0">
@@ -99,7 +99,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       </td>
     </tr>
     <template v-if="displayChildren && !hideChildren">
-      <site-navigation-nodes-list-table-item
+      <site-navigation-node-item
         v-for="child in navigationNode.children"
         :key="child.id"
         :navigation-node="child"
@@ -205,6 +205,9 @@ export default {
     },
     updatedDate() {
       return this.formatDate(this.navigationNode.updatedDate);
+    },
+    extraClass() {
+      return `${this.highlightNode ? 'light-grey-background ' : ' ' } ${this.expanded ? ' ' : ' ms-4 me-1 '} `;
     },
   },
   created() {

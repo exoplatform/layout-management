@@ -25,7 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         disable-pagination
         hide-default-footer>
         <template slot="item" slot-scope="props">
-          <site-navigation-nodes-list-table-item
+          <site-navigation-node-item
             :navigation-node="props.item"
             :can-move-up="canMoveUpNode(props.item)"
             :can-move-down="canMoveDownNode(props.item)"

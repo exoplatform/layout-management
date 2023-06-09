@@ -18,6 +18,7 @@
 import SiteNavigation from './components/SiteNavigation.vue';
 import SiteNavigationDrawer from './components/SiteNavigationDrawer.vue';
 import SiteNavigationNodesList from './components/NodesList.vue';
+import SiteNavigationNodeItem from './components/NodeItem.vue';
 import SiteNavigationNodeItemMenu from './components/NodeItemMenu.vue';
 import SiteNavigationNotificationAlert from './snackbar/SiteNavigationNotificationAlert.vue';
 import SiteNavigationNotificationAlerts from './snackbar/SiteNavigationNotificationAlerts.vue';
@@ -34,12 +35,12 @@ import SiteNavigationScheduleDatePickers from './components/SiteNavigationSchedu
 import SiteNavigationExistingPageElement from './components/SiteNavigationExistingPageElement.vue';
 import SiteNavigationPageSuggester from './components/SiteNavigationPageSuggester.vue';
 import SiteNavigationSiteSuggester from './components/SiteNavigationSiteSuggester.vue';
-import NodeListTableItem from './components/NodeListTableItem.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
   'site-navigation-drawer': SiteNavigationDrawer,
   'site-navigation-nodes-list': SiteNavigationNodesList,
+  'site-navigation-node-item': SiteNavigationNodeItem,
   'site-navigation-node-item-menu': SiteNavigationNodeItemMenu,
   'site-navigation-notification-alert': SiteNavigationNotificationAlert,
   'site-navigation-notification-alerts': SiteNavigationNotificationAlerts,
@@ -56,7 +57,6 @@ const components = {
   'site-navigation-existing-page-element': SiteNavigationExistingPageElement,
   'site-navigation-page-suggester': SiteNavigationPageSuggester,
   'site-navigation-site-suggester': SiteNavigationSiteSuggester,
-  'site-navigation-nodes-list-table-item': NodeListTableItem,
 };
 
 for (const key in components) {
