@@ -38,18 +38,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             </v-col>
             <v-col
               class="my-0 py-0 text-truncate">
-              <v-list-item class="px-0">
+              <v-list-item class="px-0 width-min-content">
                 <v-list-item-content>
-                  <v-list-item-title
-                    :title="navigationNode.label"
-                    class="font-weight-bold text-truncate">
-                    {{ navigationNode.label }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle
-                    :title="navigationNodeUri"
-                    class="text-truncate">
-                    {{ navigationNodeUri }}
-                  </v-list-item-subtitle>
+                  <v-tooltip bottom>
+                    <template #activator="{ on, attrs }">
+                      <v-list-item-title
+                        v-on="on"
+                        v-bind="attrs"
+                        class="font-weight-bold text-truncate">
+                        {{ navigationNode.label }}
+                      </v-list-item-title>
+                    </template>
+                    <span>{{ navigationNode.label }}</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template #activator="{ on, attrs }">
+                      <v-list-item-subtitle
+                        v-on="on"
+                        v-bind="attrs"
+                        class="text-truncate">
+                        {{ navigationNodeUri }}
+                      </v-list-item-subtitle>
+                    </template>
+                    <span>{{ navigationNodeUri }}</span>
+                  </v-tooltip>
                 </v-list-item-content>
               </v-list-item>
             </v-col>
@@ -78,24 +90,36 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </span>
       </td>
       <td v-if="expanded" class="align-center">
-        <v-icon
-          :title="visibilityIcon.title"
-          color="grey"
-          dark
-          size="20"
-          class="px-2">
-          {{ visibilityIcon.icon }}
-        </v-icon>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-icon
+              v-on="on"
+              v-bind="attrs"
+              color="grey"
+              dark
+              size="20"
+              class="px-2">
+              {{ visibilityIcon.icon }}
+            </v-icon>
+          </template>
+          <span>{{ visibilityIcon.title }}</span>
+        </v-tooltip>
       </td>
       <td v-if="expanded" class="align-center">
-        <v-icon
-          :title="accessIcon.title"
-          color="grey"
-          dark
-          size="20"
-          class="px-2">
-          {{ accessIcon.icon }}
-        </v-icon>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-icon
+              v-on="on"
+              v-bind="attrs"
+              color="grey"
+              dark
+              size="20"
+              class="px-2">
+              {{ accessIcon.icon }}
+            </v-icon>
+          </template>
+          <span>{{ accessIcon.title }}</span>
+        </v-tooltip>
       </td>
     </tr>
     <template v-if="displayChildren && !hideChildren">
