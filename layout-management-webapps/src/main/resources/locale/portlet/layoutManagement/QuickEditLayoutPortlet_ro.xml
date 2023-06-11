@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Adaugă pagină</AddPage>
          <EditNavigation>Navigare</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Adaugă Site</AddSite>
       </action>
-<ManageSites>Gestionează site-uri</ManageSites>
-<ManageGroupSites>Gestiona site-uri de grup</ManageGroupSites>
+      <ManageSites>Gestionează site-uri</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Roboţi:</robots>
       <sitemap>Hartă site:</sitemap>
       <sitemapvisible>Vizibil în harta site-ului</sitemapvisible>
-  <isInherited>Moştenit de la pagina părinte</isInherited>
+      <isInherited>Moştenit de la pagina părinte</isInherited>
       <priority>Prioritate:</priority>
       <frequency>Frecvență:</frequency>
       <select-language>Selectează limba</select-language>

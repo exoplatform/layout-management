@@ -18,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Ajouter un Site</AddSite>
       </action>
-<ManageSites>Gestion des Sites</ManageSites>
-<ManageGroupSites>Gestion des Sites de Groupe</ManageGroupSites>
+      <ManageSites>Gestion des Sites</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -31,7 +32,7 @@
       <robots>Robots:</robots>
       <sitemap>Sitemap:</sitemap>
       <sitemapvisible>Visible dans le sitemap</sitemapvisible>
-  <isInherited>Hérité de la page parent</isInherited>
+      <isInherited>Hérité de la page parent</isInherited>
       <priority>Priorité:</priority>
       <frequency>Fréquence:</frequency>
       <select-language>Sélectionnez une langue</select-language>

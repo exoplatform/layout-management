@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Sayfa Ekle</AddPage>
          <EditNavigation>Gezintiyi düzenle</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Site Ekle</AddSite>
       </action>
-<ManageSites>Siteleri Yönet</ManageSites>
-<ManageGroupSites>Grup Siteleri Yönet</ManageGroupSites>
+      <ManageSites>Siteleri Yönet</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robotlar:</robots>
       <sitemap>Site Haritası:</sitemap>
       <sitemapvisible>Site Haritasındaki görünür</sitemapvisible>
-  <isInherited>Üst sayfadan miras</isInherited>
+      <isInherited>Üst sayfadan miras</isInherited>
       <priority>Öncelik:</priority>
       <frequency>Frekans:</frequency>
       <select-language>Dil Seçin</select-language>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Pridėti puslapį</AddPage>
          <EditNavigation>Edit Navigation</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Pridėti svetainę</AddSite>
       </action>
-<ManageSites>Valdyti svetaines</ManageSites>
-<ManageGroupSites>Valdyti grupės svetaines</ManageGroupSites>
+      <ManageSites>Valdyti svetaines</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robots:</robots>
       <sitemap>Sitemap:</sitemap>
       <sitemapvisible>Matomas svetainės žemėlapyje</sitemapvisible>
-  <isInherited>Paveldėtas iš pagrindinio puslapio</isInherited>
+      <isInherited>Paveldėtas iš pagrindinio puslapio</isInherited>
       <priority>Priority:</priority>
       <frequency>Frequency:</frequency>
       <select-language>Pasirinkite kalbą</select-language>

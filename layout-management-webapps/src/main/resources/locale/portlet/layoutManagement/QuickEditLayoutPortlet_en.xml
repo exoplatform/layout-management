@@ -19,7 +19,7 @@
          <AddSite>Add Site</AddSite>
       </action>
       <ManageSites>Manage Sites</ManageSites>
-      <ManageGroupSites>Manage Group Sites</ManageGroupSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
       <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 

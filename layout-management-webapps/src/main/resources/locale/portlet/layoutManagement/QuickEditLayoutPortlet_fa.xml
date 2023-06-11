@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>اضافه کردن صفحه</AddPage>
          <EditNavigation>هدایت</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>اضافه کردن سایت</AddSite>
       </action>
-<ManageSites>مدیریت سایت ها</ManageSites>
-<ManageGroupSites>مدیریت سایت گروه ها</ManageGroupSites>
+      <ManageSites>مدیریت سایت ها</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>روبات ها:</robots>
       <sitemap>نقشه سایت:</sitemap>
       <sitemapvisible>قابل مشاهده در نقشه سایت</sitemapvisible>
-  <isInherited>از صفحه پدر به ارث رسیده</isInherited>
+      <isInherited>از صفحه پدر به ارث رسیده</isInherited>
       <priority>اولويت:</priority>
       <frequency>تکرار:</frequency>
       <select-language>یک زبان را انتخاب کنید</select-language>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Προσθήκη σελίδας</AddPage>
          <EditNavigation>Πλοήγηση</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Προσθήκη Τοποθεσίας</AddSite>
       </action>
-<ManageSites>Διαχείριση τοποθεσιών</ManageSites>
-<ManageGroupSites>Διαχείριση Τοποθεσιών Ομάδων</ManageGroupSites>
+      <ManageSites>Διαχείριση τοποθεσιών</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Ρομπότ ιστού:</robots>
       <sitemap>Χάρτης ιστότοπου:</sitemap>
       <sitemapvisible>Ορατό στο χάρτη του ιστότοπου</sitemapvisible>
-  <isInherited>Κληρονoμήθηκαν από τη γονική σελίδα</isInherited>
+      <isInherited>Κληρονoμήθηκαν από τη γονική σελίδα</isInherited>
       <priority>Προτεραιότητα:</priority>
       <frequency>Συχνότητα:</frequency>
       <select-language>Επιλέξτε μια γλώσσα</select-language>

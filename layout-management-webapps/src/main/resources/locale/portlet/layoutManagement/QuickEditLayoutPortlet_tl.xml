@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Magdagdag ng Pahina</AddPage>
          <EditNavigation>I-edit ang Nabigasyon</EditNavigation>
@@ -9,26 +12,27 @@
          <Page>Pahina</Page>
          <Site>Ang lugar</Site>
          <Layout>I-edit ang layout</Layout>
-         <siteLayout>I-edit ang layout</siteLayout>
+         <siteLayout>Edit Layout</siteLayout>
          <ManagePages>Pamahalaan ang mga Pahina</ManagePages>
          <GroupSite>Lugar ng grupo</GroupSite>
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Magdagdag ng lugar</AddSite>
       </action>
-<ManageSites>Pamahalaan ang mga Lugar</ManageSites>
-<ManageGroupSites>Pamahalaan ang Grupo ng mga Lugar</ManageGroupSites>
+      <ManageSites>Pamahalaan ang mga Lugar</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
     <label>
       <title>Pamagat:</title>  
-      <description>Deskripsyon:</description>
+      <description>Description:</description>
       <keywords>Mga keyword:</keywords>
       <language>Wika:</language>
       <robots>Mga robot:</robots>
       <sitemap>Ang Sitemap:</sitemap>
       <sitemapvisible>Makikita sa sitemap</sitemapvisible>
-  <isInherited>Nagmamana mula sa pahina ng magulang</isInherited>
+      <isInherited>Nagmamana mula sa pahina ng magulang</isInherited>
       <priority>Prayoridad:</priority>
       <frequency>Ang Dalas:</frequency>
       <select-language>Pumili ng wika</select-language>

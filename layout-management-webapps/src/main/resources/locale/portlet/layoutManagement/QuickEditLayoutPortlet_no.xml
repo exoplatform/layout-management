@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Legg til side</AddPage>
          <EditNavigation>Edit Navigation</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Legge til nettsted</AddSite>
       </action>
-<ManageSites>Administrer nettsteder</ManageSites>
-<ManageGroupSites>Administrere gruppe nettsteder</ManageGroupSites>
+      <ManageSites>Administrer nettsteder</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robots:</robots>
       <sitemap>Sitemap:</sitemap>
       <sitemapvisible>Synlig i nettstedskartet</sitemapvisible>
-  <isInherited>Arvet fra overordnet side</isInherited>
+      <isInherited>Arvet fra overordnet side</isInherited>
       <priority>Priority:</priority>
       <frequency>Frequency:</frequency>
       <select-language>Velg språk</select-language>

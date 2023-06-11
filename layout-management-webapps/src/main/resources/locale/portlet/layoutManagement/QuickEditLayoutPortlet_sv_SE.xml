@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Lägg till sida</AddPage>
          <EditNavigation>Edit Navigation</EditNavigation>
@@ -9,14 +12,15 @@
          <Page>Sida</Page>
          <Site>Webbplats</Site>
          <Layout>Redigera Layout</Layout>
-         <siteLayout>Redigera Layout</siteLayout>
+         <siteLayout>Edit Layout</siteLayout>
          <ManagePages>Hantera sidor</ManagePages>
          <GroupSite>Grupp webbplats</GroupSite>
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Lägg till webbplats</AddSite>
       </action>
-<ManageSites>Hantera webbplatser</ManageSites>
-<ManageGroupSites>Hantera grupp webbplatser</ManageGroupSites>
+      <ManageSites>Hantera webbplatser</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robots:</robots>
       <sitemap>Sitemap:</sitemap>
       <sitemapvisible>Synliga i karta på webbplats</sitemapvisible>
-  <isInherited>Ärvts från överordnad sida</isInherited>
+      <isInherited>Ärvts från överordnad sida</isInherited>
       <priority>Priority:</priority>
       <frequency>Frequency:</frequency>
       <select-language>Välj språk</select-language>

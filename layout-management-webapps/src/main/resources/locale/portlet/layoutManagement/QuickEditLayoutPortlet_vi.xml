@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Thêm Trang</AddPage>
          <EditNavigation>Edit Navigation</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Tạo Site</AddSite>
       </action>
-<ManageSites>Quản lý Site</ManageSites>
-<ManageGroupSites>Quản lý Nhóm Site</ManageGroupSites>
+      <ManageSites>Quản lý Site</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robot:</robots>
       <sitemap>Sơ đồ Trang:</sitemap>
       <sitemapvisible>Có thể nhìn thấy trong sơ đồ site</sitemapvisible>
-  <isInherited>Được kế thừa từ trang mẹ</isInherited>
+      <isInherited>Được kế thừa từ trang mẹ</isInherited>
       <priority>Độ ưu tiên:</priority>
       <frequency>Tần suất:</frequency>
       <select-language>Chọn Ngôn ngữ</select-language>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Añadir una página</AddPage>
          <EditNavigation>Editar Navegación</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Añadir sitio</AddSite>
       </action>
-<ManageSites>Administrar sitios</ManageSites>
-<ManageGroupSites>Administrar sitios del grupo</ManageGroupSites>
+      <ManageSites>Administrar sitios</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robots:</robots>
       <sitemap>Mapa del sitio:</sitemap>
       <sitemapvisible>Visible en el mapa del sitio</sitemapvisible>
-  <isInherited>Heredado de la página principal</isInherited>
+      <isInherited>Heredado de la página principal</isInherited>
       <priority>Prioridad:</priority>
       <frequency>Frecuencia:</frequency>
       <select-language>Selecciona Idioma</select-language>
@@ -52,7 +56,7 @@
       <confirm-delete>¿Está seguro que desea eliminar estos datos SEO?</confirm-delete>
     </msg>
     <title>
-    <seo-delete>Borrar</seo-delete>
+    <seo-delete>Eliminar</seo-delete>
     </title>
 <help> 
   <priority>Valores válidos oscilan entre 0.0 y 1.0.</priority>

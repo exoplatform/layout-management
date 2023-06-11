@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>إضافة صفحة</AddPage>
          <EditNavigation>تغيير التصفّح</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>إضافة موقع</AddSite>
       </action>
-<ManageSites>إدارة المواقع</ManageSites>
-<ManageGroupSites>إدارة مواقع المجموعة</ManageGroupSites>
+      <ManageSites>إدارة المواقع</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>الروبوتات:</robots>
       <sitemap>خريطة الموقع:</sitemap>
       <sitemapvisible>مرئية في خريطة الموقع</sitemapvisible>
-  <isInherited>الموروثة من الصفحة الأم</isInherited>
+      <isInherited>الموروثة من الصفحة الأم</isInherited>
       <priority>الأولوية:</priority>
       <frequency>التردد:</frequency>
       <select-language>اختيار اللغة</select-language>
@@ -45,7 +49,7 @@
  
     <action>
       <Save>#{word.save}</Save>
-      <Cancel>#{word.cancel}</Cancel>
+      <Cancel>إلغاء</Cancel>
     </action>
     <msg>
       <repository-exception>حدث خطأ غير متوقع. لا يمكن حفظ البيانات الوصفية للصفحة.</repository-exception>

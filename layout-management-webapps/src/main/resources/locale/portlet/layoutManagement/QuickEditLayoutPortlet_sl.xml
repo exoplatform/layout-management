@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Dodaj stran</AddPage>
          <EditNavigation>Uredi krmarjenje</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Dodaj spletno mesto</AddSite>
       </action>
-<ManageSites>Upravljanje spletnih mest</ManageSites>
-<ManageGroupSites>Upravljanje spletnega mesta skupine</ManageGroupSites>
+      <ManageSites>Upravljanje spletnih mest</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Roboti:</robots>
       <sitemap>Zemljevid strani:</sitemap>
       <sitemapvisible>Vidno v zemljevidu strani</sitemapvisible>
-  <isInherited>Podedovano od nadrejene strani</isInherited>
+      <isInherited>Podedovano od nadrejene strani</isInherited>
       <priority>Prioriteta:</priority>
       <frequency>Pogostost:</frequency>
       <select-language>Izberite jezik</select-language>

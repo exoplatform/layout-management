@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Přidat stránku</AddPage>
          <EditNavigation>Navigace</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Přidat web</AddSite>
       </action>
-<ManageSites>Správa webů</ManageSites>
-<ManageGroupSites>Správa stránek skupiny</ManageGroupSites>
+      <ManageSites>Správa webů</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Roboti:</robots>
       <sitemap>Mapa stránek:</sitemap>
       <sitemapvisible>Viditelné v mapě stránek</sitemapvisible>
-  <isInherited>Zděděno z nadřazené stránky</isInherited>
+      <isInherited>Zděděno z nadřazené stránky</isInherited>
       <priority>Priorita:</priority>
       <frequency>Frekvence:</frequency>
       <select-language>Vybrat jazyk</select-language>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>添加页面</AddPage>
          <EditNavigation>导航</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>添加站点</AddSite>
       </action>
-<ManageSites>管理站点</ManageSites>
-<ManageGroupSites>管理组站点</ManageGroupSites>
+      <ManageSites>管理站点</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>机器人：</robots>
       <sitemap>网站地图：</sitemap>
       <sitemapvisible>在站点地图中可见</sitemapvisible>
-  <isInherited>继承自父页</isInherited>
+      <isInherited>继承自父页</isInherited>
       <priority>优先级：</priority>
       <frequency>频率：</frequency>
       <select-language>选择一种语言</select-language>

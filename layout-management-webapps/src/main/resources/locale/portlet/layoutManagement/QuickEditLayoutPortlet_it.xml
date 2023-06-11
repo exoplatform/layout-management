@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Aggiungere Pagina</AddPage>
          <EditNavigation>Navigazione</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Aggiungere sito</AddSite>
       </action>
-<ManageSites>Gestire siti</ManageSites>
-<ManageGroupSites>Gestire siti di gruppo</ManageGroupSites>
+      <ManageSites>Gestire siti</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robot:</robots>
       <sitemap>Mappa del sito:</sitemap>
       <sitemapvisible>Visibile nella mappa del sito</sitemapvisible>
-  <isInherited>Ereditato dalla pagina padre</isInherited>
+      <isInherited>Ereditato dalla pagina padre</isInherited>
       <priority>Priorità:</priority>
       <frequency>Ferequenza:</frequency>
       <select-language>Selezionare una lingua</select-language>

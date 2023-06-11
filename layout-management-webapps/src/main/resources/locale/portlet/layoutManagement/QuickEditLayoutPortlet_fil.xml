@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Magdagdag ng Pahina</AddPage>
          <EditNavigation>I-edit ang Nabigasyon</EditNavigation>
@@ -9,14 +12,15 @@
          <Page>Ang Pahina</Page>
          <Site>Ang Site</Site>
          <Layout>I-edit ang layout</Layout>
-         <siteLayout>I-edit ang layout</siteLayout>
+         <siteLayout>Edit Layout</siteLayout>
          <ManagePages>Ang pamahalaan ang mga pahina</ManagePages>
          <GroupSite>Ang Groupo sa Sayt</GroupSite>
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Magdagdag ng site</AddSite>
       </action>
-<ManageSites>Ang Mamahala ng mga site</ManageSites>
-<ManageGroupSites>Ang Mamahala ng mga grupo ng mga site</ManageGroupSites>
+      <ManageSites>Ang Mamahala ng mga site</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Ang Mga Robot:</robots>
       <sitemap>Ang Saytmap:</sitemap>
       <sitemapvisible>Ang Makikita sa saytmap</sitemapvisible>
-  <isInherited>Ang mana mula sa magulang na pahina</isInherited>
+      <isInherited>Ang mana mula sa magulang na pahina</isInherited>
       <priority>Ang Prayoridad:</priority>
       <frequency>Ang Dalas:</frequency>
       <select-language>Ang Pumili ng Wika</select-language>

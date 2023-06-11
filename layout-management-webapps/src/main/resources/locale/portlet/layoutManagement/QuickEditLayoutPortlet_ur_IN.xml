@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>صفحہ ا ضافہ کریں</AddPage>
          <EditNavigation>نیوی گیشن میں ترمیم کریں</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>سائٹ کا ا ضافہ کریں</AddSite>
       </action>
-<ManageSites>سائٹس منظم کریی</ManageSites>
-<ManageGroupSites>گروپ سائٹس کا انتظام کریں</ManageGroupSites>
+      <ManageSites>سائٹس منظم کریی</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>روبوٹ:</robots>
       <sitemap>سائٹ کا نقشہ:</sitemap>
       <sitemapvisible>سائٹ کے نقشہ میں نظر آتا ہے</sitemapvisible>
-  <isInherited>اصلی صفحہ سے وراثت میں مِلا</isInherited>
+      <isInherited>اصلی صفحہ سے وراثت میں مِلا</isInherited>
       <priority>ترجیح:</priority>
       <frequency>کثرت:</frequency>
       <select-language>زبان منتخب کریں</select-language>

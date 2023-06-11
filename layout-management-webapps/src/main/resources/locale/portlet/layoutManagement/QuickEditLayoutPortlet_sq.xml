@@ -1,89 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>crwdns7075927:0crwdne7075927:0</EditAdministration>
+      </title>
       <action>
-         <AddPage>crwdns6786019:0crwdne6786019:0</AddPage>
-         <EditNavigation>crwdns6786020:0crwdne6786020:0</EditNavigation>
-         <Content>crwdns6786021:0crwdne6786021:0</Content>
-         <Editor>crwdns6786022:0crwdne6786022:0</Editor>
-         <Page>crwdns6786023:0crwdne6786023:0</Page>
-         <Site>crwdns6786024:0crwdne6786024:0</Site>
-         <Layout>crwdns6786025:0crwdne6786025:0</Layout>
-         <siteLayout>crwdns6786026:0crwdne6786026:0</siteLayout>
-         <ManagePages>crwdns6786027:0crwdne6786027:0</ManagePages>
-         <GroupSite>crwdns6786028:0crwdne6786028:0</GroupSite>
-         <Properties>crwdns6786029:0#{UISEOToolbarForm.label.seo}crwdne6786029:0</Properties>
-         <AddSite>crwdns6786030:0crwdne6786030:0</AddSite>
+         <AddPage>crwdns7075929:0crwdne7075929:0</AddPage>
+         <EditNavigation>crwdns7075931:0crwdne7075931:0</EditNavigation>
+         <Content>crwdns7075933:0crwdne7075933:0</Content>
+         <Editor>crwdns7075935:0crwdne7075935:0</Editor>
+         <Page>crwdns7075937:0crwdne7075937:0</Page>
+         <Site>crwdns7075939:0crwdne7075939:0</Site>
+         <Layout>crwdns7075941:0crwdne7075941:0</Layout>
+         <siteLayout>crwdns7075943:0crwdne7075943:0</siteLayout>
+         <ManagePages>crwdns7075945:0crwdne7075945:0</ManagePages>
+         <GroupSite>crwdns7075947:0crwdne7075947:0</GroupSite>
+         <Properties>crwdns7075949:0#{UISEOToolbarForm.label.seo}crwdne7075949:0</Properties>
+         <AddSite>crwdns7075951:0crwdne7075951:0</AddSite>
       </action>
-<ManageSites>crwdns6786031:0crwdne6786031:0</ManageSites>
-<ManageGroupSites>crwdns6786032:0crwdne6786032:0</ManageGroupSites>
+      <ManageSites>crwdns7075953:0crwdne7075953:0</ManageSites>
+      <ManageGroupSites>crwdns7075955:0crwdne7075955:0</ManageGroupSites>
+      <TopbarTooltip>crwdns7075957:0crwdne7075957:0</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
     <label>
-      <title>crwdns6786033:0crwdne6786033:0</title>  
-      <description>crwdns6786034:0crwdne6786034:0</description>
-      <keywords>crwdns6786035:0crwdne6786035:0</keywords>
-      <language>crwdns6786036:0crwdne6786036:0</language>
-      <robots>crwdns6786037:0crwdne6786037:0</robots>
-      <sitemap>crwdns6786038:0crwdne6786038:0</sitemap>
-      <sitemapvisible>crwdns6786039:0crwdne6786039:0</sitemapvisible>
-  <isInherited>crwdns6786040:0crwdne6786040:0</isInherited>
-      <priority>crwdns6786041:0crwdne6786041:0</priority>
-      <frequency>crwdns6786042:0crwdne6786042:0</frequency>
-      <select-language>crwdns6786043:0crwdne6786043:0</select-language>
+      <title>crwdns7075959:0crwdne7075959:0</title>  
+      <description>crwdns7075961:0crwdne7075961:0</description>
+      <keywords>crwdns7075963:0crwdne7075963:0</keywords>
+      <language>crwdns7075965:0crwdne7075965:0</language>
+      <robots>crwdns7075967:0crwdne7075967:0</robots>
+      <sitemap>crwdns7075969:0crwdne7075969:0</sitemap>
+      <sitemapvisible>crwdns7075971:0crwdne7075971:0</sitemapvisible>
+      <isInherited>crwdns7075973:0crwdne7075973:0</isInherited>
+      <priority>crwdns7075975:0crwdne7075975:0</priority>
+      <frequency>crwdns7075977:0crwdne7075977:0</frequency>
+      <select-language>crwdns7075979:0crwdne7075979:0</select-language>
       <option>
-        <Always>crwdns6786044:0crwdne6786044:0</Always>
-        <Hourly>crwdns6786045:0crwdne6786045:0</Hourly>
-        <Daily>crwdns6786046:0crwdne6786046:0</Daily>
-        <Weekly>crwdns6786047:0crwdne6786047:0</Weekly>
-        <Monthly>crwdns6786048:0crwdne6786048:0</Monthly>
-        <Yearly>crwdns6786049:0crwdne6786049:0</Yearly>
-        <Never>crwdns6786050:0crwdne6786050:0</Never>
+        <Always>crwdns7075981:0crwdne7075981:0</Always>
+        <Hourly>crwdns7075983:0crwdne7075983:0</Hourly>
+        <Daily>crwdns7075985:0crwdne7075985:0</Daily>
+        <Weekly>crwdns7075987:0crwdne7075987:0</Weekly>
+        <Monthly>crwdns7075989:0crwdne7075989:0</Monthly>
+        <Yearly>crwdns7075991:0crwdne7075991:0</Yearly>
+        <Never>crwdns7075993:0crwdne7075993:0</Never>
       </option> 
     </label>
  
     <action>
-      <Save>crwdns6786051:0#{word.save}crwdne6786051:0</Save>
-      <Cancel>crwdns6786052:0#{word.cancel}crwdne6786052:0</Cancel>
+      <Save>crwdns7075995:0#{word.save}crwdne7075995:0</Save>
+      <Cancel>crwdns7075997:0#{word.cancel}crwdne7075997:0</Cancel>
     </action>
     <msg>
-      <repository-exception>crwdns6786053:0crwdne6786053:0</repository-exception>
-      <confirm-delete>crwdns6786054:0crwdne6786054:0</confirm-delete>
+      <repository-exception>crwdns7075999:0crwdne7075999:0</repository-exception>
+      <confirm-delete>crwdns7076001:0crwdne7076001:0</confirm-delete>
     </msg>
     <title>
-    <seo-delete>crwdns6786055:0crwdne6786055:0</seo-delete>
+    <seo-delete>crwdns7076003:0crwdne7076003:0</seo-delete>
     </title>
 <help> 
-  <priority>crwdns6786056:0crwdne6786056:0</priority>
-  <description>crwdns6786057:0crwdne6786057:0</description>
-  <keywords>crwdns6786058:0crwdne6786058:0</keywords>  
+  <priority>crwdns7076005:0crwdne7076005:0</priority>
+  <description>crwdns7076007:0crwdne7076007:0</description>
+  <keywords>crwdns7076009:0crwdne7076009:0</keywords>  
     </help>  
   </UISEOForm>
   <UISEOPopupWindow>
   <title>
-      <UISEOForm>crwdns6786059:0#{UISEOToolbarForm.title.seo}crwdne6786059:0</UISEOForm>
+      <UISEOForm>crwdns7076011:0#{UISEOToolbarForm.title.seo}crwdne7076011:0</UISEOForm>
   </title>
   </UISEOPopupWindow>    
   <UISEOToolbarForm>
   <title>
-      <seo>crwdns6786060:0crwdne6786060:0</seo>
+      <seo>crwdns7076013:0crwdne7076013:0</seo>
   </title>
   <label>
-    <seo>crwdns6786061:0crwdne6786061:0</seo>
+    <seo>crwdns7076015:0crwdne7076015:0</seo>
   </label>
   </UISEOToolbarForm>  
   <FloatNumberValidator>
     <msg>
-      <Invalid-number>crwdns6786062:0crwdne6786062:0</Invalid-number>
+      <Invalid-number>crwdns7076017:0crwdne7076017:0</Invalid-number>
     </msg>
   </FloatNumberValidator>
   
   <Locale>
     <label>      
-      <it>crwdns6786063:0crwdne6786063:0</it>      
-      <fr>crwdns6786064:0crwdne6786064:0</fr>
-      <en>crwdns6786065:0crwdne6786065:0</en>      
+      <it>crwdns7076019:0crwdne7076019:0</it>      
+      <fr>crwdns7076021:0crwdne7076021:0</fr>
+      <en>crwdns7076023:0crwdne7076023:0</en>      
     </label>
   </Locale>
   

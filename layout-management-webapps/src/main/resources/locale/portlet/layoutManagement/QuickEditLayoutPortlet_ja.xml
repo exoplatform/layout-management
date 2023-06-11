@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>ページを追加</AddPage>
          <EditNavigation>ナビゲーションを編集</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>サイトを追加</AddSite>
       </action>
-<ManageSites>サイトを管理</ManageSites>
-<ManageGroupSites>サイト グループを管理</ManageGroupSites>
+      <ManageSites>サイトを管理</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>ロボット:</robots>
       <sitemap>サイトマップ：</sitemap>
       <sitemapvisible>サイトマップで公開</sitemapvisible>
-  <isInherited>親ページから継承</isInherited>
+      <isInherited>親ページから継承</isInherited>
       <priority>優先順位：</priority>
       <frequency>頻度:</frequency>
       <select-language>言語の選択</select-language>

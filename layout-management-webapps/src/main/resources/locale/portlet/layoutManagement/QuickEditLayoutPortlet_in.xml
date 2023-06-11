@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
    <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
       <action>
          <AddPage>Tambahkan Halaman</AddPage>
          <EditNavigation>Sunting Navigasi</EditNavigation>
@@ -15,8 +18,9 @@
          <Properties>#{UISEOToolbarForm.label.seo}</Properties>
          <AddSite>Tambahkan Situs</AddSite>
       </action>
-<ManageSites>Mengelola Situs</ManageSites>
-<ManageGroupSites>Mengelola Situs Grup</ManageGroupSites>
+      <ManageSites>Mengelola Situs</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
@@ -28,7 +32,7 @@
       <robots>Robot:</robots>
       <sitemap>Sitemap:</sitemap>
       <sitemapvisible>Nampak di sitemap</sitemapvisible>
-  <isInherited>Mewarisi dari halaman utama</isInherited>
+      <isInherited>Mewarisi dari halaman utama</isInherited>
       <priority>Prioritas:</priority>
       <frequency>Frekuensi:</frequency>
       <select-language>Pilih Bahasa</select-language>
