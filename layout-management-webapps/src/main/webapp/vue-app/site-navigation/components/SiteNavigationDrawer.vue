@@ -51,7 +51,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-toolbar>
         <site-navigation-nodes-list
           :navigation-nodes="navigationNodesToDisplay"
-          :expanded="$refs.siteNavigationDrawer?.expand"
+          :expanded="$refs.siteNavigationDrawer && $refs.siteNavigationDrawer?.expand"
           :loading="loading"
           :hide-children="hideChildren" />
       </div>
@@ -100,11 +100,11 @@ export default {
   created() {
     this.$root.$on('navigation-node-deleted', this.getNavigationNodes);
     this.$root.$on('refresh-navigation-nodes', this.getNavigationNodes);
-    this.getNavigationNodes();
     this.$root.$on('open-site-navigation-drawer', this.open);
   },
   methods: {
-    open() {
+    open(event) {
+      this.getNavigationNodes(event);
       this.$refs.siteNavigationDrawer.open();
       this.$nextTick().then(() =>  this.$root.$emit('site-navigation-drawer-opened'));
     },
@@ -112,9 +112,9 @@ export default {
       this.$root.$emit('site-navigation-hide-nodes-tree');
       this.$refs.siteNavigationDrawer.close();
     },
-    getNavigationNodes() {
+    getNavigationNodes(data) {
       this.loading = true;
-      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
+      return this.$siteNavigationService.getNavigationNodes( data?.siteType || this.siteType, data?.siteName || this.siteName, false, true)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
           this.filterNavigationNodes();
