@@ -60,10 +60,13 @@ export default {
       return this.$vuetify.breakpoint.width < 768 ;
     },
   },
+  created() {
+    document.addEventListener('open-site-navigation-drawer', event => this.openSiteNavigationDrawer(event.detail));
+  },
   methods: {
-    openSiteNavigationDrawer() {
+    openSiteNavigationDrawer(data) {
       this.siteNavigationDrawerOpened = true;
-      this.$nextTick().then(() => this.$root.$emit('open-site-navigation-drawer'));
+      this.$nextTick().then(() => this.$root.$emit('open-site-navigation-drawer', data));
     }
   }
 };
