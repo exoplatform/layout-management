@@ -35,6 +35,7 @@ const config = {
   ],
   entry: {
     siteNavigation: './src/main/webapp/vue-app/site-navigation/main.js',
+    siteManagement: './src/main/webapp/vue-app/site-management/main.js',
   },
   output: {
     path: path.join(__dirname, 'target/layout-management/'),
