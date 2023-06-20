@@ -16,6 +16,7 @@
  */
 
 import SiteNavigation from './components/SiteNavigation.vue';
+import SiteNavigationButton from './components/SiteNavigationButton.vue';
 import SiteNavigationDrawer from './components/SiteNavigationDrawer.vue';
 import SiteNavigationNodesList from './components/NodesList.vue';
 import SiteNavigationNodeItem from './components/NodeItem.vue';
@@ -38,6 +39,7 @@ import SiteNavigationSiteSuggester from './components/SiteNavigationSiteSuggeste
 
 const components = {
   'site-navigation': SiteNavigation,
+  'site-navigation-button': SiteNavigationButton,
   'site-navigation-drawer': SiteNavigationDrawer,
   'site-navigation-nodes-list': SiteNavigationNodesList,
   'site-navigation-node-item': SiteNavigationNodeItem,
