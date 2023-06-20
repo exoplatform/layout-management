@@ -27,6 +27,12 @@ if (extensionRegistry) {
   }
 }
 
+extensionRegistry.registerComponent('manageSpaceActions', 'manage-space-actions', {
+  id: 'manage-space-actions',
+  vueComponent: Vue.options.components['site-navigation-button'],
+  rank: 20,
+});
+
 Vue.use(Vuetify);
 const vuetify = new Vuetify(eXo.env.portal.vuetifyPreset);
 
