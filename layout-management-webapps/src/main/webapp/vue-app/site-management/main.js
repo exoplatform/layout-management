@@ -36,7 +36,7 @@ const appId = 'siteManagement';
 const lang = eXo?.env.portal.language || 'en';
 
 //should expose the locale ressources as REST API
-const urls = [`${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.portlet.layoutManagement.SiteNavigationPortlet-${lang}.json`];
+const urls = [`${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.portlet.layoutManagement.SiteManagementPortlet-${lang}.json`];
 
 export function init() {
   exoi18n.loadLanguageAsync(lang, urls).then(i18n => {
