@@ -15,14 +15,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getNavigationNodes(siteType, siteName, includeGlobal, expandPageDetails) {
+export function getNavigationNodes(siteType, siteName, includeGlobal, expand) {
   const formData = new FormData();
   if (siteName) {
     formData.append('siteName', siteName);
   }
   formData.append('includeGlobal', includeGlobal);
 
-  formData.append('expandPageDetails', expandPageDetails);
+  formData.append('expand', expand);
 
   formData.append('temporalCheck', false);
 
