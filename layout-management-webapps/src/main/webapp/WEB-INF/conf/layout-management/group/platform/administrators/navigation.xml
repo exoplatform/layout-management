@@ -51,5 +51,10 @@
       <label>#{administration.portalnavigation}</label>
       <page-reference>group::/platform/administrators::portalnavigation</page-reference>
     </node>
+    <node>
+      <name>siteManagement</name>
+      <label>#{administration.siteManagement}</label>
+      <page-reference>group::/platform/administrators::siteManagement</page-reference>
+    </node>
   </page-nodes>
 </node-navigation>
