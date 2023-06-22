@@ -114,7 +114,9 @@ export default {
     },
     getNavigationNodes(data) {
       this.loading = true;
-      return this.$siteNavigationService.getNavigationNodes( data?.siteType || this.siteType, data?.siteName || this.siteName, false, true)
+      this.siteName = data?.siteName || eXo.env.portal.siteKeyName;
+      this.siteType = data?.siteType || eXo.env.portal.siteKeyType;
+      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
           this.filterNavigationNodes();

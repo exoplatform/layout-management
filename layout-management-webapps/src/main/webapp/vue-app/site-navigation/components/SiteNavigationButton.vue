@@ -5,7 +5,8 @@
         size="16"
         outlined
         icon
-        class="mx-2">
+        class="mx-2"
+        :disabled="disabled">
         <v-icon
           v-on="on"
           v-bind="attrs"
@@ -25,6 +26,10 @@
 <script>
 export default {
   props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     iconClass: {
       type: String,
       default: null,
