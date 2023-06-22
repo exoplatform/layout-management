@@ -26,7 +26,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.exoplatform.services.organization.OrganizationService;
 import org.gatein.api.Portal;
 import org.gatein.api.site.Site;
 import org.gatein.api.site.SiteQuery;
@@ -48,11 +47,9 @@ public class SiteManagementRestService implements ResourceContainer {
   private static final Log LOG = ExoLogger.getLogger(SiteManagementRestService.class);
 
   private Portal           portal;
-  private OrganizationService organizationService;
 
-  public SiteManagementRestService(Portal portal, OrganizationService organizationService) {
+  public SiteManagementRestService(Portal portal) {
     this.portal = portal;
-    this.organizationService = organizationService;
   }
 
   @GET
@@ -65,7 +62,7 @@ public class SiteManagementRestService implements ResourceContainer {
     try {
       SiteQuery pageQuery = new SiteQuery.Builder().withSiteTypes(SiteType.SITE, SiteType.SPACE).build();
       List<Site> sites = portal.findSites(pageQuery);
-      return Response.ok().entity(EntityBuilder.toSiteRestEntities(sites, organizationService)).build();
+      return Response.ok().entity(EntityBuilder.toSiteRestEntities(sites)).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving sites", e);
       return Response.serverError().build();

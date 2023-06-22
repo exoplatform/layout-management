@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <v-app class="siteManagementApplication">
     <v-main class="white mx-8 my-8">
-      <site-management-sites-list :sites="sites" />
+      <site-management-sites-list :sites="sites"  class="mt-7"/>
     </v-main>
   </v-app>
 </template>
@@ -38,8 +38,8 @@ export default {
       return this.$siteManagementService.getSites()
         .then(sites => {
           this.sites = sites || [];
-          this.loading = false;
-        });
+        })
+        .finally(() => this.loading = false);
     }
   }
 };

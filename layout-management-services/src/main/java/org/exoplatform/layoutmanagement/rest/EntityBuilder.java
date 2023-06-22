@@ -92,7 +92,7 @@ public class EntityBuilder {
     return nodeLabelRestEntity;
   }
 
-  public static SiteRestEntity toSiteRestEntity(Site site, OrganizationService organizationService) {
+  public static SiteRestEntity toSiteRestEntity(Site site) {
     if (site == null) {
       return null;
     }
@@ -101,7 +101,7 @@ public class EntityBuilder {
 
     if (StringUtils.isBlank(displayName) && SiteType.GROUP.equals(siteType)) {
       try {
-        Group siteGroup = organizationService.getGroupHandler().findGroupById(site.getName());
+        Group siteGroup = getOrganizationService().getGroupHandler().findGroupById(site.getName());
         displayName = siteGroup != null ? siteGroup.getLabel() : null;
       } catch (Exception e) {
         // do nothing
@@ -116,7 +116,10 @@ public class EntityBuilder {
                               Util.from(site.getEditPermission())[0]);
   }
 
-  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites, OrganizationService organizationService) {
-    return sites.stream().map(site -> toSiteRestEntity(site, organizationService)).toList();
+  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
+    return sites.stream().map(site -> toSiteRestEntity(site)).toList();
+  }
+  private static OrganizationService getOrganizationService() {
+    return CommonsUtils.getService(OrganizationService.class);
   }
 }
