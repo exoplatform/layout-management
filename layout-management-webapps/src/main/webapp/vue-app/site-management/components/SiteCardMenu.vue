@@ -30,7 +30,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </template>
-    <v-list class="pa-0" dense />
+    <v-list class="pa-0" dense>
+      <v-list-item
+        class="subtitle-2 px-3"
+        @click="openSiteNavigationDrawer">
+        <v-icon
+          size="13"
+          class="me-2 ms-0"
+          color="primary">
+          fas fa-sitemap
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteManagement.label.navigation') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
   </v-menu>
 </template>
 
@@ -55,6 +70,14 @@ export default {
       }
     });
   },
-
+  methods: {
+    openSiteNavigationDrawer() {
+      const params = {
+        siteName: this.site.name,
+        siteType: this.site.siteType,
+      };
+      document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
+    }
+  }
 };
 </script>
