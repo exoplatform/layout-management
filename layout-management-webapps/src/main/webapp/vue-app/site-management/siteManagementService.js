@@ -15,27 +15,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import SiteManagement from './components/SiteManagement.vue';
-import SitesList from './components/SitesList.vue';
-import SiteCard from './components/SiteCard.vue';
-import SiteCardMenu from './components/SiteCardMenu.vue';
 
-
-const components = {
-  'site-management': SiteManagement,
-  'site-management-sites-list': SitesList,
-  'site-management-site-card': SiteCard,
-  'site-management-site-card-menu': SiteCardMenu,
-};
-
-for (const key in components) {
-  Vue.component(key, components[key]);
-}
-
-import * as siteManagementService from './siteManagementService.js';
-
-if (!Vue.prototype.$siteManagementService) {
-  window.Object.defineProperty(Vue.prototype, '$siteManagementService', {
-    value: siteManagementService,
+export function getSites() {
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  }).then(resp => {
+    if (resp || resp.ok) {
+      return resp.json();
+    } else {
+      throw new Error('Error when retrieving sites');
+    }
   });
 }
