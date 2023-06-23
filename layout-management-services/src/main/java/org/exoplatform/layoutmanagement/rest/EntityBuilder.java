@@ -24,11 +24,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.OrganizationService;
+import org.gatein.api.Util;
+import org.gatein.api.site.Site;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.I18N;
 import org.exoplatform.layoutmanagement.rest.model.NodeLabelRestEntity;
 import org.exoplatform.layoutmanagement.rest.model.PageTemplateRestEntity;
+import org.exoplatform.layoutmanagement.rest.model.SiteRestEntity;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
 import org.exoplatform.portal.mop.State;
 import org.exoplatform.services.resources.LocaleConfig;
@@ -84,5 +90,36 @@ public class EntityBuilder {
     nodeLabelRestEntity.setDefaultLanguage(defaultLanguage);
     nodeLabelRestEntity.setSupportedLanguages(supportedLanguages);
     return nodeLabelRestEntity;
+  }
+
+  public static SiteRestEntity toSiteRestEntity(Site site) {
+    if (site == null) {
+      return null;
+    }
+    SiteType siteType = Util.from(site.getType());
+    String displayName = site.getDisplayName();
+
+    if (StringUtils.isBlank(displayName) && SiteType.GROUP.equals(siteType)) {
+      try {
+        Group siteGroup = getOrganizationService().getGroupHandler().findGroupById(site.getName());
+        displayName = siteGroup != null ? siteGroup.getLabel() : null;
+      } catch (Exception e) {
+        // do nothing
+      }
+    }
+    return new SiteRestEntity(site.getId(),
+                              siteType,
+                              site.getName(),
+                              displayName,
+                              site.getDescription(),
+                              Util.from(site.getAccessPermission()),
+                              Util.from(site.getEditPermission())[0]);
+  }
+
+  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
+    return sites.stream().map(site -> toSiteRestEntity(site)).toList();
+  }
+  private static OrganizationService getOrganizationService() {
+    return CommonsUtils.getService(OrganizationService.class);
   }
 }
