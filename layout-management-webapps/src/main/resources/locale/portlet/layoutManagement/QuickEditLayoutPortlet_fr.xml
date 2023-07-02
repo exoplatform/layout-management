@@ -19,8 +19,8 @@
          <AddSite>Ajouter un Site</AddSite>
       </action>
       <ManageSites>Gestion des Sites</ManageSites>
-      <ManageGroupSites>Group Sites</ManageGroupSites>
-      <TopbarTooltip>Edit layout</TopbarTooltip>
+      <ManageGroupSites>Sites de groupe</ManageGroupSites>
+      <TopbarTooltip>Modifier la mise en page</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
