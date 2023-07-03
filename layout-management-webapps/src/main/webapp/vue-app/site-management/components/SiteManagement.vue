@@ -19,6 +19,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <v-main class="white">
       <site-management-sites-list :sites="sites" class="mt-7" />
     </v-main>
+    <exo-confirm-dialog
+      ref="deleteSiteConfirmDialog"
+      :message="deleteConfirmMessage"
+      :title="$t('siteManagement.label.confirmDelete')"
+      :ok-label="$t('siteManagement.label.confirm')"
+      :cancel-label="$t('siteManagement.label.cancel')"
+      @ok="deleteSite" />
   </v-app>
 </template>
 
@@ -27,9 +34,13 @@ export default {
   data() {
     return {
       sites: [],
+      siteToDelete: null,
+      deleteConfirmMessage: '',
     };
   },
   created() {
+    this.$root.$on('delete-site', this.confirmDelete);
+    this.$root.$on('refresh-sites', this.getSites);
     this.getSites();
   },
   methods: {
@@ -40,7 +51,17 @@ export default {
           this.sites = sites || [];
         })
         .finally(() => this.loading = false);
-    }
+    },
+    confirmDelete(siteToDelete) {
+      this.siteToDelete = siteToDelete;
+      this.deleteConfirmMessage = this.$t('siteManagement.label.confirmDelete.message', {0: this.siteToDelete.name});
+      this.$refs.deleteSiteConfirmDialog.open();
+    },
+    deleteSite() {
+      return this.$siteManagementService.deleteSite(this.siteToDelete.siteType, this.siteToDelete.name)
+        .then(() => {
+          this.$root.$emit('refresh-sites');
+        });}
   }
 };
 </script>
