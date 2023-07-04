@@ -159,6 +159,25 @@
     </portlet-info>
   </portlet>
 
+   <portlet>
+    <portlet-name>SiteManagementPortlet</portlet-name>
+    <display-name>Site Management Portlet</display-name>
+    <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+    <init-param>
+      <name>portlet-view-dispatched-file-path</name>
+      <value>/WEB-INF/jsp/siteManagement.jsp</value>
+    </init-param>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portlet.layoutManagement.SiteManagementPortlet</resource-bundle>
+    <portlet-info>
+      <title>site management</title>
+      <keywords>site management</keywords>
+    </portlet-info>
+  </portlet>
+
   <event-definition>
     <name>NavigationChange</name>
   </event-definition>
