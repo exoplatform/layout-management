@@ -65,8 +65,8 @@ export default {
     return {
       navigationNodes: [],
       navigationNodesToDisplay: [],
-      siteName: eXo.env.portal.siteKeyName,
-      siteType: eXo.env.portal.siteKeyType,
+      siteName: null,
+      siteType: null,
       loading: false,
       filter: 'ALL',
     };
@@ -104,18 +104,20 @@ export default {
   },
   methods: {
     open(event) {
-      this.getNavigationNodes(event);
+      this.siteName = event?.siteName || eXo.env.portal.siteKeyName;
+      this.siteType = event?.siteType || eXo.env.portal.siteKeyType;
+      this.getNavigationNodes();
       this.$refs.siteNavigationDrawer.open();
       this.$nextTick().then(() =>  this.$root.$emit('site-navigation-drawer-opened'));
     },
     close() {
+      this.siteName = null;
+      this.siteType = null;
       this.$root.$emit('site-navigation-hide-nodes-tree');
       this.$refs.siteNavigationDrawer.close();
     },
-    getNavigationNodes(data) {
+    getNavigationNodes() {
       this.loading = true;
-      this.siteName = data?.siteName || eXo.env.portal.siteKeyName;
-      this.siteType = data?.siteType || eXo.env.portal.siteKeyType;
       return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
