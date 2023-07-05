@@ -240,6 +240,7 @@ export default {
     this.$root.$on('moveup-node', this.moveUpChildNode);
     this.$root.$on('movedown-node', this.moveDownChildNode);
     this.$root.$on('cut-node', this.cutNode);
+    this.$root.$on('copy-node', this.copyNode);
     this.$root.$on('site-navigation-hide-nodes-tree', () => {
       this.displayChildren = false;
     });
