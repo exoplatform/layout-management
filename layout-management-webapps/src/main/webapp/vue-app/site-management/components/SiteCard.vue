@@ -18,7 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <v-card
     height="240"
     max-height="240"
-    outlined>
+    outlined
+    hover>
     <v-toolbar
       color="white"
       flat

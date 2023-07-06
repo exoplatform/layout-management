@@ -113,6 +113,8 @@ export default {
     close() {
       this.siteName = null;
       this.siteType = null;
+      this.navigationNodes = [];
+      this.navigationNodesToDisplay = [];
       this.$root.$emit('site-navigation-hide-nodes-tree');
       this.$refs.siteNavigationDrawer.close();
     },
@@ -122,8 +124,8 @@ export default {
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
           this.filterNavigationNodes();
-          this.loading = false;
-        });
+        })
+        .finally(() => this.loading = false);
     },
     filterNavigationNodes(){
       this.navigationNodesToDisplay = [];

@@ -75,6 +75,7 @@ export default {
       const params = {
         siteName: this.site.name,
         siteType: this.site.siteType,
+        includeGlobal: this.site.name.toLowerCase() === 'global'
       };
       document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
     }

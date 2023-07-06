@@ -27,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.gatein.api.Portal;
+import org.gatein.api.common.Filter;
 import org.gatein.api.site.Site;
 import org.gatein.api.site.SiteQuery;
 import org.gatein.api.site.SiteType;
@@ -54,13 +55,19 @@ public class SiteManagementRestService implements ResourceContainer {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("users")
+  @RolesAllowed("administrators")
   @Operation(summary = "Retrieve sites", method = "GET", description = "This retrieves sites")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response getSites() {
     try {
-      SiteQuery pageQuery = new SiteQuery.Builder().withSiteTypes(SiteType.SITE, SiteType.SPACE).build();
+      Filter<Site> filter = new Filter<>() {
+        @Override
+        public boolean accept(Site site) {
+          return !site.getName().startsWith("/spaces/");
+        }
+      };
+      SiteQuery pageQuery = new SiteQuery.Builder().withSiteTypes(SiteType.SITE, SiteType.SPACE).withFilter(filter).build();
       List<Site> sites = portal.findSites(pageQuery);
       return Response.ok().entity(EntityBuilder.toSiteRestEntities(sites)).build();
     } catch (Exception e) {
