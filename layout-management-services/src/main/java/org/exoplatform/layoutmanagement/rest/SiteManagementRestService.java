@@ -20,12 +20,14 @@ package org.exoplatform.layoutmanagement.rest;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import org.exoplatform.portal.mop.SiteKey;
 import org.gatein.api.Portal;
 import org.gatein.api.common.Filter;
 import org.gatein.api.Util;
@@ -34,11 +36,13 @@ import org.gatein.api.site.SiteId;
 import org.gatein.api.site.SiteQuery;
 import org.gatein.api.site.SiteType;
 
+import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -95,7 +99,7 @@ public class SiteManagementRestService implements ResourceContainer {
       portal.removeSite(siteId);
       return Response.ok().build();
     } catch (Exception e) {
-      LOG.error("Error when removing sites", e);
+      LOG.error("Error when deleting the site with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
     }
   }

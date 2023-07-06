@@ -42,7 +42,7 @@ export function deleteSite(siteType, siteName) {
     credentials: 'include',
   }).then(resp => {
     if (!resp || !resp.ok) {
-      throw new Error('Error when deleting sites');
+      throw new Error('Error when deleting site');
     }
   });
 }
