@@ -23,8 +23,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         class="mb-4"
         cols="12"
         sm="6"
-        lg="4"
-        xl="3">
+        lg="4">
         <site-management-site-card
           :site="site"
           class="mx-2" />
