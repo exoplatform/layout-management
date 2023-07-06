@@ -42,31 +42,45 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-title>
       </v-list-item>
       <v-list-item
-          class="subtitle-2 px-3"
-          @click="openSiteNavigationDrawer">
+        class="subtitle-2 px-3"
+        @click="openSiteNavigationDrawer">
         <v-icon
-            size="13"
-            class="me-2 ms-0"
-            color="primary">
+          size="13"
+          class="me-2 ms-0"
+          color="primary">
           fas fa-sitemap
         </v-icon>
         <v-list-item-title
-            class="subtitle-2">
+          class="subtitle-2">
           <span class="ps-1">{{ $t('siteManagement.label.navigation') }}</span>
         </v-list-item-title>
       </v-list-item>
       <v-list-item
-          v-if="canDelete"
-          class="subtitle-2 px-3"
-          @click="$root.$emit('delete-site', site)">
+        class="subtitle-2 px-3"
+        @click="editSiteLayout">
         <v-icon
-            size="13"
-            class="me-2 ms-0"
-            color="primary">
+          size="13"
+          class="me-2 ms-0"
+          color="primary">
+          fas fa-sitemap
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteManagement.label.editLayout') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        v-if="canDelete"
+        class="subtitle-2 px-3"
+        @click="$root.$emit('delete-site', site)">
+        <v-icon
+          size="13"
+          class="me-2 ms-0"
+          color="primary">
           fas fa-trash
         </v-icon>
         <v-list-item-title
-            class="subtitle-2">
+          class="subtitle-2">
           <span class="ps-1">{{ $t('siteManagement.label.delete') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -98,7 +112,7 @@ export default {
     canDelete() {
       return !(this.isDefaultPortalSite || this.isGlobalSite || this.isGroupSite);
     },
-    isPortalSite(){
+    isPortalSite() {
       return this.site.siteType === 'PORTAL';
     }
   },
@@ -122,7 +136,10 @@ export default {
     },
     openSiteCardPropertiesDrawer() {
       this.$root.$emit('open-site-card-properties-drawer', this.site);
-
+    },
+    editSiteLayout() {
+      const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
+      this.$siteManagementService.editSiteLayout(uiPageId, this.site.name);
     }
   }
 };
