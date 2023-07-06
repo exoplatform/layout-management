@@ -32,6 +32,17 @@
       </properties-param>
     </init-params>
   </component>
+  <component>
+    <key>SiteManagementFeatureProperties</key>
+    <type>org.exoplatform.container.ExtendedPropertyConfigurator</type>
+    <init-params>
+      <properties-param>
+        <name>SiteManagementFeatureProperties</name>
+        <description>Site Management Feature flags</description>
+        <property name="exo.feature.newSiteManagement.enabled" value="${exo.feature.newSiteManagement.enabled:false}" />
+      </properties-param>
+    </init-params>
+  </component>
   <external-component-plugins>
     <target-component>org.exoplatform.portal.config.NavigationCategoryService</target-component>
     <component-plugin>

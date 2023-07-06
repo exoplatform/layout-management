@@ -260,7 +260,7 @@ export default {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = index > 1 ? this.navigationNode.children[index - 2].id : null;
-          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         }
@@ -272,7 +272,7 @@ export default {
         const index = this.navigationNode.children.findIndex(navigationNode => navigationNode.id === navigationNodeId);
         if (index !== -1) {
           const previousNodeId = this.navigationNode.children[index + 1].id;
-          this.$siteNavigationService.moveNode(navigationNodeId, previousNodeId).then(() => {
+          this.$siteNavigationService.moveNode(navigationNodeId, null, previousNodeId).then(() => {
             this.$root.$emit('refresh-navigation-nodes');
           });
         }
