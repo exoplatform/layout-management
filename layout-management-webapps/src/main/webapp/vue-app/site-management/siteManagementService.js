@@ -31,3 +31,18 @@ export function getSites() {
     }
   });
 }
+
+export function deleteSite(siteType, siteName) {
+  const formData = new FormData();
+  formData.append('siteName', siteName);
+  formData.append('siteType', siteType);
+  const params = new URLSearchParams(formData).toString();
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error('Error when deleting site');
+    }
+  });
+}
