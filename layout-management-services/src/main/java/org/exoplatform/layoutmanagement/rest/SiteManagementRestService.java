@@ -84,7 +84,7 @@ public class SiteManagementRestService implements ResourceContainer {
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("users")
+  @RolesAllowed("administrators")
   @Operation(summary = "removed sites", method = "GET", description = "This removes sites")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
