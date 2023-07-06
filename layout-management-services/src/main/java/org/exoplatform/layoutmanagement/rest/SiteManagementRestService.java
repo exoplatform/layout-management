@@ -55,7 +55,7 @@ public class SiteManagementRestService implements ResourceContainer {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("users")
+  @RolesAllowed("administrators")
   @Operation(summary = "Retrieve sites", method = "GET", description = "This retrieves sites")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
