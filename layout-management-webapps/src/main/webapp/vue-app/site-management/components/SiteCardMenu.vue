@@ -46,21 +46,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-if="canDelete"
-        class="subtitle-2 px-3"
-        @click="$root.$emit('delete-site', site)">
-        <v-icon
-          size="13"
-          class="me-2 ms-0"
-          color="primary">
-          fas fa-trash
-        </v-icon>
-        <v-list-item-title
-          class="subtitle-2">
-          <span class="ps-1">{{ $t('siteManagement.label.delete') }}</span>
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item
         v-if="isPortalSite"
         class="subtitle-2 px-3"
         @click="openSiteCardPropertiesDrawer">
@@ -68,6 +53,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-list-item-title
           class="subtitle-2">
           <span class="ps-1">{{ $t('siteManagement.label.properties') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
+          v-if="canDelete"
+          class="subtitle-2 px-3"
+          @click="$root.$emit('delete-site', site)">
+        <v-icon
+            size="13"
+            class="me-2 ms-0"
+            color="primary">
+          fas fa-trash
+        </v-icon>
+        <v-list-item-title
+            class="subtitle-2">
+          <span class="ps-1">{{ $t('siteManagement.label.delete') }}</span>
         </v-list-item-title>
       </v-list-item>
     </v-list>
@@ -97,8 +97,10 @@ export default {
     },
     canDelete() {
       return !(this.isDefaultPortalSite || this.isGlobalSite || this.isGroupSite);
+    },
+    isPortalSite(){
+      return this.site.siteType === 'PORTAL';
     }
-
   },
   created() {
     $(document).on('mousedown', () => {
@@ -108,11 +110,6 @@ export default {
         }, 200);
       }
     });
-  },
-  computed: {
-    isPortalSite(){
-      return this.site.siteType === 'PORTAL';
-    }
   },
   methods: {
     openSiteNavigationDrawer() {
