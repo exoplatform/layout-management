@@ -19,6 +19,7 @@ import SiteManagement from './components/SiteManagement.vue';
 import SitesList from './components/SitesList.vue';
 import SiteCard from './components/SiteCard.vue';
 import SiteCardMenu from './components/SiteCardMenu.vue';
+import SiteManagementProperties from './components/SiteManagementProperties.vue';
 
 
 const components = {
@@ -26,6 +27,7 @@ const components = {
   'site-management-sites-list': SitesList,
   'site-management-site-card': SiteCard,
   'site-management-site-card-menu': SiteCardMenu,
+  'site-management-properties': SiteManagementProperties,
 };
 
 for (const key in components) {

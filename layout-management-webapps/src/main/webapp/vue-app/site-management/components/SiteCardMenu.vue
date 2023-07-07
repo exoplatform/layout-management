@@ -59,6 +59,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <span class="ps-1">{{ $t('siteManagement.label.delete') }}</span>
         </v-list-item-title>
       </v-list-item>
+      <v-list-item
+        v-if="portalSite"
+        class="subtitle-2 px-3"
+        @click="openSiteManagementDrawer">
+        <i class="uiIconEditPortalConfig uiIconLightGray me-2 ms-0 pb-2"></i>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteManagement.label.properties') }}</span>
+        </v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
@@ -70,6 +80,10 @@ export default {
       type: Object,
       default: null,
     },
+    portalSite: {
+      type: Boolean,
+      default: false,
+    }
 
   },
   data: () => ({
@@ -92,6 +106,10 @@ export default {
         includeGlobal: this.site.name.toLowerCase() === 'global'
       };
       document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
+    },
+    openSiteManagementDrawer() {
+      this.$root.$emit('open-site-management-properties', this.site);
+
     }
   }
 };
