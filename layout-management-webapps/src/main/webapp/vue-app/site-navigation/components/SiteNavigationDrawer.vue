@@ -67,6 +67,7 @@ export default {
       navigationNodesToDisplay: [],
       siteName: null,
       siteType: null,
+      includeGlobal: false,
       loading: false,
       filter: 'ALL',
     };
@@ -106,6 +107,7 @@ export default {
     open(event) {
       this.siteName = event?.siteName || eXo.env.portal.siteKeyName;
       this.siteType = event?.siteType || eXo.env.portal.siteKeyType;
+      this.includeGlobal = event?.includeGlobal || false;
       this.getNavigationNodes();
       this.$refs.siteNavigationDrawer.open();
       this.$nextTick().then(() =>  this.$root.$emit('site-navigation-drawer-opened'));
@@ -113,6 +115,7 @@ export default {
     close() {
       this.siteName = null;
       this.siteType = null;
+      this.includeGlobal = false;
       this.navigationNodes = [];
       this.navigationNodesToDisplay = [];
       this.$root.$emit('site-navigation-hide-nodes-tree');
@@ -120,7 +123,7 @@ export default {
     },
     getNavigationNodes() {
       this.loading = true;
-      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, false, true)
+      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, this.includeGlobal, true)
         .then(navigationNodes => {
           this.navigationNodes = navigationNodes || [];
           this.filterNavigationNodes();
