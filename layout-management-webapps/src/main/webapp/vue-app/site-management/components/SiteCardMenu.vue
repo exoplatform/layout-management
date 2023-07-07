@@ -45,6 +45,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <span class="ps-1">{{ $t('siteManagement.label.navigation') }}</span>
         </v-list-item-title>
       </v-list-item>
+      <v-list-item
+        v-if="canDelete"
+        class="subtitle-2 px-3"
+        @click="$root.$emit('delete-site', site)">
+        <v-icon
+          size="13"
+          class="me-2 ms-0"
+          color="primary">
+          fas fa-trash
+        </v-icon>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteManagement.label.delete') }}</span>
+        </v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
@@ -61,6 +76,21 @@ export default {
   data: () => ({
     displayActionMenu: false,
   }),
+  computed: {
+    isDefaultPortalSite() {
+      return this.site.name.toLowerCase() === eXo.env.portal.defaultPortalName.toLowerCase();
+    },
+    isGlobalSite() {
+      return this.site.name.toLowerCase() === eXo.env.portal.globalPortalName.toLowerCase();
+    },
+    isGroupSite() {
+      return this.site.siteType === 'GROUP';
+    },
+    canDelete() {
+      return !(this.isDefaultPortalSite || this.isGlobalSite || this.isGroupSite);
+    }
+
+  },
   created() {
     $(document).on('mousedown', () => {
       if (this.displayActionMenu) {
@@ -75,7 +105,7 @@ export default {
       const params = {
         siteName: this.site.name,
         siteType: this.site.siteType,
-        includeGlobal: this.site.name.toLowerCase() === 'global'
+        includeGlobal: this.site.name.toLowerCase() === eXo.env.portal.globalPortalName.toLowerCase()
       };
       document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
     }

@@ -23,20 +23,26 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.gatein.api.Portal;
 import org.gatein.api.common.Filter;
+import org.gatein.api.Util;
 import org.gatein.api.site.Site;
+import org.gatein.api.site.SiteId;
 import org.gatein.api.site.SiteQuery;
 import org.gatein.api.site.SiteType;
 
+import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -72,6 +78,28 @@ public class SiteManagementRestService implements ResourceContainer {
       return Response.ok().entity(EntityBuilder.toSiteRestEntities(sites)).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving sites", e);
+      return Response.serverError().build();
+    }
+  }
+
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("administrators")
+  @Operation(summary = "Delete a site", method = "GET", description = "This deletes the given site")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response deleteSite(@Parameter(description = "site type")
+  @QueryParam("siteType")
+  String siteType,
+                             @Parameter(description = "site name")
+                             @QueryParam("siteName")
+                             String siteName) {
+    try {
+      SiteId siteId = Util.from(new SiteKey(siteType, siteName));
+      portal.removeSite(siteId);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when deleting the site with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
     }
   }
