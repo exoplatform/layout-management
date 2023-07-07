@@ -26,6 +26,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       :ok-label="$t('siteManagement.label.confirm')"
       :cancel-label="$t('siteManagement.label.cancel')"
       @ok="deleteSite" />
+    <site-card-properties-drawer />
   </v-app>
 </template>
 
