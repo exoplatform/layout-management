@@ -56,6 +56,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             class="pt-0"
             type="text"
             required="required"
+            :disabled="disableSiteName"
             outlined
             dense />
         </v-card-text>
@@ -74,6 +75,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-card-text>
       </v-form>
     </template>
+    <template slot="footer">
+      <div class="d-flex justify-end">
+        <v-btn
+          class="btn ms-2"
+          @click="close">
+          {{ $t('siteNavigation.label.btn.cancel') }}
+        </v-btn>
+        <v-btn
+          :disabled="disabled"
+          :loading="loading"
+          @click="updateSite"
+          class="btn btn-primary ms-2">
+          {{ $t('siteNavigation.label.btn.save') }}
+        </v-btn>
+      </div>
+    </template>
   </exo-drawer>
 </template>
 
@@ -85,6 +102,7 @@ export default {
       siteName: '',
       siteLabel: '',
       siteDescription: '',
+      disableSiteName: true,
     };
   },
   created() {
@@ -101,6 +119,14 @@ export default {
     close() {
       this.$refs.siteCardPropertiesDrawer.close();
     },
+    updateSite() {
+      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription)
+        .then(() => {
+          this.$root.$emit('refresh-sites');
+          this.close();
+        });
+    }
+
   }
 };
 </script>

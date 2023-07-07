@@ -64,3 +64,26 @@ export function editSiteLayout(portalName) {
     }
   });
 }
+
+export function updateSite(siteName, siteType, siteLabel, siteDescription) {
+  const formData = new FormData();
+  formData.append('siteName', siteName);
+  formData.append('siteType', siteType);
+  formData.append('siteLabel', siteLabel);
+  formData.append('siteDescription', siteDescription);
+
+  const params = new URLSearchParams(formData).toString();
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {
+    credentials: 'include',
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  }).then((resp) => {
+    if (resp?.ok) {
+      return resp.ok;
+    } else {
+      throw new Error('Error when updating site');
+    }
+  });
+}

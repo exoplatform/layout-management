@@ -35,7 +35,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         v-if="isPortalSite && !isGlobalSite"
         class="subtitle-2 px-3"
         @click="openSiteCardPropertiesDrawer">
-        <i class="uiIconEditPortalConfig uiIconLightGray me-2 ms-0 pb-2"></i>
+        <v-icon
+          size="16"
+          class="me-2 ms-0"
+          color="primary">
+          fa fa-cog
+        </v-icon>
         <v-list-item-title
           class="subtitle-2">
           <span class="ps-1">{{ $t('siteManagement.label.properties') }}</span>
