@@ -88,7 +88,7 @@ export default {
     };
   },
   created() {
-    this.$root.$on('open-site-management-properties', this.open);
+    this.$root.$on('open-site-card-properties-drawer', this.open);
   },
   methods: {
     open(site) {

@@ -62,7 +62,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-list-item
         v-if="isPortalSite"
         class="subtitle-2 px-3"
-        @click="openSiteManagementDrawer">
+        @click="openSiteCardPropertiesDrawer">
         <i class="uiIconEditPortalConfig uiIconLightGray me-2 ms-0 pb-2"></i>
         <v-list-item-title
           class="subtitle-2">
@@ -107,8 +107,8 @@ export default {
       };
       document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
     },
-    openSiteManagementDrawer() {
-      this.$root.$emit('open-site-management-properties', this.site);
+    openSiteCardPropertiesDrawer() {
+      this.$root.$emit('open-site-card-properties-drawer', this.site);
 
     }
   }
