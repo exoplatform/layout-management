@@ -60,7 +60,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-if="portalSite"
+        v-if="isPortalSite"
         class="subtitle-2 px-3"
         @click="openSiteManagementDrawer">
         <i class="uiIconEditPortalConfig uiIconLightGray me-2 ms-0 pb-2"></i>
@@ -79,12 +79,7 @@ export default {
     site: {
       type: Object,
       default: null,
-    },
-    portalSite: {
-      type: Boolean,
-      default: false,
     }
-
   },
   data: () => ({
     displayActionMenu: false,
@@ -97,6 +92,11 @@ export default {
         }, 200);
       }
     });
+  },
+  computed: {
+    isPortalSite(){
+      return this.site.siteType === 'PORTAL';
+    }
   },
   methods: {
     openSiteNavigationDrawer() {

@@ -28,8 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <span class="font-weight-bold text-capitalize">  {{ site.displayName || site.name }} </span>
       <v-spacer />
       <site-management-site-card-menu
-        :site="site"
-        :portal-site="!isGroupSite" />
+        :site="site" />
     </v-toolbar>
     <div class="mx-3 mt-3 align-center text-truncate-3">
       <span>  {{ site.description }} </span>

@@ -16,8 +16,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <exo-drawer
-    id="siteManagementDrawer"
-    ref="siteManagementDrawer"
+    id="siteCardPropertiesDrawer"
+    ref="siteCardPropertiesDrawer"
     :right="!$vuetify.rtl"
     eager
     allow-expand
@@ -96,10 +96,10 @@ export default {
       this.siteName = this.site.name;
       this.siteLabel = this.site.displayName || this.site.name;
       this.siteDescription = this.site.description;
-      this.$refs.siteManagementDrawer.open();
+      this.$refs.siteCardPropertiesDrawer.open();
     },
     close() {
-      this.$refs.siteManagementDrawer.close();
+      this.$refs.siteCardPropertiesDrawer.close();
     },
   }
 };
