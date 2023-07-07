@@ -15,32 +15,45 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <v-app class="siteManagementApplication">
-    <v-main class="white">
-      <site-management-sites-list :sites="sites" class="mt-7" />
-    </v-main>
-  </v-app>
+  <v-menu
+    v-model="displayActionMenu"
+    transition="slide-x-reverse-transition"
+    :right="!$vuetify.rtl"
+    offset-x
+    offset-y
+    class="px-0 pt-0 mx-2 overflow-visible">
+    <template #activator="{ on, attrs }">
+      <v-btn
+        v-bind="attrs"
+        icon
+        v-on="on">
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </template>
+    <v-list class="pa-0" dense />
+  </v-menu>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      sites: [],
-    };
+  props: {
+    site: {
+      type: Object,
+      default: null,
+    },
+
   },
+  data: () => ({
+    displayActionMenu: false,
+  }),
   created() {
-    this.getSites();
+    $(document).on('mousedown', () => {
+      if (this.displayActionMenu) {
+        window.setTimeout(() => {
+          this.displayActionMenu = false;
+        }, 200);
+      }
+    });
   },
-  methods: {
-    getSites() {
-      this.loading = true;
-      return this.$siteManagementService.getSites()
-        .then(sites => {
-          this.sites = sites || [];
-        })
-        .finally(() => this.loading = false);
-    }
-  }
 };
 </script>

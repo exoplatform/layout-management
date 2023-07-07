@@ -15,32 +15,30 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <v-app class="siteManagementApplication">
-    <v-main class="white">
-      <site-management-sites-list :sites="sites" class="mt-7" />
-    </v-main>
-  </v-app>
+  <v-layout class="pa-3">
+    <v-row no-gutters>
+      <v-col
+        v-for="site in sites"
+        :key="site.id"
+        class="mb-4"
+        cols="12"
+        sm="6"
+        lg="4">
+        <site-management-site-card
+          :site="site"
+          class="mx-2" />
+      </v-col>
+    </v-row>
+  </v-layout>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      sites: [],
-    };
-  },
-  created() {
-    this.getSites();
-  },
-  methods: {
-    getSites() {
-      this.loading = true;
-      return this.$siteManagementService.getSites()
-        .then(sites => {
-          this.sites = sites || [];
-        })
-        .finally(() => this.loading = false);
-    }
+  props: {
+    sites: {
+      type: Array,
+      default: () => [],
+    },
   }
 };
 </script>

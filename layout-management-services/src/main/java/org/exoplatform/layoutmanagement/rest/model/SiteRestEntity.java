@@ -14,28 +14,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.exoplatform.layoutmanagement.rest.model;
 
-import SiteManagement from './components/SiteManagement.vue';
-import SitesList from './components/SitesList.vue';
-import SiteCard from './components/SiteCard.vue';
-import SiteCardMenu from './components/SiteCardMenu.vue';
+import org.gatein.api.site.SiteId;
+import org.exoplatform.portal.mop.SiteType;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-const components = {
-  'site-management': SiteManagement,
-  'site-management-sites-list': SitesList,
-  'site-management-site-card': SiteCard,
-  'site-management-site-card-menu': SiteCardMenu,
-};
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class SiteRestEntity {
 
-for (const key in components) {
-  Vue.component(key, components[key]);
-}
+  private SiteId   id;
 
-import * as siteManagementService from './siteManagementService.js';
+  private SiteType siteType;
 
-if (!Vue.prototype.$siteManagementService) {
-  window.Object.defineProperty(Vue.prototype, '$siteManagementService', {
-    value: siteManagementService,
-  });
+  private String   name;
+
+  private String   displayName;
+
+  private String   description;
+
+  private String[] accessPermissions;
+
+  private String   editPermission;
+
 }

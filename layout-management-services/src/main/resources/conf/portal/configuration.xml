@@ -21,4 +21,7 @@
     <component>
       <type>org.exoplatform.layoutmanagement.rest.SiteNavigationRestService</type>
     </component>
+    <component>
+      <type>org.exoplatform.layoutmanagement.rest.SiteManagementRestService</type>
+    </component>
 </configuration>
