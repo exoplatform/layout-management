@@ -23,7 +23,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     allow-expand
     @closed="close">
     <template slot="title">
-      <span>Site properties</span>
+      <span>{{ $t('siteManagement.drawer.properties.title') }}</span>
     </template>
     <template slot="content">
       <v-form>
