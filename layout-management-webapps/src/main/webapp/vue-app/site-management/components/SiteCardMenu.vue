@@ -32,31 +32,41 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </template>
     <v-list class="pa-0" dense>
       <v-list-item
+        v-if="isPortalSite"
         class="subtitle-2 px-3"
-        @click="openSiteNavigationDrawer">
+        @click="openSiteCardPropertiesDrawer">
+        <i class="uiIconEditPortalConfig uiIconLightGray me-2 ms-0 pb-2"></i>
+        <v-list-item-title
+          class="subtitle-2">
+          <span class="ps-1">{{ $t('siteManagement.label.properties') }}</span>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
+          class="subtitle-2 px-3"
+          @click="openSiteNavigationDrawer">
         <v-icon
-          size="13"
-          class="me-2 ms-0"
-          color="primary">
+            size="13"
+            class="me-2 ms-0"
+            color="primary">
           fas fa-sitemap
         </v-icon>
         <v-list-item-title
-          class="subtitle-2">
+            class="subtitle-2">
           <span class="ps-1">{{ $t('siteManagement.label.navigation') }}</span>
         </v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-if="canDelete"
-        class="subtitle-2 px-3"
-        @click="$root.$emit('delete-site', site)">
+          v-if="canDelete"
+          class="subtitle-2 px-3"
+          @click="$root.$emit('delete-site', site)">
         <v-icon
-          size="13"
-          class="me-2 ms-0"
-          color="primary">
+            size="13"
+            class="me-2 ms-0"
+            color="primary">
           fas fa-trash
         </v-icon>
         <v-list-item-title
-          class="subtitle-2">
+            class="subtitle-2">
           <span class="ps-1">{{ $t('siteManagement.label.delete') }}</span>
         </v-list-item-title>
       </v-list-item>
@@ -70,8 +80,7 @@ export default {
     site: {
       type: Object,
       default: null,
-    },
-
+    }
   },
   data: () => ({
     displayActionMenu: false,
@@ -88,8 +97,10 @@ export default {
     },
     canDelete() {
       return !(this.isDefaultPortalSite || this.isGlobalSite || this.isGroupSite);
+    },
+    isPortalSite(){
+      return this.site.siteType === 'PORTAL';
     }
-
   },
   created() {
     $(document).on('mousedown', () => {
@@ -108,6 +119,10 @@ export default {
         includeGlobal: this.site.name.toLowerCase() === eXo.env.portal.globalPortalName.toLowerCase()
       };
       document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
+    },
+    openSiteCardPropertiesDrawer() {
+      this.$root.$emit('open-site-card-properties-drawer', this.site);
+
     }
   }
 };
