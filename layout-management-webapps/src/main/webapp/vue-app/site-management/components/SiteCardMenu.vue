@@ -56,6 +56,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         </v-list-item-title>
       </v-list-item>
       <v-list-item
+        v-if="canEditLayout"
         class="subtitle-2 px-3"
         @click="editSiteLayout">
         <v-icon
@@ -114,7 +115,10 @@ export default {
     },
     isPortalSite() {
       return this.site.siteType === 'PORTAL';
-    }
+    },
+    canEditLayout() {
+      return !(this.isGlobalSite || this.isGroupSite);
+    },
   },
   created() {
     $(document).on('mousedown', () => {
@@ -138,8 +142,7 @@ export default {
       this.$root.$emit('open-site-card-properties-drawer', this.site);
     },
     editSiteLayout() {
-      const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
-      this.$siteManagementService.editSiteLayout(uiPageId, this.site.name);
+      this.$siteManagementService.editSiteLayout(this.site.name);
     }
   }
 };

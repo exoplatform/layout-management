@@ -48,7 +48,7 @@ export function deleteSite(siteType, siteName) {
   });
 }
   
-export function editSiteLayout(uiPageId, portalName) {
+export function editSiteLayout(portalName) {
   const params = [
     {name: 'portalName', value: portalName}
   ] ;
@@ -58,6 +58,9 @@ export function editSiteLayout(uiPageId, portalName) {
   }).then(resp => {
     if (!resp || !resp.ok) {
       throw new Error(resp.status);
+    }
+    else {
+      window.location.reload();
     }
   });
 }
