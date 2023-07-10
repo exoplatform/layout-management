@@ -110,7 +110,7 @@ public class EntityBuilder {
     return new SiteRestEntity(site.getId(),
                               siteType,
                               site.getName(),
-                              displayName,
+                              !StringUtils.isBlank(displayName) ? displayName : site.getName(),
                               site.getDescription(),
                               Util.from(site.getAccessPermission()),
                               Util.from(site.getEditPermission())[0]);

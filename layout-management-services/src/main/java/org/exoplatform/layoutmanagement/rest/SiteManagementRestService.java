@@ -17,7 +17,9 @@
 
 package org.exoplatform.layoutmanagement.rest;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -28,6 +30,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
+import org.exoplatform.layoutmanagement.rest.model.SiteRestEntity;
 import org.gatein.api.Portal;
 import org.gatein.api.common.Filter;
 import org.gatein.api.Util;
@@ -75,7 +79,9 @@ public class SiteManagementRestService implements ResourceContainer {
       };
       SiteQuery pageQuery = new SiteQuery.Builder().withSiteTypes(SiteType.SITE, SiteType.SPACE).withFilter(filter).build();
       List<Site> sites = portal.findSites(pageQuery);
-      return Response.ok().entity(EntityBuilder.toSiteRestEntities(sites)).build();
+      List<SiteRestEntity> siteRestEntities = EntityBuilder.toSiteRestEntities(sites);
+      siteRestEntities = siteRestEntities.stream().sorted(Comparator.comparing(SiteRestEntity::getDisplayName, String.CASE_INSENSITIVE_ORDER)).toList();
+      return Response.ok().entity(siteRestEntities).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving sites", e);
       return Response.serverError().build();
