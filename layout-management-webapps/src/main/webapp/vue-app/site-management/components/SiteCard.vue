@@ -31,7 +31,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         :site="site" />
     </v-toolbar>
     <div class="mx-3 mt-3 align-center text-truncate-3">
-      <span>  {{ site.description }} </span>
+      <span v-sanitized-html="site.description"></span>
     </div>
     <v-footer absolute class="px-0 py-0">
       <v-toolbar
