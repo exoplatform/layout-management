@@ -32,7 +32,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     </template>
     <v-list class="pa-0" dense>
       <v-list-item
-        v-if="isPortalSite"
+        v-if="isPortalSite && !isGlobalSite"
         class="subtitle-2 px-3"
         @click="openSiteCardPropertiesDrawer">
         <i class="uiIconEditPortalConfig uiIconLightGray me-2 ms-0 pb-2"></i>
