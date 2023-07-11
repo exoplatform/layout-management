@@ -71,6 +71,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <exo-activity-rich-editor
             v-model="siteDescription"
             max-length="1300"
+            :tag-enabled="false"
             class="flex" />
         </v-card-text>
       </v-form>
@@ -122,6 +123,10 @@ export default {
       this.$refs.siteCardPropertiesDrawer.open();
     },
     close() {
+      this.site = null;
+      this.siteName = '';
+      this.siteLabel = '';
+      this.siteDescription = '';
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {
