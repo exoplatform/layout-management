@@ -123,10 +123,10 @@ export default {
       this.$refs.siteCardPropertiesDrawer.open();
     },
     close() {
-      this.site= null;
-      this.siteName= '';
-      this.siteLabel= '';
-      this.siteDescription= '';
+      this.site = null;
+      this.siteName = '';
+      this.siteLabel = '';
+      this.siteDescription = '';
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {
