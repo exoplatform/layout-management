@@ -43,6 +43,24 @@ export function deleteSite(siteType, siteName) {
   }).then(resp => {
     if (!resp || !resp.ok) {
       throw new Error('Error when deleting site');
+
+    }
+  });
+}
+  
+export function editSiteLayout(portalName) {
+  const params = [
+    {name: 'portalName', value: portalName}
+  ] ;
+  return fetch(`${eXo.env.server.createPortalURL('UIWorkingWorkspace', 'EditPortalLayout', true, params)}`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then(resp => {
+    if (!resp || !resp.ok) {
+      throw new Error(resp.status);
+    }
+    else {
+      window.location.reload();
     }
   });
 }
