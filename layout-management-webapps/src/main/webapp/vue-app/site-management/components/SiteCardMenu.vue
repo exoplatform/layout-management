@@ -68,7 +68,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           size="13"
           class="me-2 ms-0"
           color="primary">
-          fas fa-sitemap
+          fas fa-table
         </v-icon>
         <v-list-item-title
           class="subtitle-2">
