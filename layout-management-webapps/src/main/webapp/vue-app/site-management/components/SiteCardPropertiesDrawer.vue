@@ -63,7 +63,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-card-text class="d-flex pb-2">
           <v-label>
             <span class="text-color font-weight-bold">
-              {{ $t('siteManagement.label.siteDescription.title') }} *             
+              {{ $t('siteManagement.label.siteDescription.title') }}           
             </span>
           </v-label>
         </v-card-text>
@@ -108,12 +108,17 @@ export default {
   created() {
     this.$root.$on('open-site-card-properties-drawer', this.open);
   },
+  computed: {
+    disabled(){
+      return !this.siteLabel;
+    }
+  },
   methods: {
     open(site) {
       this.site =  site;
       this.siteName = this.site.name;
       this.siteLabel = this.site.displayName || this.site.name;
-      this.siteDescription = this.site.description;
+      this.siteDescription = this.site.description !== null ?  this.site.description : '';
       this.$refs.siteCardPropertiesDrawer.open();
     },
     close() {
