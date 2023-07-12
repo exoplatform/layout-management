@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import ManageAccessDrawer from './components/ManageAccessDrawer.vue';
-import ManageEditPermission from './components/ManageEditPermission.vue';
-import ManageAccessPermission from './components/ManageAccessPermission.vue';
-import ManagePermissionItem from './components/ManagePermissionItem.vue';
-import PermissionTypeSelector from './components/PermissionTypeSelector.vue';
+import ManageAccessDrawer from './components/manage-access-permissions/ManageAccessDrawer.vue';
+import ManageEditPermission from './components/manage-access-permissions/ManageEditPermission.vue';
+import ManageAccessPermission from './components/manage-access-permissions/ManageAccessPermission.vue';
+import ManagePermissionItem from './components/manage-access-permissions/ManagePermissionItem.vue';
+import PermissionTypeSelector from './components/manage-access-permissions/PermissionTypeSelector.vue';
+import NotificationAlert from './components/snackbar/NotificationAlert.vue';
+import NotificationAlerts from './components/snackbar/NotificationAlerts.vue';
 
 const components = {
   'manage-access-drawer': ManageAccessDrawer,
@@ -26,14 +28,16 @@ const components = {
   'manage-access-permission': ManageAccessPermission,
   'manage-permission-item': ManagePermissionItem,
   'permission-type-selector': PermissionTypeSelector,
+  'layout-notification-alert': NotificationAlert,
+  'layout-notification-alerts': NotificationAlerts,
 };
 
 for (const key in components) {
   Vue.component(key, components[key]);
 }
 
-import * as ManageAccessService from './ManageAccessService.js';
+import * as commonLayoutService from './commonLayoutService.js';
 
-window.Object.defineProperty(Vue.prototype, '$ManageAccessService', {
-  value: ManageAccessService,
+window.Object.defineProperty(Vue.prototype, '$commonLayoutService', {
+  value: commonLayoutService,
 });

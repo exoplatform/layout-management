@@ -245,7 +245,7 @@ export default {
             });
           }).catch(() => {
             const message = this.$t('siteNavigation.label.pageCreation.error');
-            this.$root.$emit('navigation-node-notification-alert', {
+            this.$root.$emit('notification-alert', {
               message,
               type: 'error',
             });
@@ -282,7 +282,7 @@ export default {
           });
         }).catch(() => {
           const message = this.$t('siteNavigation.label.pageUpdate.error');
-          this.$root.$emit('navigation-node-notification-alert', {
+          this.$root.$emit('notification-alert', {
             message,
             type: 'error',
           });

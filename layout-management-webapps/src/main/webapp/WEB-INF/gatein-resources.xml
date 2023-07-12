@@ -91,9 +91,9 @@
   </portlet>
 
   <module>
-    <name>manageAccessPermission</name>
+    <name>commonLayoutComponents</name>
     <script>
-      <path>/js/manageAccessPermission.bundle.js</path>
+      <path>/js/commonLayoutComponents.bundle.js</path>
     </script>
     <depends>
       <module>commonVueComponents</module>
@@ -133,7 +133,7 @@
         <module>commonVueComponents</module>
       </depends>
       <depends>
-        <module>manageAccessPermission</module>
+        <module>commonLayoutComponents</module>
       </depends>
       <depends>
         <module>translationField</module>
@@ -165,7 +165,7 @@
         <module>extensionRegistry</module>
       </depends>
       <depends>
-        <module>manageAccessPermission</module>
+        <module>commonLayoutComponents</module>
       </depends>
       <depends>
         <module>commonVueComponents</module>
