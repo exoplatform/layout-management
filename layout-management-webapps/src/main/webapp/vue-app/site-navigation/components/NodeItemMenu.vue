@@ -273,7 +273,7 @@ export default {
         const index = this.navigationNode.children.findIndex(navNode => navNode.name === this.nodeToPaste.name);
         if (index !== -1) {
           const message = this.$t('siteNavigation.label.pasteNode.error');
-          this.$root.$emit('navigation-node-notification-alert', {
+          this.$root.$emit('notification-alert', {
             message,
             type: 'error',
           });

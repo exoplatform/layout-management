@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <manage-access-drawer v-if="siteNavigationDrawerOpened" />
     <site-navigation-node-drawer v-if="siteNavigationDrawerOpened" />
     <site-navigation-element-drawer v-if="siteNavigationDrawerOpened" />
-    <site-navigation-notification-alerts v-if="siteNavigationDrawerOpened" />
+    <layout-notification-alerts v-if="siteNavigationDrawerOpened" />
   </v-app>
 </template>
 <script>

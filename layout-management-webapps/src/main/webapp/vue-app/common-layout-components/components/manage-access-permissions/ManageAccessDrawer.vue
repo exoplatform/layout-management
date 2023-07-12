@@ -148,7 +148,9 @@ export default {
       }
     },
     save(){
-      if (!this.isSite) {
+      if (this.isSite) {
+        this.saveSitePermission();
+      } else {
         this.saveNavigationNodePermission();
       }
     },
@@ -167,10 +169,10 @@ export default {
         });
       }
       const pageRef = this.navigationNode.pageKey.ref ||`${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey.name}`;
-      return this.$ManageAccessService.updateNodePagePermission(pageRef, pageEditPermission, pageAccessPermissions)
+      return this.$commonLayoutService.updateNodePagePermission(pageRef, pageEditPermission, pageAccessPermissions)
         .then(() => {
           const message = this.$t('siteNavigation.label.updatePermission.success');
-          this.$root.$emit('navigation-node-notification-alert', {
+          this.$root.$emit('layout-notification-alert', {
             message,
             type: 'success',
           });
@@ -178,7 +180,42 @@ export default {
           this.close();
         }).catch((e) => {
           const message = e.message ==='401' &&  this.$t('siteNavigation.label.updatePermission.unauthorized') || this.$t('siteNavigation.label.updatePermission.error');
-          this.$root.$emit('navigation-node-notification-alert', {
+          this.$root.$emit('layout-notification-alert', {
+            message,
+            type: 'error',
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+          this.$refs.manageAccessDrawer.endLoading();
+        });
+    },
+    saveSitePermission() {
+      this.loading = true;
+      this.$refs.manageAccessDrawer.startLoading();
+      const siteEditPermission =this.convertPermission(this.editPermission);
+      let siteAccessPermissions = ['Everyone'];
+      if (this.accessPermissions[0] !== 'Everyone') {
+        siteAccessPermissions = [];
+        this.accessPermissions.forEach(permission => {
+          if (permission.group?.id) {
+            const accessPermission = this.convertPermission(permission);
+            siteAccessPermissions.push(accessPermission);
+          }
+        });
+      }
+      return this.$commonLayoutService.updateSitePermissions(this.site.siteType, this.site.name, siteEditPermission, siteAccessPermissions)
+        .then(() => {
+          const message = this.$t('siteManagement.label.updatePermission.success');
+          this.$root.$emit('layout-notification-alert', {
+            message,
+            type: 'success',
+          });
+          this.$root.$emit('refresh-sites');
+          this.close();
+        }).catch((e) => {
+          const message = e.message ==='401' &&  this.$t('siteManagement.label.updatePermission.unauthorized') || this.$t('siteManagement.label.updatePermission.error');
+          this.$root.$emit('layout-notification-alert', {
             message,
             type: 'error',
           });

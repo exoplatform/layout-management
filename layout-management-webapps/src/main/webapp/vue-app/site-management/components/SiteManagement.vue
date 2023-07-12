@@ -28,6 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       @ok="deleteSite" />
     <site-card-properties-drawer />
     <manage-access-drawer />
+    <layout-notification-alerts />
   </v-app>
 </template>
 
