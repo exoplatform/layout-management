@@ -570,7 +570,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
     try {
       Locale locale = httpRequest.getLocale();
       List<SelectItemOption<String>> pageTemplates = pageTemplateService.getPageTemplates();
-      return Response.ok().entity(EntityBuilder.toRestEntities(pageTemplates, locale)).build();
+      return Response.ok().entity(EntityBuilder.toPageTemplateRestEntities(pageTemplates, locale)).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving page templates", e);
       return Response.serverError().build();
