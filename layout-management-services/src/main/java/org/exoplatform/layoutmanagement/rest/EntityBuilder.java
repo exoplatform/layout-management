@@ -25,8 +25,12 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.gatein.api.Util;
 import org.gatein.api.site.Site;
 
@@ -43,10 +47,12 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 
 public class EntityBuilder {
 
+  private static final Log LOG = ExoLogger.getLogger(EntityBuilder.class);
+
   private EntityBuilder() {
   }
 
-  public static PageTemplateRestEntity toRestEntity(SelectItemOption<String> pageTemplate, Locale userLocal) {
+  public static PageTemplateRestEntity toPageTemplateRestEntity(SelectItemOption<String> pageTemplate, Locale userLocal) {
     if (pageTemplate == null) {
       return null;
     }
@@ -54,8 +60,8 @@ public class EntityBuilder {
                                       pageTemplate.getValue());
   }
 
-  public static List<PageTemplateRestEntity> toRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
-    return pageTemplates.stream().map(pageTemplate -> toRestEntity(pageTemplate, userLocal)).toList();
+  public static List<PageTemplateRestEntity> toPageTemplateRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
+    return pageTemplates.stream().map(pageTemplate -> toPageTemplateRestEntity(pageTemplate, userLocal)).toList();
   }
 
   public static NodeLabelRestEntity toNodeLabelRestEntity(Map<Locale, State> nodeLabels) {
@@ -98,13 +104,17 @@ public class EntityBuilder {
     }
     SiteType siteType = Util.from(site.getType());
     String displayName = site.getDisplayName();
-
-    if (StringUtils.isBlank(displayName) && SiteType.GROUP.equals(siteType)) {
+    Identity userIdentity = ConversationState.getCurrent().getIdentity();
+    if (SiteType.GROUP.equals(siteType)) {
       try {
         Group siteGroup = getOrganizationService().getGroupHandler().findGroupById(site.getName());
-        displayName = siteGroup != null ? siteGroup.getLabel() : null;
+        if (siteGroup == null || !userIdentity.isMemberOf(siteGroup.getId())) {
+          return null;
+        } else if (StringUtils.isBlank(displayName)) {
+          displayName = siteGroup.getLabel();
+        }
       } catch (Exception e) {
-        // do nothing
+        LOG.error("Error while retrieving group with name ", site.getName(), e);
       }
     }
     return new SiteRestEntity(site.getId(),
@@ -117,7 +127,10 @@ public class EntityBuilder {
   }
 
   public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
-    return sites.stream().map(site -> toSiteRestEntity(site)).toList();
+    return sites.stream()
+                .map(site -> toSiteRestEntity(site))
+                .filter(siteRestEntity -> siteRestEntity != null)
+                .toList();
   }
   private static OrganizationService getOrganizationService() {
     return CommonsUtils.getService(OrganizationService.class);
