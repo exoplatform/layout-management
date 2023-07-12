@@ -27,6 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.gatein.api.Util;
 import org.gatein.api.site.Site;
 
@@ -46,7 +48,7 @@ public class EntityBuilder {
   private EntityBuilder() {
   }
 
-  public static PageTemplateRestEntity toRestEntity(SelectItemOption<String> pageTemplate, Locale userLocal) {
+  public static PageTemplateRestEntity toPageTemplateRestEntity(SelectItemOption<String> pageTemplate, Locale userLocal) {
     if (pageTemplate == null) {
       return null;
     }
@@ -54,8 +56,8 @@ public class EntityBuilder {
                                       pageTemplate.getValue());
   }
 
-  public static List<PageTemplateRestEntity> toRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
-    return pageTemplates.stream().map(pageTemplate -> toRestEntity(pageTemplate, userLocal)).toList();
+  public static List<PageTemplateRestEntity> toPageTemplateRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
+    return pageTemplates.stream().map(pageTemplate -> toPageTemplateRestEntity(pageTemplate, userLocal)).toList();
   }
 
   public static NodeLabelRestEntity toNodeLabelRestEntity(Map<Locale, State> nodeLabels) {
@@ -92,13 +94,13 @@ public class EntityBuilder {
     return nodeLabelRestEntity;
   }
 
-  public static SiteRestEntity toSiteRestEntity(Site site, org.exoplatform.services.security.Identity userIdentity) {
+  public static SiteRestEntity toSiteRestEntity(Site site) {
     if (site == null) {
       return null;
     }
     SiteType siteType = Util.from(site.getType());
     String displayName = site.getDisplayName();
-
+    Identity userIdentity = ConversationState.getCurrent().getIdentity();
     if (SiteType.GROUP.equals(siteType)) {
       try {
         Group siteGroup = getOrganizationService().getGroupHandler().findGroupById(site.getName());
@@ -120,9 +122,9 @@ public class EntityBuilder {
                               Util.from(site.getEditPermission())[0]);
   }
 
-  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites, org.exoplatform.services.security.Identity userIdentity) {
+  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
     return sites.stream()
-                .map(site -> toSiteRestEntity(site, userIdentity))
+                .map(site -> toSiteRestEntity(site))
                 .filter(siteRestEntity -> siteRestEntity != null)
                 .toList();
   }
