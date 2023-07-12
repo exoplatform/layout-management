@@ -16,11 +16,7 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -129,7 +125,7 @@ public class EntityBuilder {
   public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
     return sites.stream()
                 .map(site -> toSiteRestEntity(site))
-                .filter(siteRestEntity -> siteRestEntity != null)
+                .filter(Objects::nonNull)
                 .toList();
   }
   private static OrganizationService getOrganizationService() {
