@@ -92,17 +92,21 @@ public class EntityBuilder {
     return nodeLabelRestEntity;
   }
 
-  public static SiteRestEntity toSiteRestEntity(Site site) {
+  public static SiteRestEntity toSiteRestEntity(Site site, org.exoplatform.services.security.Identity userIdentity) {
     if (site == null) {
       return null;
     }
     SiteType siteType = Util.from(site.getType());
     String displayName = site.getDisplayName();
 
-    if (StringUtils.isBlank(displayName) && SiteType.GROUP.equals(siteType)) {
+    if (SiteType.GROUP.equals(siteType)) {
       try {
         Group siteGroup = getOrganizationService().getGroupHandler().findGroupById(site.getName());
-        displayName = siteGroup != null ? siteGroup.getLabel() : null;
+        if (siteGroup == null || !userIdentity.isMemberOf(siteGroup.getId())) {
+          return null;
+        } else if (StringUtils.isBlank(displayName)) {
+          displayName = siteGroup.getLabel();
+        }
       } catch (Exception e) {
         // do nothing
       }
@@ -116,8 +120,11 @@ public class EntityBuilder {
                               Util.from(site.getEditPermission())[0]);
   }
 
-  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
-    return sites.stream().map(site -> toSiteRestEntity(site)).toList();
+  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites, org.exoplatform.services.security.Identity userIdentity) {
+    return sites.stream()
+                .map(site -> toSiteRestEntity(site, userIdentity))
+                .filter(siteRestEntity -> siteRestEntity != null)
+                .toList();
   }
   private static OrganizationService getOrganizationService() {
     return CommonsUtils.getService(OrganizationService.class);

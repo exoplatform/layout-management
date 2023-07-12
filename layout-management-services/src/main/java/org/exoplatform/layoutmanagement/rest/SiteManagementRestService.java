@@ -31,6 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.exoplatform.layoutmanagement.rest.model.SiteRestEntity;
+import org.exoplatform.services.security.ConversationState;
 import org.gatein.api.Portal;
 import org.gatein.api.common.Filter;
 import org.gatein.api.Util;
@@ -70,6 +71,7 @@ public class SiteManagementRestService implements ResourceContainer {
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
   public Response getSites() {
     try {
+      org.exoplatform.services.security.Identity currentIdentity = ConversationState.getCurrent().getIdentity();
       Filter<Site> filter = new Filter<>() {
         @Override
         public boolean accept(Site site) {
@@ -78,7 +80,7 @@ public class SiteManagementRestService implements ResourceContainer {
       };
       SiteQuery pageQuery = new SiteQuery.Builder().withSiteTypes(SiteType.SITE, SiteType.SPACE).withFilter(filter).build();
       List<Site> sites = portal.findSites(pageQuery);
-      List<SiteRestEntity> siteRestEntities = EntityBuilder.toSiteRestEntities(sites).stream().sorted(Comparator.comparing(SiteRestEntity::getDisplayName, String.CASE_INSENSITIVE_ORDER)).toList();
+      List<SiteRestEntity> siteRestEntities = EntityBuilder.toSiteRestEntities(sites, currentIdentity).stream().sorted(Comparator.comparing(SiteRestEntity::getDisplayName, String.CASE_INSENSITIVE_ORDER)).toList();
       return Response.ok().entity(siteRestEntities).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving sites", e);
