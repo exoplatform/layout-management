@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <div>
-    <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.whoCanView') }}</span>
+    <span class="font-weight-bold text-start text-color body-2">{{ whoCanView }}</span>
     <v-select
       v-model="type"
       :items="typeLabel"
@@ -43,7 +43,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       {{ $t('siteNavigation.required.error.message') }}
     </span>
     <template v-if="showAccessPermissionsList">
-      <site-navigation-node-permission-item
+      <manage-permission-item
         v-for="(permission, index) in accessPermissions"
         :key="index"
         :permission-group="permission.group"
@@ -66,6 +66,10 @@ export default {
     type: {
       type: String,
       default: 'Everyone'
+    },
+    isSite: {
+      type: Boolean,
+      default: false
     },
   },
   data() {
@@ -104,6 +108,9 @@ export default {
     showAccessPermissionsList() {
       return this.showAccessPermissionsGroupSuggester;
     },
+    whoCanView() {
+      return this.isSite && this.$t('siteManagement.label.whoCanView') || this.$t('siteNavigation.label.whoCanView');
+    }
   },
   watch: {
     accessPermission() {

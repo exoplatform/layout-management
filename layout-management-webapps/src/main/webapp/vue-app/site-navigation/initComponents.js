@@ -23,12 +23,7 @@ import SiteNavigationNodeItem from './components/NodeItem.vue';
 import SiteNavigationNodeItemMenu from './components/NodeItemMenu.vue';
 import SiteNavigationNotificationAlert from './snackbar/SiteNavigationNotificationAlert.vue';
 import SiteNavigationNotificationAlerts from './snackbar/SiteNavigationNotificationAlerts.vue';
-import SiteNavigationManageAccessDrawer from './components/SiteNavigationManageAccessDrawer.vue';
 import SiteNavigationNodeDrawer from './components/SiteNavigationNodeDrawer.vue';
-import SiteNavigationNodeEditPermission from './components/SiteNavigationNodeEditPermission.vue';
-import SiteNavigationNodeAccessPermission from './components/SiteNavigationNodeAccessPermission.vue';
-import SiteNavigationNodePermissionItem from './components/SiteNavigationNodePermissionItem.vue';
-import SiteNavigationNodePermissionTypeSelector from './components/SiteNavigationNodePermissionTypeSelector.vue';
 import SiteNavigationElementDrawer from './components/SiteNavigationElementDrawer.vue';
 import SiteNavigationPageElement from './components/SiteNavigationPageElement.vue';
 import SiteNavigationNewPageElement from './components/SiteNavigationNewPageElement.vue';
@@ -46,12 +41,7 @@ const components = {
   'site-navigation-node-item-menu': SiteNavigationNodeItemMenu,
   'site-navigation-notification-alert': SiteNavigationNotificationAlert,
   'site-navigation-notification-alerts': SiteNavigationNotificationAlerts,
-  'site-navigation-manage-access-drawer': SiteNavigationManageAccessDrawer,
   'site-navigation-node-drawer': SiteNavigationNodeDrawer,
-  'site-navigation-node-edit-permission': SiteNavigationNodeEditPermission,
-  'site-navigation-node-access-permission': SiteNavigationNodeAccessPermission,
-  'site-navigation-node-permission-item': SiteNavigationNodePermissionItem,
-  'site-navigation-node-permission-type-selector': SiteNavigationNodePermissionTypeSelector,
   'site-navigation-element-drawer': SiteNavigationElementDrawer,
   'site-navigation-page-element': SiteNavigationPageElement,
   'site-navigation-new-page-element': SiteNavigationNewPageElement,

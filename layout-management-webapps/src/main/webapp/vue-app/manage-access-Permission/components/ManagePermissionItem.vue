@@ -24,7 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       {{ displayName }}
     </span>
     <v-spacer />
-    <site-navigation-node-permission-type-selector
+    <permission-type-selector
       :membership-type="membershipType"
       class="mt-1"
       @membership-type-changed="$emit('membership-type-changed', $event)" />

@@ -260,7 +260,7 @@ export default {
       return this.$siteNavigationService.editLayout(uiPageId, this.pageName, this.pageSiteType, this.pageSiteName, this.nodeUri, this.nodeSiteType, this.nodeSiteName);    
     },
     openManageAccessDrawer(){
-      this.$root.$emit('open-site-navigation-manage-access-drawer', JSON.parse(JSON.stringify(this.navigationNode)));
+      this.$root.$emit('open-manage-access-drawer', JSON.parse(JSON.stringify(this.navigationNode)));
     },
     cutNode() {
       this.$root.$emit('cut-node', this.navigationNode);

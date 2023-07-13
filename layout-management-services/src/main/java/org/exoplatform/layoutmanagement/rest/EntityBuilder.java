@@ -113,13 +113,15 @@ public class EntityBuilder {
         LOG.error("Error while retrieving group with name ", site.getName(), e);
       }
     }
+    List<Map<String, Object>> accessPermissions = computePermissions(Util.from(site.getAccessPermission()));
+    Map<String, Object> editPermission = computePermission(Util.from(site.getEditPermission())[0]);
     return new SiteRestEntity(site.getId(),
                               siteType,
                               site.getName(),
                               !StringUtils.isBlank(displayName) ? displayName : site.getName(),
                               site.getDescription(),
-                              Util.from(site.getAccessPermission()),
-                              Util.from(site.getEditPermission())[0]);
+                              accessPermissions,
+                              editPermission);
   }
 
   public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
@@ -130,5 +132,20 @@ public class EntityBuilder {
   }
   private static OrganizationService getOrganizationService() {
     return CommonsUtils.getService(OrganizationService.class);
+  }
+
+  private static Map<String, Object> computePermission(String permission) {
+    Map<String, Object> accessPermission = new HashMap<>();
+    try {
+      accessPermission.put("membershipType", permission.split(":")[0]);
+      accessPermission.put("group", getOrganizationService().getGroupHandler().findGroupById(permission.split(":")[1]));
+    } catch (Exception e) {
+      // do nothing
+    }
+    return accessPermission;
+  }
+
+  private static List<Map<String, Object>> computePermissions(String[] permissions) {
+    return Arrays.stream(permissions).map(EntityBuilder::computePermission).toList();
   }
 }
