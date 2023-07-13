@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <div>
-    <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.whoCanEdit') }}</span>
+    <span class="font-weight-bold text-start text-color body-2">{{ whoCanEdit }}</span>
     <exo-identity-suggester
       ref="navigationNodeEditPermissions"
       :labels="suggesterLabels"
@@ -33,7 +33,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <span v-if="!permission.group" class="caption mt-n3 mx-2 position-absolute error-color">
       {{ $t('siteNavigation.required.error.message') }}
     </span>
-    <site-navigation-node-permission-item
+    <manage-permission-item
       v-if="permission.group && permission.group"
       :permission-group="permission.group"
       :membership-type="permission.membershipType"
@@ -51,6 +51,10 @@ export default {
         group: {},
         membershipType: '*'}),
     },
+    isSite: {
+      type: Boolean,
+      default: false
+    },
   },
   data: () => ({
     loading: false,
@@ -65,6 +69,9 @@ export default {
         placeholder: this.$t('siteNavigation.label.groupSuggester.placeholder'),
         noDataLabel: this.$t('siteNavigation.label.groupSuggester.noData')
       };
+    },
+    whoCanEdit() {
+      return this.isSite && this.$t('siteManagement.label.whoCanEdit') || this.$t('siteNavigation.label.whoCanEdit');
     }
   },
   watch: {
