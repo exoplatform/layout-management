@@ -56,13 +56,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             class="pt-0"
             type="text"
             required="required"
+            :disabled="disableSiteName"
             outlined
             dense />
         </v-card-text>
         <v-card-text class="d-flex pb-2">
           <v-label>
             <span class="text-color font-weight-bold">
-              {{ $t('siteManagement.label.siteDescription.title') }} *             
+              {{ $t('siteManagement.label.siteDescription.title') }}           
             </span>
           </v-label>
         </v-card-text>
@@ -70,9 +71,26 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <exo-activity-rich-editor
             v-model="siteDescription"
             max-length="1300"
+            :tag-enabled="false"
             class="flex" />
         </v-card-text>
       </v-form>
+    </template>
+    <template slot="footer">
+      <div class="d-flex justify-end">
+        <v-btn
+          class="btn ms-2"
+          @click="close">
+          {{ $t('siteNavigation.label.btn.cancel') }}
+        </v-btn>
+        <v-btn
+          :disabled="disabled"
+          :loading="loading"
+          @click="updateSite"
+          class="btn btn-primary ms-2">
+          {{ $t('siteNavigation.label.btn.save') }}
+        </v-btn>
+      </div>
     </template>
   </exo-drawer>
 </template>
@@ -85,22 +103,40 @@ export default {
       siteName: '',
       siteLabel: '',
       siteDescription: '',
+      disableSiteName: true,
     };
   },
   created() {
     this.$root.$on('open-site-card-properties-drawer', this.open);
+  },
+  computed: {
+    disabled(){
+      return !this.siteLabel;
+    }
   },
   methods: {
     open(site) {
       this.site =  site;
       this.siteName = this.site.name;
       this.siteLabel = this.site.displayName || this.site.name;
-      this.siteDescription = this.site.description;
+      this.siteDescription = this.site.description !== null ?  this.site.description : '';
       this.$refs.siteCardPropertiesDrawer.open();
     },
     close() {
+      this.site = null;
+      this.siteName = '';
+      this.siteLabel = '';
+      this.siteDescription = '';
       this.$refs.siteCardPropertiesDrawer.close();
     },
+    updateSite() {
+      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription)
+        .then(() => {
+          this.$root.$emit('refresh-sites');
+          this.close();
+        });
+    }
+
   }
 };
 </script>

@@ -25,6 +25,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -103,6 +104,37 @@ public class SiteManagementRestService implements ResourceContainer {
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when deleting the site with name {} and type {}", siteName, siteType, e);
+      return Response.serverError().build();
+    }
+  }
+
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("administrators")
+  @Operation(summary = "update a site", method = "PUT", description = "This updates the given site")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response updateSite(@Parameter(description = "site type")
+  @QueryParam("siteType")
+  String siteType,
+                             @Parameter(description = "site name")
+                             @QueryParam("siteName")
+                             String siteName,
+                             @Parameter(description = "site Label")
+                             @QueryParam("siteLabel")
+                             String siteLabel,
+                             @Parameter(description = "site description")
+                             @QueryParam("siteDescription")
+                             String siteDescription) {
+    try {
+      SiteId siteId = Util.from(new SiteKey(siteType, siteName));
+      Site site = portal.getSite(siteId);
+      site.setDescription(siteDescription);
+      site.setDisplayName(siteLabel);
+      portal.saveSite(site);
+      return Response.ok().build();
+    } catch (Exception e) {
+      LOG.error("Error when updating the site with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
     }
   }
