@@ -408,7 +408,7 @@ export default {
     },
     openTargetPage(pageData) {
       if (pageData?.pageRef) {
-        if (pageData?.pageType === 'PAGE' && pageData?.createdPage) {
+        if (pageData?.pageType === 'PAGE' && pageData?.createdPage && pageData?.openEditLayout) {
           const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
           const createdPage = pageData.createdPage;
           return this.$siteNavigationService.editLayout(uiPageId, createdPage.key.name, createdPage.key.site.typeName, createdPage.key.site.name, `${this.navigationNode.uri}/${this.nodeId}`, this.navigationNode.siteKey.typeName, this.navigationNode.siteKey.name);
