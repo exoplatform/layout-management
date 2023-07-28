@@ -16,8 +16,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <exo-drawer
-    ref="manageAccessDrawer"
-    id="manageAccessDrawer"
+    ref="managePermissionsDrawer"
+    id="managePermissionsDrawer"
     :right="!$vuetify.rtl"
     :allow-expand="isSite"
     eager
@@ -81,11 +81,11 @@ export default {
       return (this.accessPermissions.length || this.accessPermissionType ==='Everyone' ) && this.editPermission?.group?.id;
     },
     drawerTitle() {
-      return this.isSite && this.$t('siteManagement.label.managePermissions') || this.$t('siteNavigation.manageAccessDrawer.title');
+      return this.isSite && this.$t('siteManagement.label.managePermissions') || this.$t('siteNavigation.managePermissionsDrawer.title');
     }
   },
   created() {
-    this.$root.$on('open-manage-access-drawer', this.open);
+    this.$root.$on('open-manage-permissions-drawer', this.open);
     this.$root.$on('reset-edit-permission', this.resetEditPermission);
     this.$root.$on('edit-permission-membership-type-changed', this.updateEditPermissionMembershipType);
     this.$root.$on('add-access-permission', this.addAccessPermission);
@@ -94,7 +94,7 @@ export default {
     this.$root.$on('change-access-permission-type', this.changeAccessPermissionType);
   },
   methods: {
-    open(object , isSite) {
+    open(object, isSite) {
       this.isSite = isSite || false;
       if (this.isSite) {
         this.site = JSON.parse(JSON.stringify(object));
@@ -110,13 +110,13 @@ export default {
 
       this.$nextTick()
         .then(() => {
-          this.$refs.manageAccessDrawer.open();
+          this.$refs.managePermissionsDrawer.open();
         });
     },
     close() {
       this.resetEditPermission();
       this.accessPermissions = [];
-      this.$refs.manageAccessDrawer.close();
+      this.$refs.managePermissionsDrawer.close();
     },
     resetEditPermission() {
       this.editPermission = {
@@ -156,7 +156,7 @@ export default {
     },
     saveNavigationNodePermission() {
       this.loading = true;
-      this.$refs.manageAccessDrawer.startLoading();
+      this.$refs.managePermissionsDrawer.startLoading();
       const pageEditPermission =this.convertPermission(this.editPermission);
       let pageAccessPermissions = ['Everyone'];
       if (this.accessPermissions[0] !== 'Everyone') {
@@ -187,12 +187,12 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          this.$refs.manageAccessDrawer.endLoading();
+          this.$refs.managePermissionsDrawer.endLoading();
         });
     },
     saveSitePermission() {
       this.loading = true;
-      this.$refs.manageAccessDrawer.startLoading();
+      this.$refs.managePermissionsDrawer.startLoading();
       const siteEditPermission =this.convertPermission(this.editPermission);
       let siteAccessPermissions = ['Everyone'];
       if (this.accessPermissions[0] !== 'Everyone') {
@@ -222,7 +222,7 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          this.$refs.manageAccessDrawer.endLoading();
+          this.$refs.managePermissionsDrawer.endLoading();
         });
     },
     convertPermission(permission){

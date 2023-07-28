@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import ManageAccessDrawer from './components/manage-access-permissions/ManageAccessDrawer.vue';
-import ManageEditPermission from './components/manage-access-permissions/ManageEditPermission.vue';
-import ManageAccessPermission from './components/manage-access-permissions/ManageAccessPermission.vue';
-import ManagePermissionItem from './components/manage-access-permissions/ManagePermissionItem.vue';
-import PermissionTypeSelector from './components/manage-access-permissions/PermissionTypeSelector.vue';
+import ManagePermissionsDrawer from './components/manage-permissions/ManagePermissionsDrawer.vue';
+import ManageEditPermission from './components/manage-permissions/ManageEditPermission.vue';
+import ManageAccessPermission from './components/manage-permissions/ManageAccessPermission.vue';
+import ManagePermissionItem from './components/manage-permissions/ManagePermissionItem.vue';
+import PermissionTypeSelector from './components/manage-permissions/PermissionTypeSelector.vue';
 import NotificationAlert from './components/snackbar/NotificationAlert.vue';
 import NotificationAlerts from './components/snackbar/NotificationAlerts.vue';
 
 const components = {
-  'manage-access-drawer': ManageAccessDrawer,
+  'manage-permissions-drawer': ManagePermissionsDrawer,
   'manage-edit-permission': ManageEditPermission,
   'manage-access-permission': ManageAccessPermission,
   'manage-permission-item': ManagePermissionItem,

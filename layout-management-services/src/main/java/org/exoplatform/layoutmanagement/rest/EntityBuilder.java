@@ -140,7 +140,7 @@ public class EntityBuilder {
       accessPermission.put("membershipType", permission.split(":")[0]);
       accessPermission.put("group", getOrganizationService().getGroupHandler().findGroupById(permission.split(":")[1]));
     } catch (Exception e) {
-      // do nothing
+      LOG.error("Error while computing user permission ", permission, e);
     }
     return accessPermission;
   }

@@ -87,5 +87,3 @@ export function updateSite(siteName, siteType, siteLabel, siteDescription) {
     }
   });
 }
-
-

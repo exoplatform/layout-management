@@ -40,13 +40,13 @@ export default {
   }),
   computed: {
     displayAlerts() {
-      return this.alerts && this.alerts.length;
+      return this.alerts?.length;
     },
   },
   created() {
     this.$root.$on('layout-notification-alert', alert => this.alerts.push(alert));
     this.$root.$on('confirm-node-deletion', (node) => {
-      if (node && node.id) {
+      if (node?.id) {
         const clickMessage = this.$t('siteNavigation.label.undoDelete');
         const message = this.$t('siteNavigation.label.deleteSuccess');
         const administratorMessage = this.$t('siteNavigation.label.contact.administrator');

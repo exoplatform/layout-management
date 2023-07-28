@@ -154,7 +154,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-divider />
       <v-list-item
         v-if="canEditPage"
-        @click="openManageAccessDrawer">
+        @click="openManagePermissionsDrawer">
         <v-icon
           size="13"
           class="pe-1">
@@ -259,8 +259,8 @@ export default {
       const uiPageId = $('.UIPage').attr('id').split('UIPage-')[1];
       return this.$siteNavigationService.editLayout(uiPageId, this.pageName, this.pageSiteType, this.pageSiteName, this.nodeUri, this.nodeSiteType, this.nodeSiteName);    
     },
-    openManageAccessDrawer(){
-      this.$root.$emit('open-manage-access-drawer', JSON.parse(JSON.stringify(this.navigationNode)));
+    openManagePermissionsDrawer(){
+      this.$root.$emit('open-manage-permissions-drawer', JSON.parse(JSON.stringify(this.navigationNode)));
     },
     cutNode() {
       this.$root.$emit('cut-node', this.navigationNode);

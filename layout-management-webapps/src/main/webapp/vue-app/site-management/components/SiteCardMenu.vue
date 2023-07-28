@@ -78,7 +78,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-list-item
         v-if="!isGroupSite && !isGlobalSite"
         class="subtitle-2 px-3"
-        @click="$root.$emit('open-manage-access-drawer', site, true)">
+        @click="$root.$emit('open-manage-permissions-drawer', site, true)">
         <v-icon
           size="13"
           class="me-2 ms-0"
