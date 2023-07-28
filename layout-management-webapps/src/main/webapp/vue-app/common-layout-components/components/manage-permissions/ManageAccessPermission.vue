@@ -122,8 +122,10 @@ export default {
         this.$refs.navigationNodeAccessPermissions.emitSelectedValue({});
       }
     },
-    type() {
-      this.$root.$emit('change-access-permission-type', this.type);
+    type(newVal, oldVal) {
+      if ( newVal !== oldVal && oldVal !== ''){
+        this.$root.$emit('change-access-permission-type', this.type);
+      }
     }
   },
   methods: {

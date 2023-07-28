@@ -1,15 +1,9 @@
 export function updateNodePagePermission(pageRef, editPermission, accessPermissions) {
-
   const formData = new FormData();
-  
   formData.append('pageRef', pageRef);
-  
   formData.append('editPermission', editPermission);
-  
   formData.append('accessPermissions', accessPermissions);
-  
   const params = new URLSearchParams(formData).toString();
-  
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/page/permissions?${params}`, {
     method: 'PATCH',
     credentials: 'include',
@@ -22,17 +16,15 @@ export function updateNodePagePermission(pageRef, editPermission, accessPermissi
 
 
 export function updateSitePermissions(siteType, siteName, editPermission, accessPermissions) {
-
   const formData = new FormData();
-
   formData.append('siteType', siteType);
-
   formData.append('siteName', siteName);
-
-  formData.append('editPermission', editPermission);
-
-  formData.append('accessPermissions', accessPermissions);
-
+  if (editPermission) {
+    formData.append('editPermission', editPermission);
+  }
+  if (accessPermissions) {
+    formData.append('accessPermissions', accessPermissions);
+  }
   const params = new URLSearchParams(formData).toString();
 
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites/permissions?${params}`, {

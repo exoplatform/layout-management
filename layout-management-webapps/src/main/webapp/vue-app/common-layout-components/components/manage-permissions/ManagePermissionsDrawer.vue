@@ -74,6 +74,8 @@ export default {
       accessPermissionType: '',
       site: null,
       isSite: false,
+      accessPermissionChanged: false,
+      editPermissionChanged: false,
     };
   },
   computed: {
@@ -92,6 +94,8 @@ export default {
     this.$root.$on('remove-access-permission', this.removeAccessPermission);
     this.$root.$on('update-access-permission-membership-type', this.updateAccessPermissionMembership);
     this.$root.$on('change-access-permission-type', this.changeAccessPermissionType);
+    this.$root.$on('edit-permission-changed', this.editPermissionChanged = true);
+
   },
   methods: {
     open(object, isSite) {
@@ -117,25 +121,33 @@ export default {
       this.resetEditPermission();
       this.accessPermissions = [];
       this.$refs.managePermissionsDrawer.close();
+      this.editPermissionChanged = false;
+      this.accessPermissionChanged = false;
     },
     resetEditPermission() {
+      this.editPermissionChanged = true;
       this.editPermission = {
         membershipType: '*'
       };
     },
     updateEditPermissionMembershipType(membershipType) {
+      this.editPermissionChanged = true;
       this.editPermission.membershipType = membershipType;
     },
     addAccessPermission(accessPermission) {
+      this.accessPermissionChanged = true;
       this.accessPermissions.push(accessPermission);
     },
     removeAccessPermission(index) {
+      this.accessPermissionChanged = true;
       this.accessPermissions.splice(index, 1);
     },
     updateAccessPermissionMembership(accessPermission) {
+      this.accessPermissionChanged = true;
       this.accessPermissions[accessPermission.index].membershipType = accessPermission.membershipType;
     },
     changeAccessPermissionType(accessPermissionType) {
+      this.accessPermissionChanged = true;
       this.accessPermissionType = accessPermissionType;
       if (accessPermissionType === 'Everyone') {
         this.accessPermissions = ['Everyone'];
@@ -157,7 +169,7 @@ export default {
     saveNavigationNodePermission() {
       this.loading = true;
       this.$refs.managePermissionsDrawer.startLoading();
-      const pageEditPermission =this.convertPermission(this.editPermission);
+      const pageEditPermission = this.convertPermission(this.editPermission);
       let pageAccessPermissions = ['Everyone'];
       if (this.accessPermissions[0] !== 'Everyone') {
         pageAccessPermissions = [];
@@ -193,7 +205,7 @@ export default {
     saveSitePermission() {
       this.loading = true;
       this.$refs.managePermissionsDrawer.startLoading();
-      const siteEditPermission =this.convertPermission(this.editPermission);
+      const siteEditPermission = this.convertPermission(this.editPermission);
       let siteAccessPermissions = ['Everyone'];
       if (this.accessPermissions[0] !== 'Everyone') {
         siteAccessPermissions = [];
@@ -204,7 +216,7 @@ export default {
           }
         });
       }
-      return this.$commonLayoutService.updateSitePermissions(this.site.siteType, this.site.name, siteEditPermission, siteAccessPermissions)
+      return this.$commonLayoutService.updateSitePermissions(this.site.siteType, this.site.name, this.editPermissionChanged && siteEditPermission || null, this.accessPermissionChanged && siteAccessPermissions || null)
         .then(() => {
           const message = this.$t('siteManagement.label.updatePermission.success');
           this.$root.$emit('layout-notification-alert', {

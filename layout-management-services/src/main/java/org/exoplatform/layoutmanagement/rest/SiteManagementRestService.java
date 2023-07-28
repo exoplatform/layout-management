@@ -164,8 +164,7 @@ public class SiteManagementRestService implements ResourceContainer {
                                         @QueryParam("accessPermissions")
                                         String accessPermissions) {
     try {
-      if (StringUtils.isBlank(siteName) || StringUtils.isBlank(siteType) || StringUtils.isBlank(editPermission)
-          || StringUtils.isBlank(accessPermissions)) {
+      if (StringUtils.isBlank(siteName) || StringUtils.isBlank(siteType)) {
         return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
       }
       SiteId siteId = Util.from(new SiteKey(siteType, siteName));
@@ -176,11 +175,15 @@ public class SiteManagementRestService implements ResourceContainer {
       if (!SiteManagementUtils.canEditSite(site)) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      List<String> accessPermissionsList = List.of(accessPermissions.split(",")).stream().distinct().toList();
-      site.setAccessPermission(Util.from(accessPermissionsList));
-      site.setEditPermission(Util.from(editPermission));
+      if (!StringUtils.isBlank(editPermission)) {
+        site.setEditPermission(Util.from(editPermission));
+      }
+      if (!StringUtils.isBlank(accessPermissions)) {
+        List<String> accessPermissionsList = List.of(accessPermissions.split(",")).stream().distinct().toList();
+        site.setAccessPermission(Util.from(accessPermissionsList));
+      }
       portal.saveSite(site);
-      return Response.ok().build();
+      return Response.ok(EntityBuilder.toSiteRestEntity(portal.getSite(siteId))).build();
     } catch (Exception e) {
       LOG.error("Error when updating site permissions with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();

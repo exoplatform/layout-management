@@ -78,6 +78,7 @@ export default {
     'permission.group'(newVal) {
       if (newVal?.spaceId){
         this.$set(this.permission,'membershipType', '*');
+        this.$root.$emit('edit-permission-changed');
       }
     }
   }
