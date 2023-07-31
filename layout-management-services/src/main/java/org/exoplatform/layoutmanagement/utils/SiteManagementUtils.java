@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2023 eXo Platform SAS.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,35 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.layoutmanagement.rest.model;
+package org.exoplatform.layoutmanagement.utils;
 
-import org.gatein.api.site.SiteId;
-import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.portal.config.UserACL;
+import org.gatein.api.Util;
+import org.gatein.api.site.Site;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public class SiteManagementUtils {
 
-import java.util.List;
-import java.util.Map;
+  private SiteManagementUtils() {
+  }
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class SiteRestEntity {
-
-  private SiteId                    id;
-
-  private SiteType                  siteType;
-
-  private String                    name;
-
-  private String                    displayName;
-
-  private String                    description;
-
-  private List<Map<String, Object>> accessPermissions;
-
-  private Map<String, Object>       editPermission;
-
+  public static boolean canEditSite(Site site) {
+    UserACL userACL = CommonsUtils.getService(UserACL.class);
+    return userACL.hasPermission(Util.from(site.getEditPermission())[0]);
+  }
 }
