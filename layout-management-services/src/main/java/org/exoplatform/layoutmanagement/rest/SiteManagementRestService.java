@@ -30,7 +30,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.layoutmanagement.rest.model.SiteRestEntity;
+import org.exoplatform.layoutmanagement.utils.SiteManagementUtils;
+import org.exoplatform.services.rest.http.PATCH;
 import org.gatein.api.Portal;
 import org.gatein.api.common.Filter;
 import org.gatein.api.Util;
@@ -135,6 +138,54 @@ public class SiteManagementRestService implements ResourceContainer {
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when updating the site with name {} and type {}", siteName, siteType, e);
+      return Response.serverError().build();
+    }
+  }
+
+  @Path("/permissions")
+  @PATCH
+  @RolesAllowed("administrators")
+  @Operation(summary = "Update a page access and edit permission", method = "PATCH", description = "This updates the given page access and edit permission")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Page permissions updated"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "404", description = "Page not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response updateSitePermissions(@Parameter(description = "Site type", required = true)
+                                        @QueryParam("siteType")
+                                        String siteType,
+                                        @Parameter(description = "Site name", required = true)
+                                        @QueryParam("siteName")
+                                        String siteName,
+                                        @Parameter(description = "Site new edit permission", required = true)
+                                        @QueryParam("editPermission")
+                                        String editPermission,
+                                        @Parameter(description = "Site new access permissions", required = true)
+                                        @QueryParam("accessPermissions")
+                                        String accessPermissions) {
+    try {
+      if (StringUtils.isBlank(siteName) || StringUtils.isBlank(siteType)) {
+        return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
+      }
+      SiteId siteId = Util.from(new SiteKey(siteType, siteName));
+      Site site = portal.getSite(siteId);
+      if (site == null) {
+        return Response.status(Response.Status.NOT_FOUND).build();
+      }
+      if (!SiteManagementUtils.canEditSite(site)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      if (!StringUtils.isBlank(editPermission)) {
+        site.setEditPermission(Util.from(editPermission));
+      }
+      if (!StringUtils.isBlank(accessPermissions)) {
+        List<String> accessPermissionsList = List.of(accessPermissions.split(",")).stream().distinct().toList();
+        site.setAccessPermission(Util.from(accessPermissionsList));
+      }
+      portal.saveSite(site);
+      return Response.ok(EntityBuilder.toSiteRestEntity(portal.getSite(siteId))).build();
+    } catch (Exception e) {
+      LOG.error("Error when updating site permissions with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
     }
   }
