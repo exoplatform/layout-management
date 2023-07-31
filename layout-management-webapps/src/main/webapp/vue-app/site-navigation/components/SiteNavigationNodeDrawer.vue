@@ -150,6 +150,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 <v-radio
                   :label="$t('siteNavigation.label.nodeType.group')"
                   value="Group" />
+                <p v-if="editMode" class="caption text-light-color ms-8 me-2 mt-n2">
+                  {{ $t('siteNavigation.label.nodeType.group.caption') }}
+                </p>
                 <div class="d-flex">
                   <v-radio
                     :label="$t('siteNavigation.label.nodeType.pageOrLink')"
@@ -166,6 +169,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                     {{ $t('siteNavigation.label.editElement') }}
                   </a>
                 </div>
+                <p v-if="editMode" class="caption text-light-color ms-8 me-2">
+                  {{ $t('siteNavigation.label.nodeType.pageOrLink.caption') }}
+                </p>
               </v-radio-group>
             </div>
           </v-card-text>
