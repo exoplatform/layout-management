@@ -90,6 +90,35 @@
     </module>
   </portlet>
 
+  <module>
+    <name>commonLayoutComponents</name>
+    <script>
+      <path>/js/commonLayoutComponents.bundle.js</path>
+    </script>
+    <depends>
+      <module>commonVueComponents</module>
+    </depends>
+    <depends>
+      <module>translationField</module>
+    </depends>
+    <depends>
+      <module>vue</module>
+    </depends>
+    <depends>
+      <module>vuetify</module>
+    </depends>
+    <depends>
+      <module>eXoVueI18n</module>
+    </depends>
+    <depends>
+      <module>jquery</module>
+      <as>$</as>
+    </depends>
+    <depends>
+      <module>extensionRegistry</module>
+    </depends>
+  </module>
+
   <portlet>
     <name>SiteNavigation</name>
     <module>
@@ -102,6 +131,9 @@
       </depends>
       <depends>
         <module>commonVueComponents</module>
+      </depends>
+      <depends>
+        <module>commonLayoutComponents</module>
       </depends>
       <depends>
         <module>translationField</module>
@@ -131,6 +163,9 @@
       </script>
       <depends>
         <module>extensionRegistry</module>
+      </depends>
+      <depends>
+        <module>commonLayoutComponents</module>
       </depends>
       <depends>
         <module>commonVueComponents</module>

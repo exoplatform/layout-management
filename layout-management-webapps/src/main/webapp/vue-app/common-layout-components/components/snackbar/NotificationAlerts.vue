@@ -23,7 +23,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     app
     bottom
     left>
-    <site-navigation-notification-alert
+    <layout-notification-alert
       v-for="alert in alerts"
       :key="alert.message"
       :alert="alert"
@@ -40,17 +40,17 @@ export default {
   }),
   computed: {
     displayAlerts() {
-      return this.alerts && this.alerts.length;
+      return this.alerts?.length;
     },
   },
   created() {
-    this.$root.$on('navigation-node-notification-alert', alert => this.alerts.push(alert));
+    this.$root.$on('layout-notification-alert', alert => this.alerts.push(alert));
     this.$root.$on('confirm-node-deletion', (node) => {
-      if (node && node.id) {
+      if (node?.id) {
         const clickMessage = this.$t('siteNavigation.label.undoDelete');
         const message = this.$t('siteNavigation.label.deleteSuccess');
         const administratorMessage = this.$t('siteNavigation.label.contact.administrator');
-        this.$root.$emit('navigation-node-notification-alert', {
+        this.$root.$emit('layout-notification-alert', {
           message,
           administratorMessage,
           type: 'success',
