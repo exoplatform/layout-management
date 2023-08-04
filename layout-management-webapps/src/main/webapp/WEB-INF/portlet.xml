@@ -178,6 +178,25 @@
     </portlet-info>
   </portlet>
 
+  <portlet>
+    <portlet-name>ImagesPortlet</portlet-name>
+    <display-name>Images Portlet</display-name>
+    <portlet-class>org.exoplatform.portlet.ImagesPortlet</portlet-class>
+    <init-param>
+      <name>portlet-view-dispatched-file-path</name>
+      <value>/WEB-INF/jsp/portletBanner.jsp</value>
+    </init-param>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portlet.layoutManagement.ImagesPortlet</resource-bundle>
+    <portlet-info>
+      <title>Images</title>
+      <keywords>Images</keywords>
+    </portlet-info>
+  </portlet>
+
   <event-definition>
     <name>NavigationChange</name>
   </event-definition>

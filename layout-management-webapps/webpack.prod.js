@@ -36,7 +36,9 @@ const config = {
   entry: {
     siteNavigation: './src/main/webapp/vue-app/site-navigation/main.js',
     siteManagement: './src/main/webapp/vue-app/site-management/main.js',
-    commonLayoutComponents: './src/main/webapp/vue-app/common-layout-components/main.js'
+    commonLayoutComponents: './src/main/webapp/vue-app/common-layout-components/main.js',
+    portletBanner: './src/main/webapp/vue-app/portlet-banner/main.js'
+
   },
   output: {
     path: path.join(__dirname, 'target/layout-management/'),

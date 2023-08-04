@@ -24,4 +24,12 @@
     <component>
       <type>org.exoplatform.layoutmanagement.rest.SiteManagementRestService</type>
     </component>
+    <component>
+        <type>org.exoplatform.layoutmanagement.rest.PortletBannerRestService</type>
+    </component>
+    <component>
+        <key>org.exoplatform.layoutmanagement.service.PortletBannerService</key>
+        <type>org.exoplatform.layoutmanagement.service.Impl.PortletBannerServiceImpl</type>
+    </component>
+
 </configuration>
