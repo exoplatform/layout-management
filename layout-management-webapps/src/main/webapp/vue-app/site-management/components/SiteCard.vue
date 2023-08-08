@@ -78,7 +78,7 @@ export default {
         siteType: this.site.siteType,
         includeGlobal: this.site.name.toLowerCase() === eXo.env.portal.globalPortalName.toLowerCase()
       };
-      document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
+      document.dispatchEvent(new CustomEvent('open-site-navigation-drawer', {detail: params}));
     },
   }
 };
