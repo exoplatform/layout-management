@@ -19,7 +19,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     height="240"
     max-height="240"
     outlined
-    hover>
+    hover
+    @click="openSiteNavigationDrawer">
     <v-toolbar
       color="white"
       flat
@@ -69,6 +70,16 @@ export default {
     siteTypeLabel() {
       return this.$t(`siteManagement.label.${this.site.siteType.toLowerCase()}`) ;
     }
+  },
+  methods: {
+    openSiteNavigationDrawer() {
+      const params = {
+        siteName: this.site.name,
+        siteType: this.site.siteType,
+        includeGlobal: this.site.name.toLowerCase() === eXo.env.portal.globalPortalName.toLowerCase()
+      };
+      document.dispatchEvent(new CustomEvent('open-site-navigation-drawer', {detail: params}));
+    },
   }
 };
 </script>
