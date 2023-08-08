@@ -74,6 +74,32 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             :tag-enabled="false"
             class="flex" />
         </v-card-text>
+        <v-card-text class="mt-4">
+          <v-label>
+            <span class="text-color font-weight-bold mb-2"> {{ $t('siteManagement.label.displayOrder') }}</span>
+          </v-label>
+          <v-row class="ms-1 mt-4">
+            <v-col class="d-flex flex-row px-0 py-0 col-10">
+              <v-switch
+                v-model="displayed"
+                class="mt-2" />
+              <label v-if="displayed" class="subtitle-1 mx-1"> {{ $t('siteManagement.label.displayed') }} </label>
+              <label v-else class="subtitle-1 mx-1"> {{ $t('siteManagement.label.notDisplayed') }} </label>
+            </v-col>
+            <v-col class="col-2 px-0 py-0 mt-n2">
+              <v-text-field
+                v-if="displayed"
+                v-model="displayOrder"
+                :label="$t('challenges.label.points')"
+                :rules="[rules.value]"
+                :placeholder="$t('challenges.label.points')"
+                type="number"
+                class="pt-2"
+                outlined
+                required />
+            </v-col>
+          </v-row>
+        </v-card-text>
       </v-form>
     </template>
     <template slot="footer">
@@ -104,6 +130,11 @@ export default {
       siteLabel: '',
       siteDescription: '',
       disableSiteName: true,
+      displayOrder: 0,
+      displayed: true,
+      rules: {
+        value: (v) => (v > 0 && v<= 9999) || 'errorr'
+      },
     };
   },
   created() {
@@ -120,6 +151,8 @@ export default {
       this.siteName = this.site.name;
       this.siteLabel = this.site.displayName || this.site.name;
       this.siteDescription = this.site.description !== null ?  this.site.description : '';
+      this.disabled = this.site.displayed;
+      this.displayOrder = this.site.displayOrder;
       this.$refs.siteCardPropertiesDrawer.open();
     },
     close() {
@@ -130,7 +163,7 @@ export default {
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {
-      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription)
+      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.displayed, this.displayed && this.displayOrder || 0)
         .then(() => {
           this.$root.$emit('refresh-sites');
           this.close();
