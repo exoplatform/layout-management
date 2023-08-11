@@ -241,7 +241,8 @@ export default {
               'pageRef': pageRef,
               'nodeTarget': this.target,
               'pageType': this.elementType,
-              'createdPage': createdPage
+              'createdPage': createdPage,
+              'openEditLayout': this.pageTemplate === 'empty' || this.pageTemplate === 'analytics' || this.pageTemplate === 'normal'
             });
           }).catch(() => {
             const message = this.$t('siteNavigation.label.pageCreation.error');
