@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2023 eXo Platform SAS.
  *
  * This program is free software: you can redistribute it and/or modify
