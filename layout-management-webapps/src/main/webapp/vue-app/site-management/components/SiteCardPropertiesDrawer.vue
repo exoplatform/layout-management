@@ -133,7 +133,7 @@ export default {
       displayOrder: 0,
       displayed: true,
       rules: {
-        value: (v) => (v > 0 && v<= 9999) || 'errorr'
+        value: (v) => (v > 0 && v<= 9999) || this.$t('siteManagement.displayOrder.error')
       },
     };
   },
