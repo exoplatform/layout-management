@@ -33,6 +33,8 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.layoutmanagement.rest.model.SiteRestEntity;
 import org.exoplatform.layoutmanagement.utils.SiteManagementUtils;
+import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.services.rest.http.PATCH;
 import org.gatein.api.Portal;
 import org.gatein.api.common.Filter;
@@ -60,9 +62,11 @@ public class SiteManagementRestService implements ResourceContainer {
   private static final Log LOG = ExoLogger.getLogger(SiteManagementRestService.class);
 
   private Portal           portal;
+  private LayoutService layoutService;
 
-  public SiteManagementRestService(Portal portal) {
+  public SiteManagementRestService(Portal portal, LayoutService layoutService) {
     this.portal = portal;
+    this.layoutService = layoutService;
   }
 
   @GET
@@ -128,13 +132,20 @@ public class SiteManagementRestService implements ResourceContainer {
                              String siteLabel,
                              @Parameter(description = "site description")
                              @QueryParam("siteDescription")
-                             String siteDescription) {
+                             String siteDescription,
+                             @Parameter(description = "site displayed in meta site")
+                             @QueryParam("displayed")
+                             boolean displayed,
+                             @Parameter(description = "site display order")
+                             @QueryParam("displayOrder")
+                             int displayOrder) {
     try {
-      SiteId siteId = Util.from(new SiteKey(siteType, siteName));
-      Site site = portal.getSite(siteId);
-      site.setDescription(siteDescription);
-      site.setDisplayName(siteLabel);
-      portal.saveSite(site);
+      PortalConfig portalConfig = layoutService.getPortalConfig(new SiteKey(siteType, siteName));
+      portalConfig.setDescription(siteDescription);
+      portalConfig.setLabel(siteLabel);
+      portalConfig.setDisplayed(displayed);
+      portalConfig.setDisplayOrder(displayed ? displayOrder : 0);
+      layoutService.save(portalConfig);
       return Response.ok().build();
     } catch (Exception e) {
       LOG.error("Error when updating the site with name {} and type {}", siteName, siteType, e);
