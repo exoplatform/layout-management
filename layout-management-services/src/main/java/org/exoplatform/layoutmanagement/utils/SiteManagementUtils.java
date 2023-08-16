@@ -18,6 +18,7 @@ package org.exoplatform.layoutmanagement.utils;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.portal.config.UserPortalConfigService;
 import org.gatein.api.Util;
 import org.gatein.api.site.Site;
 
@@ -29,5 +30,10 @@ public class SiteManagementUtils {
   public static boolean canEditSite(Site site) {
     UserACL userACL = CommonsUtils.getService(UserACL.class);
     return userACL.hasPermission(Util.from(site.getEditPermission())[0]);
+  }
+
+  public static boolean isDefaultSite(String siteName) {
+    UserPortalConfigService portalConfig = CommonsUtils.getService(UserPortalConfigService.class);
+    return portalConfig.getDefaultPortal().equals(siteName);
   }
 }
