@@ -65,12 +65,14 @@ export function editSiteLayout(portalName) {
   });
 }
 
-export function updateSite(siteName, siteType, siteLabel, siteDescription) {
+export function updateSite(siteName, siteType, siteLabel, siteDescription, displayed, displayOrder) {
   const formData = new FormData();
   formData.append('siteName', siteName);
   formData.append('siteType', siteType);
   formData.append('siteLabel', siteLabel);
   formData.append('siteDescription', siteDescription);
+  formData.append('displayed', displayed);
+  formData.append('displayOrder', displayOrder);
 
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {

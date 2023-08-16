@@ -20,7 +20,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
+import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Group;
@@ -44,6 +47,8 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 public class EntityBuilder {
 
   private static final Log LOG = ExoLogger.getLogger(EntityBuilder.class);
+
+  private static LayoutService    layoutService;
 
   private EntityBuilder() {
   }
@@ -115,13 +120,16 @@ public class EntityBuilder {
     }
     List<Map<String, Object>> accessPermissions = computePermissions(Util.from(site.getAccessPermission()));
     Map<String, Object> editPermission = computePermission(Util.from(site.getEditPermission())[0]);
+    PortalConfig sitePortalConfig = getLayoutService().getPortalConfig(new SiteKey(siteType, site.getName()));
     return new SiteRestEntity(site.getId(),
                               siteType,
                               site.getName(),
                               !StringUtils.isBlank(displayName) ? displayName : site.getName(),
                               site.getDescription(),
                               accessPermissions,
-                              editPermission);
+                              editPermission,
+                              sitePortalConfig.isDisplayed(),
+                              sitePortalConfig.getDisplayOrder());
   }
 
   public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
@@ -147,5 +155,12 @@ public class EntityBuilder {
 
   private static List<Map<String, Object>> computePermissions(String[] permissions) {
     return Arrays.stream(permissions).map(EntityBuilder::computePermission).toList();
+  }
+
+  private static LayoutService getLayoutService() {
+    if (layoutService == null) {
+      layoutService = CommonsUtils.getService(LayoutService.class);
+    }
+    return layoutService;
   }
 }
