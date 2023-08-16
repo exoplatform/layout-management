@@ -18,10 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <v-app v-if="canManageSiteNavigation && !isMobile">
     <site-navigation-button icon-class="text-color" />
     <site-navigation-drawer v-if="siteNavigationDrawerOpened" />
-    <site-navigation-manage-access-drawer v-if="siteNavigationDrawerOpened" />
+    <manage-permissions-drawer v-if="siteNavigationDrawerOpened" />
     <site-navigation-node-drawer v-if="siteNavigationDrawerOpened" />
     <site-navigation-element-drawer v-if="siteNavigationDrawerOpened" />
-    <site-navigation-notification-alerts v-if="siteNavigationDrawerOpened" />
+    <layout-notification-alerts v-if="siteNavigationDrawerOpened" />
   </v-app>
 </template>
 <script>

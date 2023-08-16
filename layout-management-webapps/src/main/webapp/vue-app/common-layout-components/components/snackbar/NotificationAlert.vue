@@ -73,7 +73,7 @@ export default {
       return this.alert.type;
     },
     administratorMessage() {
-      return this.alert && this.alert.administratorMessage;
+      return this.alert?.administratorMessage;
     },
   },
   watch: {
