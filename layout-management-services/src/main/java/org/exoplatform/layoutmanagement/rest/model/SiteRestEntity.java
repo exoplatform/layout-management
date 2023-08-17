@@ -45,8 +45,10 @@ public class SiteRestEntity {
 
   private Map<String, Object>       editPermission;
 
-  private boolean             displayed;
+  private boolean                   displayed;
 
-  private int                 displayOrder;
+  private int                       displayOrder;
+
+  private boolean                   isDefaultSite;
 
 }
