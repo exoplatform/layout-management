@@ -19,7 +19,7 @@
          <AddSite>Seite hinzufügen</AddSite>
       </action>
       <ManageSites>Seiten verwalten</ManageSites>
-      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <ManageGroupSites>Gruppierte Seiten</ManageGroupSites>
       <TopbarTooltip>Layout bearbeiten</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
