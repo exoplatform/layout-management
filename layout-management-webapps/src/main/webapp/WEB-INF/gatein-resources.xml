@@ -48,6 +48,14 @@
     <css-path>/skin/css/siteNavigation.css</css-path>
   </portlet-skin>
 
+  <!-- SiteManagement skins -->
+  <portlet-skin>
+    <application-name>layout-management</application-name>
+    <portlet-name>SiteManagementPortlet</portlet-name>
+    <skin-name>Enterprise</skin-name>
+    <css-path>/skin/css/siteManagement.css</css-path>
+  </portlet-skin>
+
   <portlet>
     <name>QuickEditLayoutPortlet</name>
     <module>

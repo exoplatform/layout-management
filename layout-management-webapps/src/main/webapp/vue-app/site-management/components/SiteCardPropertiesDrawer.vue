@@ -78,7 +78,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <v-label>
             <span class="text-color font-weight-bold mb-2"> {{ $t('siteManagement.label.displayOrder') }}</span>
           </v-label>
-          <v-row class="ms-1 mt-4">
+          <v-row class="mx-0 mt-2">
             <v-col class="d-flex flex-row px-0 py-0 col-10">
               <v-switch
                 v-model="displayed"
@@ -87,13 +87,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               <label v-if="displayed" class="subtitle-1 mx-1"> {{ $t('siteManagement.label.displayed') }} </label>
               <label v-else class="subtitle-1 mx-1"> {{ $t('siteManagement.label.notDisplayed') }} </label>
             </v-col>
-            <v-col class="col-2 px-0 py-0 mt-n2">
+            <v-col class="col-2 px-0 py-0 mt-n1 orderDisplay">
               <v-text-field
                 v-if="displayed"
                 v-model="displayOrder"
-                :label="$t('challenges.label.points')"
                 :rules="[rules.value]"
-                :placeholder="$t('challenges.label.points')"
                 type="number"
                 class="pt-2"
                 outlined
@@ -143,7 +141,7 @@ export default {
   },
   computed: {
     disabled(){
-      return !this.siteLabel;
+      return !this.siteLabel || (this.displayed && this.displayOrder < 1);
     }
   },
   methods: {
@@ -152,9 +150,11 @@ export default {
       this.siteName = this.site.name;
       this.siteLabel = this.site.displayName || this.site.name;
       this.siteDescription = this.site.description !== null ?  this.site.description : '';
-      this.disabled = this.site.displayed;
+      this.displayed = this.site.displayed;
       this.displayOrder = this.site.displayOrder;
-      this.$refs.siteCardPropertiesDrawer.open();
+      this.$nextTick().then(() => {
+        this.$refs.siteCardPropertiesDrawer.open();
+      });
     },
     close() {
       this.site = null;

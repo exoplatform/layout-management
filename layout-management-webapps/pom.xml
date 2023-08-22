@@ -103,6 +103,7 @@
               <compress>false</compress>
               <includes>
                 <include>siteNavigation.less</include>
+                <include>siteManagement.less</include>
               </includes>
             </configuration>
             <goals>
