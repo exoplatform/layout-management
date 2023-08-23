@@ -129,6 +129,9 @@ export default {
       }
       return height;
     },
+    isMobile() {
+      return this.$vuetify.breakpoint.xs;
+    }
   },
   mounted() {
     if (this.fileId === 'default') {
