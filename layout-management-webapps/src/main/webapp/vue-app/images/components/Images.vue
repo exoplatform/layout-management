@@ -120,7 +120,7 @@ export default {
       return this.maxUploadSize * ONE_KB * ONE_KB;
     },
     isDefaultImage() {
-      return this.imageUrl && this.imageUrl.includes('/portal/rest/v1/image/default');
+      return this.imageUrl?.includes('/portal/rest/v1/image/default');
     },
     height() {
       let height = 171.5;

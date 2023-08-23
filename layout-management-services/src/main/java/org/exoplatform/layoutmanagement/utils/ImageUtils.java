@@ -16,6 +16,9 @@ public class ImageUtils {
   
   private static final Log LOG = ExoLogger.getLogger(ImageUtils.class);
   
+  private ImageUtils() {
+  }
+  
   public static String buildImageUrl(String fileId, String remoteId, Long lastModifiedDate) {
     if (remoteId == null) {
       return null;

@@ -65,8 +65,6 @@ public class ImageRestService implements ResourceContainer {
 
   private static final String DEFAULT_IMAGE_PATH = "/skin/images/default_image.png";
 
-  public byte[]               defaultImage       = null;
-
   public ImageRestService(PortalContainer portalContainer, ImageService imageService) {
     this.imageService = imageService;
     this.portalContainer = portalContainer;
@@ -139,13 +137,12 @@ public class ImageRestService implements ResourceContainer {
   }
 
   private InputStream getDefaultImageInputStream() throws IOException {
-    if (defaultImage == null) {
-      InputStream is = portalContainer.getPortalContext().getResourceAsStream(DEFAULT_IMAGE_PATH);
-      if (is == null) {
-        defaultImage = new byte[] {};
-      } else {
-        defaultImage = IOUtil.getStreamContentAsBytes(is);
-      }
+    byte[] defaultImage;
+    InputStream is = portalContainer.getPortalContext().getResourceAsStream(DEFAULT_IMAGE_PATH);
+    if (is == null) {
+      defaultImage = new byte[] {};
+    } else {
+      defaultImage = IOUtil.getStreamContentAsBytes(is);
     }
     return new ByteArrayInputStream(defaultImage);
   }
