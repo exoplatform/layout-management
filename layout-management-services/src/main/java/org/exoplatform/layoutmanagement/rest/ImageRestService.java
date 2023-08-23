@@ -16,37 +16,42 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import static org.exoplatform.layoutmanagement.utils.ImageUtils.ATTACHMENT_TYPE;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.exoplatform.commons.utils.IOUtil;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.layoutmanagement.rest.model.ImageEntity;
+import org.exoplatform.layoutmanagement.rest.model.ImageRestEntity;
 import org.exoplatform.layoutmanagement.service.ImageService;
+import org.exoplatform.layoutmanagement.utils.ImageUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import java.io.IOException;
+import org.exoplatform.social.core.service.LinkProvider;
 
-import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import static org.exoplatform.layoutmanagement.utils.SiteManagementUtils.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Path("v1/image")
 @Tag(name = "v1/image", description = "Managing image")
@@ -60,7 +65,7 @@ public class ImageRestService implements ResourceContainer {
 
   private static final String DEFAULT_IMAGE_PATH = "/skin/images/default_image.png";
 
-  public byte[]               defaultImage     = null;
+  public byte[]               defaultImage       = null;
 
   public ImageRestService(PortalContainer portalContainer, ImageService imageService) {
     this.imageService = imageService;
@@ -85,9 +90,9 @@ public class ImageRestService implements ResourceContainer {
       String fileId = String.valueOf(uploadFileId.equals("default") ? uploadFileId
                                                                     : imageService.getImage(identity.getUserId(), uploadFileId));
       Long lastModifiedDate = System.currentTimeMillis();
-      String imageUrl = buildImageUrl(fileId, identity.getUserId(), lastModifiedDate);
-      ImageEntity imageEntity = new ImageEntity(fileId, imageUrl);
-      return Response.ok().entity(imageEntity).build();
+      String imageUrl = ImageUtils.buildImageUrl(fileId, identity.getUserId(), lastModifiedDate);
+      ImageRestEntity imageRestEntity = new ImageRestEntity(fileId, imageUrl);
+      return Response.ok().entity(imageRestEntity).build();
     } catch (Exception e) {
       LOG.error("Error when retrieving image", e);
       return Response.serverError().build();
@@ -120,7 +125,7 @@ public class ImageRestService implements ResourceContainer {
       }
       Identity identity = ConversationState.getCurrent().getIdentity();
       if (!StringUtils.isBlank(token)
-          && !isAttachmentTokenValid(token, fileId, identity.getUserId(), ATTACHMENT_TYPE, lastModified)) {
+          && !LinkProvider.isAttachmentTokenValid(token, fileId, identity.getUserId(), ATTACHMENT_TYPE, lastModified)) {
         LOG.warn("An anonymous user attempts to access image of portlet without a valid access token");
         return Response.status(Response.Status.FORBIDDEN).build();
       }

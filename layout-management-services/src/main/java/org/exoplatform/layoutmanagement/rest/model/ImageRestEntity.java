@@ -14,21 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import ImagesPortlet from './components/ImagePortlet.vue';
+package org.exoplatform.layoutmanagement.rest.model;
 
-const components = {
-  'image-portlet': ImagesPortlet,
-};
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ImageRestEntity {
 
-for (const key in components) {
-  Vue.component(key, components[key]);
-}
+  private String fileId;
 
-import * as imageService from './imageService.js';
-
-if (!Vue.prototype.$imageService) {
-  window.Object.defineProperty(Vue.prototype, '$imageService', {
-    value: imageService,
-  });
+  private String imageUrl;
 }

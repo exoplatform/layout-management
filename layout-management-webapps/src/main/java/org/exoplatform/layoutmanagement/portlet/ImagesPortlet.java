@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.image;
+package org.exoplatform.layoutmanagement.portlet;
 
 import java.io.IOException;
 import java.util.Enumeration;

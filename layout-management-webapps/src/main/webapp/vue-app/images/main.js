@@ -37,9 +37,9 @@ export function init(imageUrl, fileId, maxUploadSize, saveSettingsURL) {
         maxUploadSize,
         saveSettingsURL,
       },
-      template: `<image-portlet id="${appId}" :imageUrl="imageUrl" :fileId="fileId" :maxUploadSize="maxUploadSize" :saveSettingsURL="saveSettingsURL" />`,
+      template: `<images-portlet id="${appId}" :imageUrl="imageUrl" :fileId="fileId" :maxUploadSize="maxUploadSize" :saveSettingsURL="saveSettingsURL" />`,
       vuetify,
       i18n},
-    `#${appId}`, 'image-portlet');
+    `#${appId}`, 'images-portlet');
   });
 }

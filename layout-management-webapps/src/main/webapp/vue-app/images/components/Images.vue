@@ -138,7 +138,7 @@ export default {
   },
   methods: {
     getImage(uploadId) {
-      return this.$imageService.getImage(uploadId)
+      return this.$imagesService.getImage(uploadId)
         .then(data => {
           this.imageUrl = data.imageUrl;
           this.fileId = data.fileId;
@@ -168,7 +168,7 @@ export default {
         });
     },
     saveSettings() {
-      this.$imageService.saveSettings(this.saveSettingsURL ,{
+      this.$imagesService.saveSettings(this.saveSettingsURL ,{
         fileId: this.fileId,
         imageUrl: this.imageUrl
       });

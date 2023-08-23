@@ -181,10 +181,10 @@
   <portlet>
     <portlet-name>ImagesPortlet</portlet-name>
     <display-name>Images Portlet</display-name>
-    <portlet-class>org.exoplatform.image.ImagesPortlet</portlet-class>
+    <portlet-class>org.exoplatform.layoutmanagement.portlet.ImagesPortlet</portlet-class>
     <init-param>
       <name>portlet-view-dispatched-file-path</name>
-      <value>/WEB-INF/jsp/image.jsp</value>
+      <value>/WEB-INF/jsp/images.jsp</value>
     </init-param>
     <supports>
       <mime-type>text/html</mime-type>
