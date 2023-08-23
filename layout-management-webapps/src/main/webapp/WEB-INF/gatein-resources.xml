@@ -197,5 +197,50 @@
     </module>
   </portlet>
 
+  <portlet>
+    <name>ImagesPortlet</name>
+    <module>
+      <script>
+        <minify>false</minify>
+        <path>/js/image.bundle.js</path>
+      </script>
+      <depends>
+        <module>extensionRegistry</module>
+      </depends>
+      <depends>
+        <module>imageCropper</module>
+      </depends>
+      <depends>
+        <module>cropper</module>
+        <as>Cropper</as>
+      </depends>
+      <depends>
+        <module>manageAccessPermission</module>
+      </depends>
+      <depends>
+        <module>commonLayoutComponents</module>
+      </depends>
+      <depends>
+        <module>commonVueComponents</module>
+      </depends>
+      <depends>
+        <module>translationField</module>
+      </depends>
+      <depends>
+        <module>vue</module>
+      </depends>
+      <depends>
+        <module>vuetify</module>
+      </depends>
+      <depends>
+        <module>eXoVueI18n</module>
+      </depends>
+      <depends>
+        <module>jquery</module>
+        <as>$</as>
+      </depends>
+    </module>
+  </portlet>
+
 </gatein-resources>
 
