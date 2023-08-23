@@ -32,7 +32,7 @@
 	<properties>
 		<!-- 3rd party libraries versions -->
 		<org.exoplatform.commons-exo.version>6.5.x-SNAPSHOT</org.exoplatform.commons-exo.version>
-		
+		<org.exoplatform.social.version>6.5.x-SNAPSHOT</org.exoplatform.social.version>
 		<!-- Sonar properties -->
 		<sonar.organization>exoplatform</sonar.organization>
 	</properties>
@@ -43,6 +43,13 @@
 				<groupId>org.exoplatform.commons-exo</groupId>
 				<artifactId>commons-exo</artifactId>
 				<version>${org.exoplatform.commons-exo.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.exoplatform.social</groupId>
+				<artifactId>social</artifactId>
+				<version>${org.exoplatform.social.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

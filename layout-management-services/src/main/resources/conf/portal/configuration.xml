@@ -24,4 +24,11 @@
     <component>
       <type>org.exoplatform.layoutmanagement.rest.SiteManagementRestService</type>
     </component>
+    <component>
+        <type>org.exoplatform.layoutmanagement.rest.ImageRestService</type>
+    </component>
+    <component>
+        <key>org.exoplatform.layoutmanagement.service.ImageService</key>
+        <type>org.exoplatform.layoutmanagement.service.impl.ImageServiceImpl</type>
+    </component>
 </configuration>
