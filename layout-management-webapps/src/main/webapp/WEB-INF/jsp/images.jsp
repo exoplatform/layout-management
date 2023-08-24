@@ -8,6 +8,8 @@
 <portlet:defineObjects />
 <portlet:actionURL var="saveSettingsURL" />
 <%
+  int generatedId = (int) (Math.random() * 1000000l);
+  String appId = "image-" + generatedId;
   IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
   PortletPreferences preferences = renderRequest.getPreferences();
   String imageUrl = preferences.getValue("imageUrl", "");
@@ -15,9 +17,10 @@
   int maxUploadSize = identityManager.getImageUploadLimit();
 %>
 <div class="VuetifyApp">
-  <div id="image">
+  <div id="<%= appId %>">
     <script type="text/javascript">
       require(['PORTLET/layout-management/ImagesPortlet'], app => app.init(
+        '<%=appId%>',
         '<%=imageUrl%>',
         '<%=fileId%>',
         <%=maxUploadSize%>,
