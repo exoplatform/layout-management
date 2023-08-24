@@ -56,6 +56,14 @@
     <css-path>/skin/css/siteManagement.css</css-path>
   </portlet-skin>
 
+  <!-- ImagesPortlet skins -->
+  <portlet-skin>
+    <application-name>layout-management</application-name>
+    <portlet-name>ImagesPortlet</portlet-name>
+    <skin-name>Enterprise</skin-name>
+    <css-path>/skin/css/imagesPortlet.css</css-path>
+  </portlet-skin>
+
   <portlet>
     <name>QuickEditLayoutPortlet</name>
     <module>
