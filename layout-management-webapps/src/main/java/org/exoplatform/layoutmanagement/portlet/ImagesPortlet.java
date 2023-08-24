@@ -49,7 +49,7 @@ public class ImagesPortlet extends GenericPortlet {
 
   @Override
   protected void doView(RenderRequest request, RenderResponse response) throws IOException, PortletException {
-    PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher("/WEB-INF/jsp/image.jsp");
+    PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher("/WEB-INF/jsp/images.jsp");
     dispatcher.forward(request, response);
   }
 }
