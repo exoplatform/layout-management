@@ -19,19 +19,18 @@ import './initComponents.js';
 Vue.use(Vuetify);
 const vuetify = new Vuetify(eXo.env.portal.vuetifyPreset);
 
-const appId = 'image';
-
 //getting language of the PLF
 const lang = eXo?.env.portal.language || 'en';
 
 //should expose the locale ressources as REST API
 const urls = [`${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.portlet.layoutManagement.ImagesPortlet-${lang}.json`];
 
-export function init(imageUrl, fileId, maxUploadSize, saveSettingsURL) {
+export function init(appId, imageUrl, fileId, maxUploadSize, saveSettingsURL) {
   exoi18n.loadLanguageAsync(lang, urls).then(i18n => {
     // init Vue app when locale ressources are ready
     Vue.createApp({
       data: {
+        appId,
         imageUrl,
         fileId,
         maxUploadSize,
