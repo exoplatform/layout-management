@@ -27,7 +27,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           :src="imageUrl"
           :min-height="36"
           :max-height="height"
-          id="imageImg"
+          id="image"
           height="auto"
           min-width="100%"
           class="d-flex"
@@ -41,6 +41,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 v-show="hover"
                 :title="$t('image.title.deleteImage')"
                 id="imageDeleteButton"
+                class="changeBannerButton border-color"
                 outlined
                 icon
                 dark
@@ -52,6 +53,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 ref="imageInput"
                 id="imageEditButton"
                 :title="$t('image.title.ChangeImage')"
+                class="changeBannerButton border-color"
                 icon
                 outlined
                 dark

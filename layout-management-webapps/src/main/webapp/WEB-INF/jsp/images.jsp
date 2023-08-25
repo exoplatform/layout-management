@@ -16,7 +16,7 @@
   String fileId = preferences.getValue("fileId", "default");
   int maxUploadSize = identityManager.getImageUploadLimit();
 %>
-<div class="VuetifyApp">
+<div id="ImagesPortlet" class="VuetifyApp">
   <div id="<%= appId %>">
     <script type="text/javascript">
       require(['PORTLET/layout-management/ImagesPortlet'], app => app.init(
