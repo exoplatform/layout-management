@@ -39,7 +39,7 @@
       <properties-param>
         <name>SiteManagementFeatureProperties</name>
         <description>Site Management Feature flags</description>
-        <property name="exo.feature.newSiteManagement.enabled" value="${exo.feature.newSiteManagement.enabled:false}" />
+        <property name="exo.feature.newSiteManagement.enabled" value="${exo.feature.newSiteManagement.enabled:true}" />
       </properties-param>
     </init-params>
   </component>
