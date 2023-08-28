@@ -82,7 +82,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-col class="d-flex flex-row px-0 py-0 col-10">
               <v-switch
                 v-model="displayed"
-                class="mt-2" />
+                :disabled="site.defaultSite"
+                class="mt-2"/>
               <label v-if="displayed" class="subtitle-1 mx-1"> {{ $t('siteManagement.label.displayed') }} </label>
               <label v-else class="subtitle-1 mx-1"> {{ $t('siteManagement.label.notDisplayed') }} </label>
             </v-col>
@@ -163,7 +164,7 @@ export default {
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {
-      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.displayed, this.displayed && this.displayOrder || 0)
+      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.defaultSite || this.displayed, this.displayed && this.displayOrder || 0)
         .then(() => {
           this.$root.$emit('refresh-sites');
           this.close();

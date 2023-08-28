@@ -143,7 +143,7 @@ public class SiteManagementRestService implements ResourceContainer {
       PortalConfig portalConfig = layoutService.getPortalConfig(new SiteKey(siteType, siteName));
       portalConfig.setDescription(siteDescription);
       portalConfig.setLabel(siteLabel);
-      portalConfig.setDisplayed(displayed);
+      portalConfig.setDisplayed(SiteManagementUtils.isDefaultSite(portalConfig.getName()) || displayed);
       portalConfig.setDisplayOrder(displayed ? displayOrder : 0);
       layoutService.save(portalConfig);
       return Response.ok().build();
