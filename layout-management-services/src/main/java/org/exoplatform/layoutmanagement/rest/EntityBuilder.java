@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.exoplatform.layoutmanagement.utils.SiteManagementUtils;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.SiteType;
@@ -128,8 +129,9 @@ public class EntityBuilder {
                               site.getDescription(),
                               accessPermissions,
                               editPermission,
-                              sitePortalConfig.isDisplayed(),
-                              sitePortalConfig.getDisplayOrder());
+                              SiteManagementUtils.isDefaultSite(sitePortalConfig.getName()) || sitePortalConfig.isDisplayed(),
+                              sitePortalConfig.getDisplayOrder(),
+                              SiteManagementUtils.isDefaultSite(site.getName()));
   }
 
   public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
