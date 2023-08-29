@@ -41,6 +41,8 @@ export function updateSitePermissions(siteType, siteName, editPermission, access
   if (accessPermissions) {
     formData.append('accessPermissions', accessPermissions);
   }
+  formData.append('lang', eXo.env.portal.language);
+
   const params = new URLSearchParams(formData).toString();
 
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites/permissions?${params}`, {
