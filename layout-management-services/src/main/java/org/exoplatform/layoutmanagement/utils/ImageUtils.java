@@ -19,17 +19,27 @@ package org.exoplatform.layoutmanagement.utils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.service.LinkProvider;
+import org.exoplatform.social.core.space.SpaceUtils;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
+import org.exoplatform.services.security.Identity;
 
 public class ImageUtils {
   
   public static final String ATTACHMENT_TYPE         = "image";
 
   public static final String BASE_URL_IMAGE_REST_API = "/v1/image";
-  
+
+  private static final String PLATFORM_WEB_CONTRIBUTORS_GROUP = "/platform/web-contributors";
+
+  private static final String PUBLISHER_MEMBERSHIP_NAME       = "publisher";
+
   private static final Log LOG = ExoLogger.getLogger(ImageUtils.class);
   
   private ImageUtils() {
@@ -56,6 +66,18 @@ public class ImageUtils {
                                                    .append("&r=")
                                                    .append(token)
                                                    .toString();
+  }
+
+  public static boolean isPublisher() {
+    Identity currentIdentity = ConversationState.getCurrent().getIdentity();
+    Space space = SpaceUtils.getSpaceByContext();
+    if (space != null) {
+      SpaceService spaceService = CommonsUtils.getService(SpaceService.class);
+      return currentIdentity != null && spaceService.isMember(space, currentIdentity.getUserId())
+          && (currentIdentity.isMemberOf(PLATFORM_WEB_CONTRIBUTORS_GROUP, PUBLISHER_MEMBERSHIP_NAME)
+              || spaceService.isPublisher(space, currentIdentity.getUserId()));
+    }
+    return currentIdentity != null && currentIdentity.isMemberOf(PLATFORM_WEB_CONTRIBUTORS_GROUP, PUBLISHER_MEMBERSHIP_NAME);
   }
 
   public static String getBaseURLImageRest() {
