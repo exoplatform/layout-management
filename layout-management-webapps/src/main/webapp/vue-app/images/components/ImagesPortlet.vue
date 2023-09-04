@@ -35,7 +35,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           <div
             v-show="hover"
             class="d-flex flex-grow-1 position-absolute full-height full-width">
-            <div class="me-2 ms-auto my-auto mt-sm-2 mb-sm-0">
+            <div v-if="isPublisher" class="me-2 ms-auto my-auto mt-sm-2 mb-sm-0">
               <v-btn
                 v-if="!isDefaultImage"
                 v-show="hover"
@@ -116,6 +116,7 @@ export default {
       aspectRatio: 1280 / 225,
       viewMode: 1,
     },
+    isPublisher: eXo.env.portal.isPublisher,
   }),
   computed: {
     maxUploadSizeInBytes() {
