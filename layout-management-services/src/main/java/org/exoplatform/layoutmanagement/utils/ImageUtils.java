@@ -45,12 +45,9 @@ public class ImageUtils {
   private ImageUtils() {
   }
   
-  public static String buildImageUrl(String fileId, String remoteId, Long lastModifiedDate) {
-    if (remoteId == null) {
-      return null;
-    }
+  public static String buildImageUrl(String fileId, Long lastModifiedDate) {
 
-    String token = LinkProvider.generateAttachmentToken(fileId, remoteId, ATTACHMENT_TYPE, String.valueOf(lastModifiedDate));
+    String token = LinkProvider.generateAttachmentToken(fileId, null, ATTACHMENT_TYPE, String.valueOf(lastModifiedDate));
     if (org.apache.commons.lang.StringUtils.isNotBlank(token)) {
       try {
         token = URLEncoder.encode(token, "UTF8");

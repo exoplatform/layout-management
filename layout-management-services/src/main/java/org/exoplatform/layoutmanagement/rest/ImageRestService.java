@@ -72,7 +72,7 @@ public class ImageRestService implements ResourceContainer {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @Operation(summary = "Retrieve image", method = "GET", description = "This retrieves the image")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
@@ -88,7 +88,7 @@ public class ImageRestService implements ResourceContainer {
       String fileId = String.valueOf(uploadFileId.equals("default") ? uploadFileId
                                                                     : imageService.getImage(identity.getUserId(), uploadFileId));
       Long lastModifiedDate = System.currentTimeMillis();
-      String imageUrl = ImageUtils.buildImageUrl(fileId, identity.getUserId(), lastModifiedDate);
+      String imageUrl = ImageUtils.buildImageUrl(fileId, lastModifiedDate);
       ImageRestEntity imageRestEntity = new ImageRestEntity(fileId, imageUrl);
       return Response.ok().entity(imageRestEntity).build();
     } catch (Exception e) {
@@ -100,7 +100,7 @@ public class ImageRestService implements ResourceContainer {
   @GET
   @Path("{fileId}")
   @Produces("image/png")
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @Operation(summary = "Retrieve image stream", method = "GET", description = "This retrieves image stream")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "400", description = "Invalid query input"),
@@ -121,9 +121,8 @@ public class ImageRestService implements ResourceContainer {
       if (StringUtils.isBlank(fileId)) {
         return Response.status(Response.Status.BAD_REQUEST).entity("fileId is mandatory").build();
       }
-      Identity identity = ConversationState.getCurrent().getIdentity();
       if (!StringUtils.isBlank(token)
-          && !LinkProvider.isAttachmentTokenValid(token, fileId, identity.getUserId(), ATTACHMENT_TYPE, lastModified)) {
+          && !LinkProvider.isAttachmentTokenValid(token, fileId, null, ATTACHMENT_TYPE, lastModified)) {
         LOG.warn("An anonymous user attempts to access image of portlet without a valid access token");
         return Response.status(Response.Status.FORBIDDEN).build();
       }
