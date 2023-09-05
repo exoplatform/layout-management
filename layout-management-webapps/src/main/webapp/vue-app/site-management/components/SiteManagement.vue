@@ -49,7 +49,7 @@ export default {
   methods: {
     getSites() {
       this.loading = true;
-      return this.$siteManagementService.getSites()
+      return this.$siteService.getSites(null, null, true, null, true, true)
         .then(sites => {
           this.sites = sites || [];
         })

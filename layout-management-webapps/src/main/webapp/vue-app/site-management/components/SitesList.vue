@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <v-layout class="pa-3">
     <v-row no-gutters>
       <v-col
-        v-for="site in sites"
+        v-for="site in displayedSites"
         :key="site.id"
         class="mb-4"
         cols="12"
@@ -39,6 +39,11 @@ export default {
       type: Array,
       default: () => [],
     },
-  }
+  },
+  computed: {
+    displayedSites() {
+      return this.sites.filter(site => site.siteNavigations != null);
+    },
+  },
 };
 </script>

@@ -16,29 +16,19 @@
  */
 package org.exoplatform.layoutmanagement.rest;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.exoplatform.layoutmanagement.utils.SiteManagementUtils;
-import org.exoplatform.portal.config.model.PortalConfig;
-import org.exoplatform.portal.mop.SiteKey;
-import org.exoplatform.portal.mop.SiteType;
-import org.exoplatform.portal.mop.service.LayoutService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.Group;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
-import org.gatein.api.Util;
-import org.gatein.api.site.Site;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.commons.utils.I18N;
 import org.exoplatform.layoutmanagement.rest.model.NodeLabelRestEntity;
 import org.exoplatform.layoutmanagement.rest.model.PageTemplateRestEntity;
-import org.exoplatform.layoutmanagement.rest.model.SiteRestEntity;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
 import org.exoplatform.portal.mop.State;
 import org.exoplatform.services.resources.LocaleConfig;
@@ -47,19 +37,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 
 public class EntityBuilder {
 
-  private static final Log LOG = ExoLogger.getLogger(EntityBuilder.class);
-
-  private static LayoutService    layoutService;
-
   private EntityBuilder() {
-  }
-
-  public static PageTemplateRestEntity toPageTemplateRestEntity(SelectItemOption<String> pageTemplate, Locale userLocal) {
-    if (pageTemplate == null) {
-      return null;
-    }
-    return new PageTemplateRestEntity(SiteNavigationUtils.getI18NLabel(userLocal, pageTemplate.getLabel()),
-                                      pageTemplate.getValue());
   }
 
   public static List<PageTemplateRestEntity> toPageTemplateRestEntities(List<SelectItemOption<String>> pageTemplates, Locale userLocal) {
@@ -100,69 +78,11 @@ public class EntityBuilder {
     return nodeLabelRestEntity;
   }
 
-  public static SiteRestEntity toSiteRestEntity(Site site) {
-    if (site == null) {
+  private static PageTemplateRestEntity toPageTemplateRestEntity(SelectItemOption<String> pageTemplate, Locale userLocal) {
+    if (pageTemplate == null) {
       return null;
     }
-    SiteType siteType = Util.from(site.getType());
-    String displayName = site.getDisplayName();
-    Identity userIdentity = ConversationState.getCurrent().getIdentity();
-    if (SiteType.GROUP.equals(siteType)) {
-      try {
-        Group siteGroup = getOrganizationService().getGroupHandler().findGroupById(site.getName());
-        if (siteGroup == null || !userIdentity.isMemberOf(siteGroup.getId())) {
-          return null;
-        } else if (StringUtils.isBlank(displayName)) {
-          displayName = siteGroup.getLabel();
-        }
-      } catch (Exception e) {
-        LOG.error("Error while retrieving group with name ", site.getName(), e);
-      }
-    }
-    List<Map<String, Object>> accessPermissions = computePermissions(Util.from(site.getAccessPermission()));
-    Map<String, Object> editPermission = computePermission(Util.from(site.getEditPermission())[0]);
-    PortalConfig sitePortalConfig = getLayoutService().getPortalConfig(new SiteKey(siteType, site.getName()));
-    return new SiteRestEntity(site.getId(),
-                              siteType,
-                              site.getName(),
-                              !StringUtils.isBlank(displayName) ? displayName : site.getName(),
-                              site.getDescription(),
-                              accessPermissions,
-                              editPermission,
-                              SiteManagementUtils.isDefaultSite(sitePortalConfig.getName()) || sitePortalConfig.isDisplayed(),
-                              sitePortalConfig.getDisplayOrder(),
-                              SiteManagementUtils.isDefaultSite(site.getName()));
-  }
-
-  public static List<SiteRestEntity> toSiteRestEntities(List<Site> sites) {
-    return sites.stream()
-                .map(site -> toSiteRestEntity(site))
-                .filter(Objects::nonNull)
-                .toList();
-  }
-  private static OrganizationService getOrganizationService() {
-    return CommonsUtils.getService(OrganizationService.class);
-  }
-
-  private static Map<String, Object> computePermission(String permission) {
-    Map<String, Object> accessPermission = new HashMap<>();
-    try {
-      accessPermission.put("membershipType", permission.split(":")[0]);
-      accessPermission.put("group", getOrganizationService().getGroupHandler().findGroupById(permission.split(":")[1]));
-    } catch (Exception e) {
-      LOG.error("Error while computing user permission ", permission, e);
-    }
-    return accessPermission;
-  }
-
-  private static List<Map<String, Object>> computePermissions(String[] permissions) {
-    return Arrays.stream(permissions).map(EntityBuilder::computePermission).toList();
-  }
-
-  private static LayoutService getLayoutService() {
-    if (layoutService == null) {
-      layoutService = CommonsUtils.getService(LayoutService.class);
-    }
-    return layoutService;
+    return new PageTemplateRestEntity(SiteNavigationUtils.getI18NLabel(userLocal, pageTemplate.getLabel()),
+                                      pageTemplate.getValue());
   }
 }
