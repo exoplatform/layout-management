@@ -26,7 +26,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-btn
         v-bind="attrs"
         icon
-        v-on="on">
+        v-on="on"
+        v-if="canEditSite">
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </template>
@@ -138,6 +139,9 @@ export default {
     },
     canEditLayout() {
       return !(this.isGlobalSite || this.isGroupSite);
+    },
+    canEditSite() {
+      return this.site.canEdit;
     },
   },
   created() {

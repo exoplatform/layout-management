@@ -82,8 +82,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <v-col class="d-flex flex-row px-0 py-0 col-10">
               <v-switch
                 v-model="displayed"
-                :disabled="site.defaultSite"
-                class="mt-2"/>
+                :disabled="displayedDisabled"
+                class="mt-2" />
               <label v-if="displayed" class="subtitle-1 mx-1"> {{ $t('siteManagement.label.displayed') }} </label>
               <label v-else class="subtitle-1 mx-1"> {{ $t('siteManagement.label.notDisplayed') }} </label>
             </v-col>
@@ -109,7 +109,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           {{ $t('siteNavigation.label.btn.cancel') }}
         </v-btn>
         <v-btn
-          :disabled="disabled"
+          :disabled="saveDisabled"
           :loading="loading"
           @click="updateSite"
           class="btn btn-primary ms-2">
@@ -140,13 +140,16 @@ export default {
     this.$root.$on('open-site-card-properties-drawer', this.open);
   },
   computed: {
-    disabled(){
+    saveDisabled(){
       return !this.siteLabel || (this.displayed && this.displayOrder < 1);
-    }
+    },
+    displayedDisabled(){
+      return this.site?.metaSite;
+    },
   },
   methods: {
     open(site) {
-      this.site =  site;
+      this.site = site;
       this.siteName = this.site.name;
       this.siteLabel = this.site.displayName || this.site.name;
       this.siteDescription = this.site.description !== null ?  this.site.description : '';
@@ -164,10 +167,25 @@ export default {
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {
-      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.defaultSite || this.displayed, this.displayed && this.displayOrder || 0)
+      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.metaSite || this.displayed, this.displayed && this.displayOrder || 0)
         .then(() => {
+          const message = this.$t('siteManagement.label.updateSite.success');
+          this.$root.$emit('layout-notification-alert', {
+            message,
+            type: 'success',
+          });
           this.$root.$emit('refresh-sites');
           this.close();
+        }).catch((e) => {
+          const message = e.message ==='401' &&  this.$t('siteNavigation.label.updateSite.unauthorized') || this.$t('siteNavigation.label.updateSite.error');
+          this.$root.$emit('layout-notification-alert', {
+            message,
+            type: 'error',
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+          this.$refs.siteCardPropertiesDrawer.endLoading();
         });
     }
 
