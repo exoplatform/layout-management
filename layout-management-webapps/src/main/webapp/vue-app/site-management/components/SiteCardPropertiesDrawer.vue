@@ -18,14 +18,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <exo-drawer
     id="siteCardPropertiesDrawer"
     ref="siteCardPropertiesDrawer"
+    v-model="drawer"
     :right="!$vuetify.rtl"
+    :allow-expand="!$root.isMobile"
     eager
-    allow-expand
+    @expand-updated="expanded = $event"
     @closed="close">
     <template slot="title">
       <span>{{ $t('siteManagement.drawer.properties.title') }}</span>
     </template>
-    <template slot="content">
+    <template v-if="showDrawerContent" slot="content">
       <v-form>
         <v-card-text class="d-flex pb-2">
           <translation-text-field
@@ -33,6 +35,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             v-model="siteTitleTranslations"
             :field-value.sync="siteLabel"
             :maxlength="maxTitleLength"
+            :no-expand-icon="!expanded"
             drawer-title="siteManagement.form.translateTitle"
             :object-id="siteId"
             object-type="site"
@@ -147,6 +150,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data() {
     return {
+      drawer: false,
       site: null,
       siteName: '',
       siteLabel: '',
@@ -157,6 +161,8 @@ export default {
       displayed: true,
       siteTitleTranslations: {},
       siteDescriptionTranslations: {},
+      siteId: null,
+      expanded: false,
       rules: {
         value: (v) => (v > 0 && v<= 9999) || this.$t('siteManagement.displayOrder.error')
       },
@@ -178,23 +184,25 @@ export default {
     },
     displayedDisabled(){
       return this.site?.metaSite;
-    }
+    },
+    showDrawerContent() {
+      return this.drawer  && !!this.site;
+    },
   },
   methods: {
     open(site) {
-      this.site = site;
-      this.siteName = this.site.name;
-      this.siteLabel = this.site.displayName || this.site.name;
-      this.displayed = this.site.displayed;
-      this.displayOrder = this.site.displayOrder;
+      this.site =  site;
+      this.siteName = site.name;
+      this.siteId = site.storageId;
+      this.siteLabel = site.displayName || site.name ;
+      this.siteDescription = site.description;
+      this.displayed = site.displayed;
+      this.displayOrder = site.displayOrder;
       this.$nextTick().then(() => {
         this.$refs.siteCardPropertiesDrawer.open();
       });
     },
     close() {
-      this.site = null;
-      this.siteName = '';
-      this.siteLabel = '';
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {

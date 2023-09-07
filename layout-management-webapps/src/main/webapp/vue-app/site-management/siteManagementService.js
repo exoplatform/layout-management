@@ -15,25 +15,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getSites() {
-  const formData = new FormData();
-  formData.append('lang', eXo.env.portal.language);
-  const params = new URLSearchParams(formData).toString();
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  }).then(resp => {
-    if (resp || resp.ok) {
-      return resp.json();
-    } else {
-      throw new Error('Error when retrieving sites');
-    }
-  });
-}
-
 export function deleteSite(siteType, siteName) {
   const formData = new FormData();
   formData.append('siteName', siteName);
@@ -75,6 +56,7 @@ export function updateSite(siteName, siteType, siteLabel, siteDescription, displ
   formData.append('siteDescription', siteDescription);
   formData.append('displayed', displayed);
   formData.append('displayOrder', displayOrder);
+  formData.append('lang', eXo.env.portal.language);
 
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {

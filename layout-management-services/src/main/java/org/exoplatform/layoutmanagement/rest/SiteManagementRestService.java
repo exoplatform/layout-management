@@ -18,6 +18,7 @@
 package org.exoplatform.layoutmanagement.rest;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -118,7 +119,10 @@ public class SiteManagementRestService implements ResourceContainer {
                              boolean displayed,
                              @Parameter(description = "site display order")
                              @QueryParam("displayOrder")
-                             int displayOrder) {
+                             int displayOrder,
+                             @Parameter(description = "Used to retrieve the title and description in requested language")
+                             @QueryParam("lang")
+                             String lang) {
     try {
       SiteId siteId = Util.from(new SiteKey(siteType, siteName));
       Site site = portal.getSite(siteId);
@@ -131,7 +135,7 @@ public class SiteManagementRestService implements ResourceContainer {
       portalConfig.setDisplayed(displayed);
       portalConfig.setDisplayOrder(displayed ? displayOrder : 0);
       layoutService.save(portalConfig);
-      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false)).build();
+      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false, getLocale(lang))).build();
     } catch (Exception e) {
       LOG.error("Error when updating the site with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
@@ -161,7 +165,10 @@ public class SiteManagementRestService implements ResourceContainer {
                                         String editPermission,
                                         @Parameter(description = "Site new access permissions", required = true)
                                         @QueryParam("accessPermissions")
-                                        String accessPermissions) {
+                                        String accessPermissions,
+                                        @Parameter(description = "Used to retrieve the title and description in requested language")
+                                        @QueryParam("lang")
+                                        String lang) {
     try {
       if (StringUtils.isBlank(siteName) || StringUtils.isBlank(siteType)) {
         return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
@@ -183,10 +190,13 @@ public class SiteManagementRestService implements ResourceContainer {
       }
       portal.saveSite(site);
       PortalConfig portalConfig = layoutService.getPortalConfig(new SiteKey(siteType, siteName));
-      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false)).build();
+      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false, getLocale(lang))).build();
     } catch (Exception e) {
       LOG.error("Error when updating site permissions with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
     }
   }
+    private Locale getLocale(String lang) {
+        return org.apache.commons.lang3.StringUtils.isBlank(lang) ? null : Locale.forLanguageTag(lang);
+    }
 }
