@@ -17,36 +17,32 @@
 
 package org.exoplatform.layoutmanagement.rest;
 
-import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.layoutmanagement.rest.model.SiteRestEntity;
-import org.exoplatform.layoutmanagement.utils.SiteManagementUtils;
-import org.exoplatform.portal.config.model.PortalConfig;
-import org.exoplatform.portal.mop.service.LayoutService;
-import org.exoplatform.services.rest.http.PATCH;
 import org.gatein.api.Portal;
-import org.gatein.api.common.Filter;
 import org.gatein.api.Util;
 import org.gatein.api.site.Site;
 import org.gatein.api.site.SiteId;
-import org.gatein.api.site.SiteQuery;
-import org.gatein.api.site.SiteType;
 
+import org.exoplatform.layoutmanagement.utils.SiteManagementUtils;
+import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.mop.SiteKey;
+import org.exoplatform.portal.mop.service.LayoutService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.http.PATCH;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,6 +50,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.exoplatform.social.rest.api.EntityBuilder;
 
 @Path("v1/sites")
 @Tag(name = "v1/sites", description = "Managing sites")
@@ -62,35 +59,12 @@ public class SiteManagementRestService implements ResourceContainer {
   private static final Log LOG = ExoLogger.getLogger(SiteManagementRestService.class);
 
   private Portal           portal;
-  private LayoutService layoutService;
+
+  private LayoutService    layoutService;
 
   public SiteManagementRestService(Portal portal, LayoutService layoutService) {
     this.portal = portal;
     this.layoutService = layoutService;
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed("administrators")
-  @Operation(summary = "Retrieve sites", method = "GET", description = "This retrieves sites")
-  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
-      @ApiResponse(responseCode = "500", description = "Internal server error"), })
-  public Response getSites() {
-    try {
-      Filter<Site> filter = new Filter<>() {
-        @Override
-        public boolean accept(Site site) {
-          return !site.getName().startsWith("/spaces/");
-        }
-      };
-      SiteQuery pageQuery = new SiteQuery.Builder().withSiteTypes(SiteType.SITE, SiteType.SPACE).withFilter(filter).build();
-      List<Site> sites = portal.findSites(pageQuery);
-      List<SiteRestEntity> siteRestEntities = EntityBuilder.toSiteRestEntities(sites).stream().sorted(Comparator.comparing(SiteRestEntity::getDisplayName, String.CASE_INSENSITIVE_ORDER)).toList();
-      return Response.ok().entity(siteRestEntities).build();
-    } catch (Exception e) {
-      LOG.error("Error when retrieving sites", e);
-      return Response.serverError().build();
-    }
   }
 
   @DELETE
@@ -107,6 +81,10 @@ public class SiteManagementRestService implements ResourceContainer {
                              String siteName) {
     try {
       SiteId siteId = Util.from(new SiteKey(siteType, siteName));
+      Site site = portal.getSite(siteId);
+      if (!SiteManagementUtils.canEditSite(site)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
       portal.removeSite(siteId);
       return Response.ok().build();
     } catch (Exception e) {
@@ -121,9 +99,11 @@ public class SiteManagementRestService implements ResourceContainer {
   @Operation(summary = "update a site", method = "PUT", description = "This updates the given site")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
-  public Response updateSite(@Parameter(description = "site type")
-  @QueryParam("siteType")
-  String siteType,
+  public Response updateSite(@Context
+  HttpServletRequest request,
+                             @Parameter(description = "site type")
+                             @QueryParam("siteType")
+                             String siteType,
                              @Parameter(description = "site name")
                              @QueryParam("siteName")
                              String siteName,
@@ -140,13 +120,18 @@ public class SiteManagementRestService implements ResourceContainer {
                              @QueryParam("displayOrder")
                              int displayOrder) {
     try {
+      SiteId siteId = Util.from(new SiteKey(siteType, siteName));
+      Site site = portal.getSite(siteId);
+      if (!SiteManagementUtils.canEditSite(site)) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
       PortalConfig portalConfig = layoutService.getPortalConfig(new SiteKey(siteType, siteName));
       portalConfig.setDescription(siteDescription);
       portalConfig.setLabel(siteLabel);
-      portalConfig.setDisplayed(SiteManagementUtils.isDefaultSite(portalConfig.getName()) || displayed);
+      portalConfig.setDisplayed(displayed);
       portalConfig.setDisplayOrder(displayed ? displayOrder : 0);
       layoutService.save(portalConfig);
-      return Response.ok().build();
+      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false)).build();
     } catch (Exception e) {
       LOG.error("Error when updating the site with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
@@ -155,6 +140,7 @@ public class SiteManagementRestService implements ResourceContainer {
 
   @Path("/permissions")
   @PATCH
+  @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("administrators")
   @Operation(summary = "Update a page access and edit permission", method = "PATCH", description = "This updates the given page access and edit permission")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Page permissions updated"),
@@ -162,7 +148,9 @@ public class SiteManagementRestService implements ResourceContainer {
       @ApiResponse(responseCode = "404", description = "Page not found"),
       @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
       @ApiResponse(responseCode = "500", description = "Internal server error"), })
-  public Response updateSitePermissions(@Parameter(description = "Site type", required = true)
+  public Response updateSitePermissions(@Context
+  HttpServletRequest request,
+                                        @Parameter(description = "Site type", required = true)
                                         @QueryParam("siteType")
                                         String siteType,
                                         @Parameter(description = "Site name", required = true)
@@ -194,7 +182,8 @@ public class SiteManagementRestService implements ResourceContainer {
         site.setAccessPermission(Util.from(accessPermissionsList));
       }
       portal.saveSite(site);
-      return Response.ok(EntityBuilder.toSiteRestEntity(portal.getSite(siteId))).build();
+      PortalConfig portalConfig = layoutService.getPortalConfig(new SiteKey(siteType, siteName));
+      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false)).build();
     } catch (Exception e) {
       LOG.error("Error when updating site permissions with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
