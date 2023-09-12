@@ -39,7 +39,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             drawer-title="siteManagement.label.translateTitle"
             :object-id="siteId"
             object-type="site"
-            field-name="title"
+            field-name="label"
             name="siteTitle"
             class="width-auto flex-grow-1 pt-4"
             back-icon
