@@ -101,7 +101,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               <div class="me-8 ms-auto">
                 <v-btn
                   id="deleteIconButton"
-                  :title="$t('siteNavigation.icon.deleteButton.title')"
+                  :title="$t('siteNavigation.btn.deleteIcon.title')"
                   class="light-black-background border-color"
                   outlined
                   icon
@@ -111,7 +111,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 </v-btn>
                 <v-btn
                   id="changeIconButton"
-                  :title="$t('siteNavigation.icon.changeButton.title')"
+                  :title="$t('siteNavigation.btn.changeIcon.title')"
                   class="light-black-background border-color"
                   icon
                   outlined
@@ -291,7 +291,7 @@ export default {
   },
   computed: {
     icon() {
-      return this.navigationNode.icon ;
+      return this.navigationNode.icon;
     },
     title() {
       return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
