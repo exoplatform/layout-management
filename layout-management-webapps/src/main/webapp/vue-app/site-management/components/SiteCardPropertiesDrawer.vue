@@ -18,30 +18,41 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <exo-drawer
     id="siteCardPropertiesDrawer"
     ref="siteCardPropertiesDrawer"
+    v-model="siteCardPropertiesDrawer"
     :right="!$vuetify.rtl"
+    :allow-expand="!$root.isMobile"
     eager
-    allow-expand
+    @expand-updated="expanded = $event"
     @closed="close">
     <template slot="title">
       <span>{{ $t('siteManagement.drawer.properties.title') }}</span>
     </template>
-    <template slot="content">
+    <template v-if="showDrawerContent" slot="content">
       <v-form>
         <v-card-text class="d-flex pb-2">
-          <v-label>
-            <span class="text-color font-weight-bold">
-              {{ $t('siteManagement.label.siteLabel.title') }} *              
-            </span>
-          </v-label>
-        </v-card-text>
-        <v-card-text class="d-flex py-0">
-          <v-text-field
-            v-model="siteLabel"
-            class="pt-0"
-            type="text"
-            required="required"
-            outlined
-            dense />
+          <translation-text-field
+            ref="siteTitleTranslation"
+            v-model="siteTitleTranslations"
+            :field-value.sync="siteLabel"
+            :maxlength="maxTitleLength"
+            :no-expand-icon="!expanded"
+            drawer-title="siteManagement.label.translateTitle"
+            :object-id="siteId"
+            object-type="site"
+            field-name="title"
+            name="siteTitle"
+            class="width-auto flex-grow-1 pt-4"
+            back-icon
+            autofocus
+            required>
+            <template #title>
+              <v-label>
+                <span class="text-color font-weight-bold">
+                  {{ $t('siteManagement.label.siteLabel.title') }} *              
+                </span>
+              </v-label>
+            </template>
+          </translation-text-field>
         </v-card-text>
         <v-card-text class="d-flex pb-2">
           <v-label>
@@ -60,19 +71,34 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             outlined
             dense />
         </v-card-text>
-        <v-card-text class="d-flex pb-2">
-          <v-label>
-            <span class="text-color font-weight-bold">
-              {{ $t('siteManagement.label.siteDescription.title') }}           
-            </span>
-          </v-label>
-        </v-card-text>
         <v-card-text class="d-flex py-0">
-          <exo-activity-rich-editor
-            v-model="siteDescription"
-            max-length="1300"
-            :tag-enabled="false"
-            class="flex" />
+          <translation-text-field
+            ref="siteDescriptionTranslation"
+            v-model="siteDescriptionTranslations"
+            :field-value.sync="siteDescription"
+            :object-id="siteId"
+            :max-length="maxDescriptionLength"
+            drawer-title="siteManagement.label.translateDescription"
+            object-type="site"
+            field-name="description"
+            class="width-auto flex-grow-1 pt-4"
+            back-icon
+            rich-editor>
+            <template #title>
+              <v-label>
+                <span class="text-color font-weight-bold">
+                  {{ $t('siteManagement.label.siteDescription.title') }}           
+                </span>
+              </v-label>
+            </template>
+            <rich-editor
+              id="siteDescription"
+              ref="siteDescriptionEditor"
+              v-model="siteDescription"
+              :max-length="maxDescriptionLength"
+              :tag-enabled="false"
+              ck-editor-type="site"/>
+          </translation-text-field>
         </v-card-text>
         <v-card-text class="mt-4">
           <v-label>
@@ -124,13 +150,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data() {
     return {
+      siteCardPropertiesDrawer: false,
       site: null,
       siteName: '',
       siteLabel: '',
       siteDescription: '',
+      maxDescriptionLength: 1300,
       disableSiteName: true,
       displayOrder: 0,
       displayed: true,
+      siteTitleTranslations: {},
+      siteDescriptionTranslations: {},
+      siteId: null,
+      expanded: false,
       rules: {
         value: (v) => (v > 0 && v<= 9999) || this.$t('siteManagement.displayOrder.error')
       },
@@ -139,6 +171,13 @@ export default {
   created() {
     this.$root.$on('open-site-card-properties-drawer', this.open);
   },
+  watch: {
+    siteDescription() {
+      if (this.$refs.siteDescriptionTranslation) {
+        this.$refs.siteDescriptionTranslation.setValue(this.siteDescription);
+      }
+    },
+  },
   computed: {
     saveDisabled(){
       return !this.siteLabel || (this.displayed && this.displayOrder < 1);
@@ -146,28 +185,30 @@ export default {
     displayedDisabled(){
       return this.site?.metaSite;
     },
+    showDrawerContent() {
+      return this.siteCardPropertiesDrawer && !!this.site;
+    },
   },
   methods: {
     open(site) {
-      this.site = site;
-      this.siteName = this.site.name;
-      this.siteLabel = this.site.displayName || this.site.name;
-      this.siteDescription = this.site.description !== null ?  this.site.description : '';
-      this.displayed = this.site.displayed;
-      this.displayOrder = this.site.displayOrder;
+      this.site =  site;
+      this.siteName = site.name;
+      this.siteId = site.storageId;
+      this.siteLabel = site.displayName || site.name ;
+      this.siteDescription = site.description;
+      this.displayed = site.displayed;
+      this.displayOrder = site.displayOrder;
       this.$nextTick().then(() => {
         this.$refs.siteCardPropertiesDrawer.open();
       });
     },
     close() {
-      this.site = null;
-      this.siteName = '';
-      this.siteLabel = '';
-      this.siteDescription = '';
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {
       return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.metaSite || this.displayed, this.displayed && this.displayOrder || 0)
+        .then(() => this.$translationService.saveTranslations('site', this.siteId, 'title', this.siteTitleTranslations))
+        .then(() => this.$translationService.saveTranslations('site', this.siteId, 'description', this.siteDescriptionTranslations))
         .then(() => {
           const message = this.$t('siteManagement.label.updateSite.success');
           this.$root.$emit('layout-notification-alert', {
@@ -177,7 +218,7 @@ export default {
           this.$root.$emit('refresh-sites');
           this.close();
         }).catch((e) => {
-          const message = e.message ==='401' &&  this.$t('siteNavigation.label.updateSite.unauthorized') || this.$t('siteNavigation.label.updateSite.error');
+          const message = e.message ==='401' &&  this.$t('siteManagement.label.updateSite.unauthorized') || this.$t('siteManagement.label.updateSite.error');
           this.$root.$emit('layout-notification-alert', {
             message,
             type: 'error',
