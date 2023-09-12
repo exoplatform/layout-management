@@ -193,8 +193,9 @@ export default {
     open(site) {
       this.site =  site;
       this.siteName = site.name;
-      this.siteId = site.storageId;
+      this.siteId = site.siteId;
       this.siteLabel = site.displayName || site.name ;
+      this.siteTitleTranslations = {};
       this.siteDescription = site.description;
       this.displayed = site.displayed;
       this.displayOrder = site.displayOrder;
@@ -207,7 +208,7 @@ export default {
     },
     updateSite() {
       return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.metaSite || this.displayed, this.displayed && this.displayOrder || 0)
-        .then(() => this.$translationService.saveTranslations('site', this.siteId, 'title', this.siteTitleTranslations))
+        .then(() => this.$translationService.saveTranslations('site', this.siteId, 'label', this.siteTitleTranslations))
         .then(() => this.$translationService.saveTranslations('site', this.siteId, 'description', this.siteDescriptionTranslations))
         .then(() => {
           const message = this.$t('siteManagement.label.updateSite.success');
