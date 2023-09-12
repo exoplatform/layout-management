@@ -89,6 +89,45 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-card-text>
           <v-card-text class="d-flex flex-grow-1 pb-2">
             <v-label>
+              <span class="text-color font-weight-bold mr-6">
+                {{ $t('siteNavigation.label.icon.title') }}             
+              </span>
+              <p class="caption"> {{ $t('siteNavigation.label.icon.description') }}  </p>
+            </v-label>
+          </v-card-text>
+          <v-card-text class="d-flex py-0 pb-8">
+            <div
+              class="d-flex flex-grow-1 position-absolute full-width">
+              <div class="me-8 ms-auto">
+                <v-btn
+                  id="deleteIconButton"
+                  :title="$t('siteNavigation.btn.deleteIcon.title')"
+                  class="light-black-background border-color"
+                  outlined
+                  icon
+                  dark
+                  small>
+                  <v-icon size="13">mdi-delete</v-icon>
+                </v-btn>
+                <v-btn
+                  id="changeIconButton"
+                  :title="$t('siteNavigation.btn.changeIcon.title')"
+                  class="light-black-background border-color"
+                  icon
+                  outlined
+                  dark
+                  small>
+                  <v-icon size="13">fas fa-file-image</v-icon>
+                </v-btn>
+              </div>
+            </div>
+          </v-card-text>
+          <v-card-text class="flex-grow-1 align-center pb-8">
+            <v-icon size="32"
+            color="black"> {{ icon }} </v-icon>
+          </v-card-text>
+          <v-card-text class="d-flex flex-grow-1 pb-2">
+            <v-label>
               <span class="text-color font-weight-bold pt-2">
                 {{ $t('siteNavigation.label.visibility.title') }} 
               </span>
@@ -251,6 +290,9 @@ export default {
     };
   },
   computed: {
+    icon() {
+      return this.navigationNode.icon;
+    },
     title() {
       return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
     },
