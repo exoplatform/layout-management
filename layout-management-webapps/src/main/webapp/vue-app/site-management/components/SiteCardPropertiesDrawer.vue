@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
   <exo-drawer
     id="siteCardPropertiesDrawer"
     ref="siteCardPropertiesDrawer"
-    v-model="drawer"
+    v-model="siteCardPropertiesDrawer"
     :right="!$vuetify.rtl"
     :allow-expand="!$root.isMobile"
     eager
@@ -36,7 +36,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             :field-value.sync="siteLabel"
             :maxlength="maxTitleLength"
             :no-expand-icon="!expanded"
-            drawer-title="siteManagement.form.translateTitle"
+            drawer-title="siteManagement.label.translateTitle"
             :object-id="siteId"
             object-type="site"
             field-name="title"
@@ -78,7 +78,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             :field-value.sync="siteDescription"
             :object-id="siteId"
             :max-length="maxDescriptionLength"
-            drawer-title="siteManagement.form.translateDescription"
+            drawer-title="siteManagement.label.translateDescription"
             object-type="site"
             field-name="description"
             class="width-auto flex-grow-1 pt-4"
@@ -150,7 +150,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data() {
     return {
-      drawer: false,
+      siteCardPropertiesDrawer: false,
       site: null,
       siteName: '',
       siteLabel: '',
@@ -186,7 +186,7 @@ export default {
       return this.site?.metaSite;
     },
     showDrawerContent() {
-      return this.drawer  && !!this.site;
+      return this.siteCardPropertiesDrawer && !!this.site;
     },
   },
   methods: {

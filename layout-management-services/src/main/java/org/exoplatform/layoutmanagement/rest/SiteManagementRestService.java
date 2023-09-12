@@ -197,6 +197,6 @@ public class SiteManagementRestService implements ResourceContainer {
     }
   }
     private Locale getLocale(String lang) {
-        return org.apache.commons.lang3.StringUtils.isBlank(lang) ? null : Locale.forLanguageTag(lang);
+        return StringUtils.isBlank(lang) ? null : Locale.forLanguageTag(lang);
     }
 }
