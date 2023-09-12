@@ -120,7 +120,7 @@ public class SiteManagementRestService implements ResourceContainer {
                              @Parameter(description = "site display order")
                              @QueryParam("displayOrder")
                              int displayOrder,
-                             @Parameter(description = "Used to retrieve the title and description in requested language")
+                             @Parameter(description = "Used to retrieve the site label and description in the requested language")
                              @QueryParam("lang")
                              String lang) {
     try {
@@ -166,7 +166,7 @@ public class SiteManagementRestService implements ResourceContainer {
                                         @Parameter(description = "Site new access permissions", required = true)
                                         @QueryParam("accessPermissions")
                                         String accessPermissions,
-                                        @Parameter(description = "Used to retrieve the title and description in requested language")
+                                        @Parameter(description = "Used to retrieve the site label and description in the requested language")
                                         @QueryParam("lang")
                                         String lang) {
     try {
