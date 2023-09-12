@@ -191,7 +191,7 @@ export default {
           this.$root.$emit('refresh-navigation-nodes');
           this.close();
         }).catch((e) => {
-          const message = e.message ==='401' &&  this.$t('siteManagement.label.updateSite.unauthorized') || this.$t('siteManagement.label.updateSite.error');
+          const message = e.message ==='401' &&  this.$t('siteNavigation.label.updatePermission.unauthorized') || this.$t('siteNavigation.label.updatePermission.error');
           this.$root.$emit('layout-notification-alert', {
             message,
             type: 'error',
