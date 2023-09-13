@@ -291,7 +291,7 @@ export default {
   },
   computed: {
     icon() {
-      return this.navigationNode.icon;
+      return this.navigationNode?.icon;
     },
     title() {
       return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
