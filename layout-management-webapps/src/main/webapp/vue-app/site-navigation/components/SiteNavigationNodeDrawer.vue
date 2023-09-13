@@ -97,8 +97,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-card-text>
           <v-card-text class="d-flex py-0 pb-8">
             <div
-              class="d-flex flex-grow-1 position-absolute full-width">
-              <div class="me-8 ms-auto">
+              class="d-flex flex-grow-1 full-width">
+              <div class="me-2 ms-auto">
                 <v-btn
                   id="deleteIconButton"
                   :title="$t('siteNavigation.btn.deleteIcon.title')"
@@ -123,8 +123,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             </div>
           </v-card-text>
           <v-card-text class="flex-grow-1 align-center pb-8">
-            <v-icon size="32"
-            color="black"> {{ icon }} </v-icon>
+            <v-icon
+              size="32"
+              color="black">
+              {{ icon }}
+            </v-icon>
           </v-card-text>
           <v-card-text class="d-flex flex-grow-1 pb-2">
             <v-label>
@@ -291,7 +294,7 @@ export default {
   },
   computed: {
     icon() {
-      return this.navigationNode?.icon;
+      return this.editMode && this.navigationNode?.icon;
     },
     title() {
       return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
