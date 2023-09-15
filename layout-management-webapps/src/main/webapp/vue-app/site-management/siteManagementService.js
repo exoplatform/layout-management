@@ -56,6 +56,7 @@ export function updateSite(siteName, siteType, siteLabel, siteDescription, displ
   formData.append('siteDescription', siteDescription);
   formData.append('displayed', displayed);
   formData.append('displayOrder', displayOrder);
+  formData.append('lang', eXo.env.portal.language);
 
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {
