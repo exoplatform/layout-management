@@ -1,0 +1,196 @@
+<!--
+Copyright (C) 2023 eXo Platform SAS.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+-->
+<template>
+  <exo-drawer
+    ref="fontAwesomePickerDrawer"
+    id="fontAwesomePickerDrawer"
+    :right="!$vuetify.rtl"
+    eager
+    allow-expand
+    @closed="close">
+    <template slot="title">
+      <div class="d-flex">
+        <v-icon
+          size="16"
+          class="clickable"
+          @click="close">
+          fas fa-arrow-left
+        </v-icon>
+        <span class="ms-2"> {{ $t('siteNavigation.label.selectIcon.title') }}</span>
+      </div>
+    </template>
+    <template slot="content">
+      <v-card-text class="d-flex pb-2">
+        <v-text-field
+          v-model="keyword"
+          placeholder="filter by name"
+          prepend-inner-icon="fa-filter"
+          class="inputPeopleFilter"
+          @keyup="filterIcons($event)" />
+      </v-card-text>
+      <v-card-text class="d-flex pb-2">
+        <v-container id="iconPicker">
+          <v-row class="ma-0">
+            <v-col 
+              v-for="icon in icons"
+              :key="icon.iconValue"
+              cols="3"
+              class="pa-0 pa-1">
+              <v-sheet 
+                class="rounded-lg clickable "
+                :class="selectedIcon === icon ? 'grey-background' : 'light-grey-background'"
+                @click="selectIcon(icon)">
+                <div class="d-flex flex-grow-1">
+                  <v-icon
+                    v-if="selectedIcon === icon"
+                    color="primary"
+                    size="18"
+                    class="pb-8 py-1 pl-1">
+                    fas fa-check-square
+                  </v-icon>
+                  <v-icon
+                    size="32"
+                    class="flex-grow-1 align-center pt-6 pb-2"
+                    color="black">
+                    fas fa-{{ icon.iconValue }}
+                  </v-icon>
+                </div>
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <p                 
+                      v-on="on"
+                      v-bind="attrs"
+                      class="align-center text-truncate text-caption text--primary font-weight-medium pb-2 mx-1">
+                      {{ icon.iconName }}
+                    </p>
+                  </template>
+                  <span>{{ icon.iconName }}</span>
+                </v-tooltip>
+              </v-sheet>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+      <v-card-text class="align-center">
+        <v-btn
+          v-if="!search"
+          elevation="0"
+          @click="showMoreIcons">
+          {{ $t('siteNavigation.label.btn.showMore') }}
+        </v-btn>
+      </v-card-text>
+    </template>
+    <template slot="footer">
+      <div class="d-flex justify-end">
+        <v-btn
+          class="btn ms-2"
+          @click="close">
+          {{ $t('siteNavigation.label.btn.cancel') }}
+        </v-btn>
+        <v-btn
+          :loading="loading"
+          :disabled="disabled"
+          class="btn btn-primary ms-2"
+          @click="saveIcon">
+          {{ $t('siteNavigation.label.btn.save') }}
+        </v-btn>
+      </div>
+    </template>
+  </exo-drawer>
+</template>
+
+
+<script>
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
+// Add all solid Font Awesome icons to the library
+library.add(fas);
+export default {
+  data () {
+    return {
+      allIcons: {},
+      iconsNumber: 16,
+      showMore: false,
+      selectedIcon: null,
+      filtredIcons: [],
+      search: false,
+      keyword: null,
+      disabled: true
+    };
+  },
+  computed: {
+    icons() {
+      if (this.search && this.filtredIcons) {
+        return this.filtredIcons;
+      } else {
+        return Array.from(this.allIcons).slice(0, this.iconsNumber);
+      }
+    },
+    extraClass() {
+      return this.selectedIcon ? 'selectedIcon' : 'light-grey-background';
+    }
+  },
+  created() {
+    this.$root.$on('open-font-awesome-picker-drawer', this.open);
+  },
+  methods: {
+    open() {
+      this.allIcons = Object.keys(library.definitions.fas).map(icon => ({
+        'iconName': icon,
+        'iconValue': `fas fa-${ icon}`
+      }));
+      this.$nextTick().then(() => this.$refs.fontAwesomePickerDrawer.open());
+    },
+    close() {
+      this.keyword = null;
+      this.search = false;
+      this.selectedIcon = null;
+      this.iconsNumber = 16;
+      this.$refs.fontAwesomePickerDrawer.close();
+    },
+    showMoreIcons() {
+      this.iconsNumber += 16;
+    },
+    selectIcon(icon) {
+      if (this.selectedIcon === icon) {
+        this.disabled = true;
+        this.selectedIcon = null;
+      } else {
+        this.disabled = false;
+        this.selectedIcon = icon;
+      }
+    },
+    saveIcon() {
+      this.$root.$emit('update-icon-node', this.selectedIcon.iconValue);
+      this.$nextTick().then(() => this.close());
+    },
+    filterIcons (event) {
+      const search = event.target.value.trim();
+      if (search.length > 0) {
+        this.search = true;
+        this.filtredIcons = this.allIcons.filter((item) => {
+          return item.iconName.includes(search);
+        });
+      } else {
+        this.filtredIcons = null;
+        this.search = false;
+      }
+    },
+  },
+};
+</script>

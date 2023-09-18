@@ -103,7 +103,7 @@ export function moveNode(nodeId, destinationParentId, previousNodeId) {
   });
 }
 
-export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVisible, isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageRef, target, isPasteMode) {
+export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, icon, isVisible, isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageRef, target, isPasteMode) {
   const formData = new FormData();
   if (parentNodeId) {
     formData.append('parentNodeId', parentNodeId);
@@ -118,6 +118,8 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
     formData.append('nodeId', nodeId);
   }
   
+  formData.append('icon', icon);
+
   formData.append('isVisible', isVisible);
 
   formData.append('isScheduled', isScheduled);
@@ -155,7 +157,7 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, isVi
   });
 }
 
-export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, startScheduleDate, endScheduleDate, nodeLabels, target) {
+export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, startScheduleDate, endScheduleDate, nodeLabels, target, icon) {
   const formData = new FormData();
   if (nodeId) {
     formData.append('nodeId', nodeId);
@@ -163,7 +165,8 @@ export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, s
   if (nodeLabel) {
     formData.append('nodeLabel', nodeLabel);
   }
-  
+  formData.append('icon', icon);
+
   formData.append('pageRef', pageRef);
 
   formData.append('isVisible', isVisible);

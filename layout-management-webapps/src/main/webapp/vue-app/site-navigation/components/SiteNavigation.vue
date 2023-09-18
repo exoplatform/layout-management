@@ -22,6 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <site-navigation-node-drawer v-if="siteNavigationDrawerOpened" />
     <site-navigation-element-drawer v-if="siteNavigationDrawerOpened" />
     <layout-notification-alerts v-if="siteNavigationDrawerOpened" />
+    <font-awesome-picker-drawer />
   </v-app>
 </template>
 <script>
