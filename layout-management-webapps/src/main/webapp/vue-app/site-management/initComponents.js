@@ -20,6 +20,7 @@ import SitesList from './components/SitesList.vue';
 import SiteCard from './components/SiteCard.vue';
 import SiteCardMenu from './components/SiteCardMenu.vue';
 import SiteCardPropertiesDrawer from './components/SiteCardPropertiesDrawer.vue';
+import SiteBannerSelector from './components/SiteBannerSelector.vue';
 
 
 const components = {
@@ -28,6 +29,7 @@ const components = {
   'site-management-site-card': SiteCard,
   'site-management-site-card-menu': SiteCardMenu,
   'site-card-properties-drawer': SiteCardPropertiesDrawer ,
+  'site-management-banner-selector': SiteBannerSelector ,
 };
 
 for (const key in components) {

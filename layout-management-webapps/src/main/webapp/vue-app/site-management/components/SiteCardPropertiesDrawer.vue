@@ -98,8 +98,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               v-model="siteDescription"
               :max-length="maxDescriptionLength"
               :tag-enabled="false"
-              ck-editor-type="site"/>
+              ck-editor-type="site" />
           </translation-text-field>
+        </v-card-text>
+        <v-card-text class="mt-3 py-4 px-3">
+          <v-label>
+            <span class="text-color font-weight-bold mb-2 px-1 text-capitalize"> {{ $t('siteManagement.label.banner') }}</span>
+            <span class="text-color caption px-1 text-capitalize"> {{ $t('siteManagement.label.caption') }}</span>
+          </v-label>
+          <site-management-banner-selector
+            v-if="siteBannerSelectorKey"
+            ref="siteBannerSelector"
+            :key="siteBannerSelectorKey"
+            :src="siteBannerUrl"
+            :default-src="defaultSiteBannerUrl"
+            :is-default="isDefaultBanner"
+            :no-expand="!expanded"
+            @updated="updateBannerUploadId"
+            @reset="resetBannerUploadId" />
         </v-card-text>
         <v-card-text class="mt-4">
           <v-label>
@@ -164,6 +180,12 @@ export default {
       siteDescriptionTranslations: {},
       siteId: null,
       expanded: false,
+      siteBannerUrl: '',
+      bannerUploadId: null,
+      hasDefaultBanner: true,
+      isDefaultBanner: true,
+      defaultSiteBannerUrl: '',
+      siteBannerSelectorKey: null,
       rules: {
         value: (v) => (v > 0 && v<= 9999) || this.$t('siteManagement.displayOrder.error')
       },
@@ -198,6 +220,7 @@ export default {
         return this.$siteService.getSiteById(parseInt(site.siteId), false, false, 'en')
           .then(freshSite => this.open(freshSite, true));
       }
+      this.siteBannerSelectorKey = `siteBannerSelector${parseInt(Math.random() * 10000).toString()}`;
       this.site = site;
       this.siteName = site.name;
       this.siteId = site.siteId;
@@ -205,16 +228,37 @@ export default {
       this.siteDescription = site.description;
       this.displayed = site.displayed;
       this.displayOrder = site.displayOrder;
+      this.siteBannerUrl = site.bannerUrl;
+      this.defaultSiteBannerUrl = this.siteBannerUrl.replace('isDefault=false', 'isDefault=true');
+      this.isDefaultBanner = this.siteBannerUrl?.includes('&isDefault=true') ;
+      this.hasDefaultBanner = this.isDefaultBanner;
       this.$nextTick().then(() => {
         this.$refs.siteCardPropertiesDrawer.open();
       });
     },
     close() {
       this.site = null;
+      this.reset();
       this.$refs.siteCardPropertiesDrawer.close();
     },
+    updateBannerUploadId(bannerUploadId) {
+      this.bannerUploadId = bannerUploadId;
+      this.isDefaultBanner = false;
+    },
+    resetBannerUploadId() {
+      this.bannerUploadId = '0';
+      this.isDefaultBanner = true;
+    },
+    reset() {
+      this.siteCardPropertiesDrawer = false;
+      this.isDefaultBanner = true;
+      this.siteBannerUrl = null;
+      this.defaultSiteBannerUrl = null;
+      this.siteBannerSelectorKey = null;
+      this.$refs.siteBannerSelector.reset();
+    },
     updateSite() {
-      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.metaSite || this.displayed, this.displayed && this.displayOrder || 0)
+      return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.metaSite || this.displayed, this.displayed && this.displayOrder || 0, this.bannerUploadId !== '0' && this.bannerUploadId || null, !this.hasDefaultBanner && this.bannerUploadId === '0')
         .then(() => this.$translationService.saveTranslations('site', this.siteId, 'label', this.siteTitleTranslations))
         .then(() => this.$translationService.saveTranslations('site', this.siteId, 'description', this.siteDescriptionTranslations))
         .then(() => {
