@@ -16,8 +16,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <exo-drawer
-    ref="fontAwesomePickerDrawer"
-    id="fontAwesomePickerDrawer"
+    ref="nodeIconPickerDrawer"
+    id="nodeIconPickerDrawer"
     :right="!$vuetify.rtl"
     eager
     allow-expand
@@ -30,14 +30,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           @click="close">
           fas fa-arrow-left
         </v-icon>
-        <span class="ms-2"> {{ $t('siteNavigation.label.selectIcon.title') }}</span>
+        <span class="ms-2"> {{ $t('siteNavigation.fontAwesomePickerDrawer.title') }}</span>
       </div>
     </template>
     <template slot="content">
       <v-card-text class="d-flex pb-2">
         <v-text-field
           v-model="keyword"
-          placeholder="filter by name"
+          :placeholder="$t('siteNavigation.label.icon.searchPlaceholder')"
           prepend-inner-icon="fa-filter"
           class="inputPeopleFilter"
           @keyup="filterIcons($event)" />
@@ -52,7 +52,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               class="pa-0 pa-1">
               <v-sheet 
                 class="rounded-lg clickable "
-                :class="selectedIcon === icon ? 'grey-background' : 'light-grey-background'"
+                :class="icon.iconColor"
                 @click="selectIcon(icon)">
                 <div class="d-flex flex-grow-1">
                   <v-icon
@@ -90,7 +90,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           v-if="!search"
           elevation="0"
           @click="showMoreIcons">
-          {{ $t('siteNavigation.label.btn.showMore') }}
+          {{ $t('siteNavigation.btn.showMore.title') }}
         </v-btn>
       </v-card-text>
     </template>
@@ -141,42 +141,46 @@ export default {
         return Array.from(this.allIcons).slice(0, this.iconsNumber);
       }
     },
-    extraClass() {
-      return this.selectedIcon ? 'selectedIcon' : 'light-grey-background';
-    }
   },
   created() {
-    this.$root.$on('open-font-awesome-picker-drawer', this.open);
+    this.$root.$on('open-node-icon-picker-drawer', this.open);
   },
   methods: {
     open() {
       this.allIcons = Object.keys(library.definitions.fas).map(icon => ({
         'iconName': icon,
-        'iconValue': `fas fa-${ icon}`
+        'iconValue': `fas fa-${ icon}`,
+        'iconColor': 'light-grey-background'
       }));
-      this.$nextTick().then(() => this.$refs.fontAwesomePickerDrawer.open());
+      this.$nextTick().then(() => this.$refs.nodeIconPickerDrawer.open());
     },
     close() {
       this.keyword = null;
       this.search = false;
       this.selectedIcon = null;
       this.iconsNumber = 16;
-      this.$refs.fontAwesomePickerDrawer.close();
+      this.$refs.nodeIconPickerDrawer.close();
     },
     showMoreIcons() {
       this.iconsNumber += 16;
     },
     selectIcon(icon) {
-      if (this.selectedIcon === icon) {
+      if (this.selectedIcon && this.selectedIcon !== icon) {
+        this.selectedIcon.iconColor = 'light-grey-background';
+        icon.iconColor = 'grey-background';
+        this.selectedIcon = icon;
+      } else if (this.selectedIcon === icon) {
+        icon.iconColor = 'light-grey-background';
         this.disabled = true;
         this.selectedIcon = null;
       } else {
+        icon.iconColor = 'grey-background';
         this.disabled = false;
         this.selectedIcon = icon;
       }
     },
     saveIcon() {
-      this.$root.$emit('update-icon-node', this.selectedIcon.iconValue);
+      this.$root.$emit('update-node-icon', this.selectedIcon.iconValue);
       this.$nextTick().then(() => this.close());
     },
     filterIcons (event) {

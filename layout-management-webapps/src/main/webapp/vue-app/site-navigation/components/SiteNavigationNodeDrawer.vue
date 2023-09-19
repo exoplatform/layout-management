@@ -324,7 +324,7 @@ export default {
       this.open(navigationNode);
     });
     this.$root.$on('save-node-with-page', this.saveNode);
-    this.$root.$on('update-icon-node', (icon) => {
+    this.$root.$on('update-node-icon', (icon) => {
       this.nodeIcon = icon;
     });
   },
@@ -494,7 +494,7 @@ export default {
       return url ;
     },
     openFontAwesomePicker() {
-      this.$root.$emit('open-font-awesome-picker-drawer');
+      this.$root.$emit('open-node-icon-picker-drawer');
     },
     deleteIcon() {
       this.nodeIcon = 'fas fa-folder';
