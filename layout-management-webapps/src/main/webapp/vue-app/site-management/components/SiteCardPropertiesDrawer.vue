@@ -78,6 +78,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             :field-value.sync="siteDescription"
             :object-id="siteId"
             :max-length="maxDescriptionLength"
+            :no-expand-icon="!expanded"
             drawer-title="siteManagement.label.translateDescription"
             object-type="site"
             field-name="description"
@@ -190,12 +191,17 @@ export default {
     },
   },
   methods: {
-    open(site) {
+    open(site, freshInstance) {
+      this.siteTitleTranslations = {};
+      if (site && !freshInstance) {
+        this.$refs.siteCardPropertiesDrawer.open();
+        return this.$siteService.getSiteById(parseInt(site.siteId), false, false, 'en')
+          .then(freshSite => this.open(freshSite, true));
+      }
       this.site = site;
       this.siteName = site.name;
       this.siteId = site.siteId;
       this.siteLabel = site.displayName || site.name ;
-      this.siteTitleTranslations = {};
       this.siteDescription = site.description;
       this.displayed = site.displayed;
       this.displayOrder = site.displayOrder;
@@ -204,6 +210,7 @@ export default {
       });
     },
     close() {
+      this.site = null;
       this.$refs.siteCardPropertiesDrawer.close();
     },
     updateSite() {
