@@ -99,26 +99,41 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <div
               class="d-flex flex-grow-1 full-width">
               <div class="me-2 ms-auto">
-                <v-btn
-                  id="deleteIconButton"
-                  :title="$t('siteNavigation.btn.deleteIcon.title')"
-                  class="light-black-background border-color"
-                  outlined
-                  icon
-                  dark
-                  small>
-                  <v-icon size="13">mdi-delete</v-icon>
-                </v-btn>
-                <v-btn
-                  id="changeIconButton"
-                  :title="$t('siteNavigation.btn.changeIcon.title')"
-                  class="light-black-background border-color"
-                  icon
-                  outlined
-                  dark
-                  small>
-                  <v-icon size="13">fas fa-file-image</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      v-if="isDefaultIcon"
+                      v-on="on"
+                      v-bind="attrs"
+                      id="deleteIconButton"
+                      class="light-black-background border-color"
+                      outlined
+                      icon
+                      dark
+                      small
+                      @click="deleteIcon">
+                      <v-icon size="13">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('siteNavigation.btn.deleteIcon.title') }}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      v-on="on"
+                      v-bind="attrs"
+                      id="changeIconButton"
+                      class="light-black-background border-color"
+                      icon
+                      outlined
+                      dark
+                      small
+                      @click="openNodeIconPickerDrawer">
+                      <v-icon size="13">fas fa-file-image</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('siteNavigation.btn.changeIcon.title') }}</span>
+                </v-tooltip>
               </div>
             </div>
           </v-card-text>
@@ -274,6 +289,7 @@ export default {
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       editMode: false,
+      nodeIcon: null,
       nodeLabelRules: {
         required: value => value == null || !!(value?.length) || this.$t('siteNavigation.required.error.message'),
       },
@@ -293,8 +309,11 @@ export default {
     };
   },
   computed: {
+    isDefaultIcon() {
+      return this.nodeIcon !== 'fas fa-folder';
+    },
     icon() {
-      return this.editMode && this.navigationNode?.icon;
+      return this.nodeIcon ? this.nodeIcon : 'fas fa-folder';
     },
     title() {
       return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
@@ -317,6 +336,9 @@ export default {
       this.open(navigationNode);
     });
     this.$root.$on('save-node-with-page', this.saveNode);
+    this.$root.$on('update-node-icon', (icon) => {
+      this.nodeIcon = icon;
+    });
   },
   methods: {
     updateDates(startDate, endDate, startTime, endTime) {
@@ -339,6 +361,7 @@ export default {
         this.nodeId = parentNavigationNode.name;
         this.nodeType = parentNavigationNode.pageKey ? 'pageOrLink' : 'Group';
         this.visible = parentNavigationNode.visibility !== 'HIDDEN';
+        this.nodeIcon = parentNavigationNode.icon ? parentNavigationNode.icon : 'fas fa-folder';
         this.disableNodeId = true;
         if (parentNavigationNode.visibility === 'TEMPORAL') {
           this.isScheduled = true;
@@ -365,6 +388,7 @@ export default {
       this.valuesPerLanguage = {};
       this.supportedLanguages = {};
       this.labels = null;
+      this.nodeIcon = null;
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     saveNode(pageData) {
@@ -396,7 +420,7 @@ export default {
       };
       if (this.editMode) {
         const pageRef = pageData?.pageRef ||  (this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey?.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey?.name}` : '');
-        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.nodeTarget || this.navigationNode.target)
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.nodeTarget || this.navigationNode.target, this.nodeIcon)
           .then(() => {
             this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
@@ -406,7 +430,7 @@ export default {
             this.close();
           });
       } else {
-        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.pageRef && pageData?.nodeTarget || 'SAME_TAB')
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.nodeIcon, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.pageRef && pageData?.nodeTarget || 'SAME_TAB')
           .then(() => {
             this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
@@ -481,6 +505,12 @@ export default {
       }
       return url ;
     },
+    openNodeIconPickerDrawer() {
+      this.$root.$emit('open-node-icon-picker-drawer');
+    },
+    deleteIcon() {
+      this.nodeIcon = 'fas fa-folder';
+    }
   }
 };
 </script>

@@ -167,7 +167,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              NodeLabelRestEntity nodeLabelRestEntity,
                              @Parameter(description = "isPasteMode")
                              @QueryParam("isPasteMode")
-                             boolean isPasteMode) {
+                             boolean isPasteMode,
+                             @Parameter(description = "node icon")
+                             @QueryParam("icon")
+                             String icon) {
 
     if (parentNodeId == null || StringUtils.isBlank(nodeLabel) || StringUtils.isBlank(nodeId) || nodeLabelRestEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
@@ -200,7 +203,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
           nodeState = new NodeState(nodeLabel,
-                                    null,
+                                    icon,
                                     startScheduleDate,
                                     endScheduleDate,
                                     Visibility.TEMPORAL,
@@ -211,7 +214,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         }
       } else {
         nodeState = new NodeState(nodeLabel,
-                                  null,
+                                  icon,
                                   -1,
                                   -1,
                                   isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
@@ -264,7 +267,10 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
                              @QueryParam("endScheduleDate")
                              Long endScheduleDate,
                              @RequestBody(description = "node labels", required = true)
-                             NodeLabelRestEntity nodeLabelRestEntity) {
+                             NodeLabelRestEntity nodeLabelRestEntity,
+                             @Parameter(description = "node icon")
+                             @QueryParam("icon")
+                             String icon) {
     if (nodeId == null || StringUtils.isBlank(nodeLabel) || nodeLabelRestEntity == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("params are mandatory").build();
     }
@@ -306,7 +312,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
           return Response.status(Response.Status.BAD_REQUEST).entity("start schedule date must be after current date").build();
         } else {
           nodeState = new NodeState(nodeLabel,
-                                    null,
+                                    icon,
                                     startScheduleDate,
                                     endScheduleDate,
                                     Visibility.TEMPORAL,
@@ -317,7 +323,7 @@ public class SiteNavigationRestService implements ResourceContainer, Startable {
         }
       } else {
         nodeState = new NodeState(nodeLabel,
-                                  null,
+                                  icon,
                                   -1,
                                   -1,
                                   isVisible ? Visibility.DISPLAYED : Visibility.HIDDEN,
