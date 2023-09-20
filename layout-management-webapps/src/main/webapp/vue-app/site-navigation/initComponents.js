@@ -29,6 +29,7 @@ import SiteNavigationScheduleDatePickers from './components/SiteNavigationSchedu
 import SiteNavigationExistingPageElement from './components/SiteNavigationExistingPageElement.vue';
 import SiteNavigationPageSuggester from './components/SiteNavigationPageSuggester.vue';
 import SiteNavigationSiteSuggester from './components/SiteNavigationSiteSuggester.vue';
+import NodeIconPickerDrawer from './components/NodeIconPickerDrawer.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
@@ -45,6 +46,7 @@ const components = {
   'site-navigation-existing-page-element': SiteNavigationExistingPageElement,
   'site-navigation-page-suggester': SiteNavigationPageSuggester,
   'site-navigation-site-suggester': SiteNavigationSiteSuggester,
+  'node-icon-picker-drawer': NodeIconPickerDrawer,
 };
 
 for (const key in components) {
