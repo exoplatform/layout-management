@@ -99,29 +99,41 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <div
               class="d-flex flex-grow-1 full-width">
               <div class="me-2 ms-auto">
-                <v-btn
-                  v-if="isDefaultIcon"
-                  id="deleteIconButton"
-                  :title="$t('siteNavigation.btn.deleteIcon.title')"
-                  class="light-black-background border-color"
-                  outlined
-                  icon
-                  dark
-                  small
-                  @click="deleteIcon">
-                  <v-icon size="13">mdi-delete</v-icon>
-                </v-btn>
-                <v-btn
-                  id="changeIconButton"
-                  :title="$t('siteNavigation.btn.changeIcon.title')"
-                  class="light-black-background border-color"
-                  icon
-                  outlined
-                  dark
-                  small
-                  @click="openFontAwesomePicker">
-                  <v-icon size="13">fas fa-file-image</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      v-if="isDefaultIcon"
+                      v-on="on"
+                      v-bind="attrs"
+                      id="deleteIconButton"
+                      class="light-black-background border-color"
+                      outlined
+                      icon
+                      dark
+                      small
+                      @click="deleteIcon">
+                      <v-icon size="13">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('siteNavigation.btn.deleteIcon.title') }}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      v-on="on"
+                      v-bind="attrs"
+                      id="changeIconButton"
+                      class="light-black-background border-color"
+                      icon
+                      outlined
+                      dark
+                      small
+                      @click="openNodeIconPickerDrawer">
+                      <v-icon size="13">fas fa-file-image</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('siteNavigation.btn.changeIcon.title') }}</span>
+                </v-tooltip>
               </div>
             </div>
           </v-card-text>
@@ -493,7 +505,7 @@ export default {
       }
       return url ;
     },
-    openFontAwesomePicker() {
+    openNodeIconPickerDrawer() {
       this.$root.$emit('open-node-icon-picker-drawer');
     },
     deleteIcon() {

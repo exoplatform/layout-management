@@ -30,7 +30,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           @click="close">
           fas fa-arrow-left
         </v-icon>
-        <span class="ms-2"> {{ $t('siteNavigation.fontAwesomePickerDrawer.title') }}</span>
+        <span class="ms-2"> {{ $t('siteNavigation.nodeIconPickerDrawer.title') }}</span>
       </div>
     </template>
     <template slot="content">
@@ -51,7 +51,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               cols="3"
               class="pa-0 pa-1">
               <v-sheet 
-                class="rounded-lg clickable "
+                class="rounded-lg clickable light-grey-background"
                 :class="icon.iconColor"
                 @click="selectIcon(icon)">
                 <div class="d-flex flex-grow-1">
@@ -66,7 +66,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                     size="32"
                     class="flex-grow-1 align-center pt-6 pb-2"
                     color="black">
-                    fas fa-{{ icon.iconValue }}
+                    {{ icon.iconValue }}
                   </v-icon>
                 </div>
                 <v-tooltip bottom>
@@ -115,14 +115,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 <script>
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-
-// Add all solid Font Awesome icons to the library
-library.add(fas);
+import fontLibrary from '../../../js/icons.js';
 export default {
-  data () {
+  data() {
     return {
+      fontLibrary,
       allIcons: {},
       iconsNumber: 16,
       showMore: false,
@@ -147,10 +144,9 @@ export default {
   },
   methods: {
     open() {
-      this.allIcons = Object.keys(library.definitions.fas).map(icon => ({
-        'iconName': icon,
-        'iconValue': `fas fa-${ icon}`,
-        'iconColor': 'light-grey-background'
+      this.allIcons = this.fontLibrary.icons.map(icon => ({
+        'iconName': icon.split('fa-')[1],
+        'iconValue': icon,
       }));
       this.$nextTick().then(() => this.$refs.nodeIconPickerDrawer.open());
     },
@@ -183,7 +179,7 @@ export default {
       this.$root.$emit('update-node-icon', this.selectedIcon.iconValue);
       this.$nextTick().then(() => this.close());
     },
-    filterIcons (event) {
+    filterIcons(event) {
       const search = event.target.value.trim();
       if (search.length > 0) {
         this.search = true;
