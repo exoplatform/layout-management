@@ -147,7 +147,7 @@ export default {
       this.allIcons = this.fontLibrary.icons.map(icon => ({
         'iconName': icon.split('fa-')[1],
         'iconValue': icon,
-      }));
+      })).sort((icon1, icon2) => icon1.iconName.localeCompare(icon2.iconName));
       this.$nextTick().then(() => this.$refs.nodeIconPickerDrawer.open());
     },
     close() {
