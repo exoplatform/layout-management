@@ -289,7 +289,7 @@ export default {
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       editMode: false,
-      nodeIcon: null,
+      nodeIcon: 'fas fa-folder',
       nodeLabelRules: {
         required: value => value == null || !!(value?.length) || this.$t('siteNavigation.required.error.message'),
       },
@@ -313,7 +313,7 @@ export default {
       return this.nodeIcon !== 'fas fa-folder';
     },
     icon() {
-      return this.nodeIcon ? this.nodeIcon : 'fas fa-folder';
+      return this.nodeIcon;
     },
     title() {
       return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
@@ -361,7 +361,7 @@ export default {
         this.nodeId = parentNavigationNode.name;
         this.nodeType = parentNavigationNode.pageKey ? 'pageOrLink' : 'Group';
         this.visible = parentNavigationNode.visibility !== 'HIDDEN';
-        this.nodeIcon = parentNavigationNode.icon ? parentNavigationNode.icon : 'fas fa-folder';
+        this.nodeIcon = parentNavigationNode.icon;
         this.disableNodeId = true;
         if (parentNavigationNode.visibility === 'TEMPORAL') {
           this.isScheduled = true;
@@ -388,7 +388,7 @@ export default {
       this.valuesPerLanguage = {};
       this.supportedLanguages = {};
       this.labels = null;
-      this.nodeIcon = null;
+      this.nodeIcon = 'fas fa-folder';
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     saveNode(pageData) {
@@ -420,7 +420,7 @@ export default {
       };
       if (this.editMode) {
         const pageRef = pageData?.pageRef ||  (this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey?.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey?.name}` : '');
-        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.nodeTarget || this.navigationNode.target, this.nodeIcon)
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.nodeTarget || this.navigationNode.target, this.icon)
           .then(() => {
             this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
@@ -430,7 +430,7 @@ export default {
             this.close();
           });
       } else {
-        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.nodeIcon, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.pageRef && pageData?.nodeTarget || 'SAME_TAB')
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.icon, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.pageRef && pageData?.nodeTarget || 'SAME_TAB')
           .then(() => {
             this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
