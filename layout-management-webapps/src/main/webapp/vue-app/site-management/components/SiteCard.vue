@@ -31,8 +31,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <site-management-site-card-menu
         :site="site" />
     </v-toolbar>
-    <div class="mx-3 mt-3 align-center text-truncate-3">
-      <span v-sanitized-html="site.description"></span>
+    <div class="d-flex flex-grow-0 flex-shrink-1 rich-editor-content">
+      <span class="align-self-center text-wrap text-left text-break mx-2 text-truncate-4" v-sanitized-html="site.description"></span>
     </div>
     <v-footer absolute class="px-0 py-0">
       <v-toolbar
