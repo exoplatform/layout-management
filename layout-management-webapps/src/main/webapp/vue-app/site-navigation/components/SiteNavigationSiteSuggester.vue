@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       ref="selectSiteNavigation"
       v-model="selectedSiteNavigation"
       :placeholder="suggesterLabels.placeholder"
-      :items="siteNavigations"
+      :items="sites"
       :loading="loadingSuggestions"
       append-icon=""
       menu-props="closeOnClick, closeOnContentClick, maxHeight = 100"
@@ -81,7 +81,7 @@ export default {
   },
   data() {
     return {
-      siteNavigations: [],
+      sites: [],
       searchTerm: null,
       loadingSuggestions: false
     };
@@ -115,8 +115,8 @@ export default {
     getSites() {
       this.loadingSuggestions = true;
       return this.$siteService.getSites(null, 'USER', null, true, true, false, false, false, null, true)
-        .then(siteNavigations => {
-          this.siteNavigations = siteNavigations || [];
+        .then(sites => {
+          this.sites = sites || [];
         })
         .finally(() => this.loadingSuggestions = false);
     },
