@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       ref="selectSiteNavigation"
       v-model="selectedSiteNavigation"
       :placeholder="suggesterLabels.placeholder"
-      :items="siteNavigations"
+      :items="sites"
       :loading="loadingSuggestions"
       append-icon=""
       menu-props="closeOnClick, closeOnContentClick, maxHeight = 100"
@@ -28,7 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       content-class="identitySuggesterContent"
       width="100%"
       max-width="100%"
-      item-text="label"
+      item-text="displayName"
       item-value="name"
       return-object
       persistent-hint
@@ -54,14 +54,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           class="identitySuggesterItem"
           @click:close="remove()">
           <span class="text-truncate">
-            {{ item.label }}
+            {{ item.displayName }}
           </span>
         </v-chip>
       </template>
       <template slot="item" slot-scope="data">
         <v-list-item-title
           class="text-truncate identitySuggestionMenuItemText"
-          v-text="data.item.label" />
+          v-text="data.item.displayName" />
       </template>
     </v-autocomplete>
   </v-flex>
@@ -81,7 +81,7 @@ export default {
   },
   data() {
     return {
-      siteNavigations: [],
+      sites: [],
       searchTerm: null,
       loadingSuggestions: false
     };
@@ -105,20 +105,21 @@ export default {
     });
   },
   created(){
-    this.getSiteNavigations();
+    this.getSites();
   },
   methods: {
     remove() {
       this.selectedSiteNavigation = null;
       this.$emit('change', this.selectedSiteNavigation);
     },
-    getSiteNavigations() {
+    getSites() {
       this.loadingSuggestions = true;
-      this.siteNavigations = [];
-      this.$siteNavigationService.getSiteNavigations()
-        .then(siteNavigations => this.siteNavigations = siteNavigations)
+      return this.$siteService.getSites(null, 'USER', null, true, true, false, false, false, null, true)
+        .then(sites => {
+          this.sites = sites || [];
+        })
         .finally(() => this.loadingSuggestions = false);
-    }
+    },
   }
 };
 </script>
