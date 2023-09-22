@@ -27,6 +27,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -120,6 +121,13 @@ public class SiteManagementRestService implements ResourceContainer {
                              @Parameter(description = "site display order")
                              @QueryParam("displayOrder")
                              int displayOrder,
+                             @Parameter(description = "site banner UploadId")
+                             @QueryParam("bannerUploadId")
+                             String bannerUploadId,
+                             @Parameter(description = "if site banner has been removed")
+                             @DefaultValue("false")
+                             @QueryParam("bannerRemoved")
+                             boolean bannerRemoved,
                              @Parameter(description = "Used to retrieve the site label and description in the requested language")
                              @QueryParam("lang")
                              String lang) {
@@ -134,6 +142,12 @@ public class SiteManagementRestService implements ResourceContainer {
       portalConfig.setLabel(siteLabel);
       portalConfig.setDisplayed(displayed);
       portalConfig.setDisplayOrder(displayed ? displayOrder : 0);
+      if (bannerRemoved) {
+       layoutService.removeSiteBanner(siteName);
+       portalConfig.setBannerFileId(0);
+      } else {
+        portalConfig.setBannerUploadId(bannerUploadId);
+      }
       layoutService.save(portalConfig);
       return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false, getLocale(lang))).build();
     } catch (Exception e) {

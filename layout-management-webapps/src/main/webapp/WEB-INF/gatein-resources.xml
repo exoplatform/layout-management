@@ -181,6 +181,13 @@
         <module>extensionRegistry</module>
       </depends>
       <depends>
+        <module>imageCropper</module>
+      </depends>
+      <depends>
+        <module>cropper</module>
+        <as>Cropper</as>
+      </depends>
+      <depends>
         <module>commonLayoutComponents</module>
       </depends>
       <depends>
