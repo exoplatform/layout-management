@@ -21,6 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       ref="siteNavigationAddNodeDrawer"
       right
       allow-expand
+      @expand-updated="expanded = $event"
       @closed="close">
       <template slot="title">
         <div class="d-flex">
@@ -99,24 +100,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <div
               class="d-flex flex-grow-1 full-width">
               <div class="me-2 ms-auto">
-                <v-tooltip bottom>
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      v-if="isDefaultIcon"
-                      v-on="on"
-                      v-bind="attrs"
-                      id="deleteIconButton"
-                      class="light-black-background border-color"
-                      outlined
-                      icon
-                      dark
-                      small
-                      @click="deleteIcon">
-                      <v-icon size="13">mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>{{ $t('siteNavigation.btn.deleteIcon.title') }}</span>
-                </v-tooltip>
                 <v-tooltip bottom>
                   <template #activator="{ on, attrs }">
                     <v-btn
@@ -266,12 +249,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       :default-language="defaultLanguage"
       :supported-languages="supportedLanguages"
       @input="updateNodeLabels" />
+    <node-icon-picker-drawer 
+      :expanded="expanded" />
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      expanded: false,
       labels: null,
       supportedLanguages: {},
       valuesPerLanguage: {},
@@ -289,7 +275,7 @@ export default {
       nodeType: 'Group',
       parentNavigationNodeUrl: '',
       editMode: false,
-      nodeIcon: 'fas fa-folder',
+      nodeIcon: null,
       nodeLabelRules: {
         required: value => value == null || !!(value?.length) || this.$t('siteNavigation.required.error.message'),
       },
@@ -309,11 +295,8 @@ export default {
     };
   },
   computed: {
-    isDefaultIcon() {
-      return this.nodeIcon !== 'fas fa-folder';
-    },
     icon() {
-      return this.nodeIcon;
+      return this.nodeIcon ? this.nodeIcon : 'fas fa-folder';
     },
     title() {
       return this.editMode ? this.$t('siteNavigation.drawer.editNode.title') : this.$t('siteNavigation.drawer.addNode.title');
@@ -388,7 +371,7 @@ export default {
       this.valuesPerLanguage = {};
       this.supportedLanguages = {};
       this.labels = null;
-      this.nodeIcon = 'fas fa-folder';
+      this.nodeIcon = null;
       this.$refs.siteNavigationAddNodeDrawer.close();
     },
     saveNode(pageData) {
@@ -420,7 +403,7 @@ export default {
       };
       if (this.editMode) {
         const pageRef = pageData?.pageRef ||  (this.nodeType === 'pageOrLink' ? this.navigationNode.pageKey?.ref || `${ this.navigationNode.pageKey.site.typeName}::${ this.navigationNode.pageKey.site.name}::${this.navigationNode.pageKey?.name}` : '');
-        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.nodeTarget || this.navigationNode.target, this.icon)
+        this.$siteNavigationService.updateNode(this.navigationNode.id, this.nodeLabel, pageRef, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.nodeTarget || this.navigationNode.target, this.nodeIcon)
           .then(() => {
             this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
@@ -430,7 +413,7 @@ export default {
             this.close();
           });
       } else {
-        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.icon, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.pageRef && pageData?.nodeTarget || 'SAME_TAB')
+        this.$siteNavigationService.createNode(this.navigationNode.id, previousNodeId, this.nodeLabel, this.nodeId, this.nodeIcon, this.visible, this.isScheduled, startScheduleDate, endScheduleDate, nodeLabels, pageData?.pageRef, pageData?.pageRef && pageData?.nodeTarget || 'SAME_TAB')
           .then(() => {
             this.openTargetPage(pageData);
             this.$root.$emit('refresh-navigation-nodes');
@@ -507,9 +490,6 @@ export default {
     },
     openNodeIconPickerDrawer() {
       this.$root.$emit('open-node-icon-picker-drawer');
-    },
-    deleteIcon() {
-      this.nodeIcon = 'fas fa-folder';
     }
   }
 };
