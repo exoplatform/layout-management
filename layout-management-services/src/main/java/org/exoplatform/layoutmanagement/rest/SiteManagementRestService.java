@@ -149,7 +149,8 @@ public class SiteManagementRestService implements ResourceContainer {
         portalConfig.setBannerUploadId(bannerUploadId);
       }
       layoutService.save(portalConfig);
-      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false, getLocale(lang))).build();
+      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, null, false, false, false, getLocale(lang)))
+                     .build();
     } catch (Exception e) {
       LOG.error("Error when updating the site with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
@@ -204,7 +205,8 @@ public class SiteManagementRestService implements ResourceContainer {
       }
       portal.saveSite(site);
       PortalConfig portalConfig = layoutService.getPortalConfig(new SiteKey(siteType, siteName));
-      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, false, getLocale(lang))).build();
+      return Response.ok(EntityBuilder.buildSiteEntity(portalConfig, request, false, null, false, false, false, getLocale(lang)))
+                     .build();
     } catch (Exception e) {
       LOG.error("Error when updating site permissions with name {} and type {}", siteName, siteType, e);
       return Response.serverError().build();
