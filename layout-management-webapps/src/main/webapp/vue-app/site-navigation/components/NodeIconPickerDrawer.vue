@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     id="nodeIconPickerDrawer"
     :right="!$vuetify.rtl"
     eager
-    allow-expand
+    :allow-expand="expanded"
     @closed="close">
     <template slot="title">
       <div class="d-flex">
@@ -40,7 +40,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           :placeholder="$t('siteNavigation.label.icon.searchPlaceholder')"
           prepend-inner-icon="fa-filter"
           class="inputPeopleFilter"
-          @keyup="filterIcons($event)" />
+          @keyup="filterIcons($event)">
+          <template #append>
+            <v-btn
+              icon
+              size="22"
+              @click="closeFilter()">
+              <v-icon
+                size="18"
+                color="primary">
+                mdi-close
+              </v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
       </v-card-text>
       <v-card-text class="d-flex pb-2">
         <v-container id="iconPicker">
@@ -117,6 +130,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <script>
 import fontLibrary from '../../../js/icons.js';
 export default {
+  props: {
+    expanded: {
+      type: Boolean,
+      default: null,
+    },
+  },
   data() {
     return {
       fontLibrary,
@@ -191,6 +210,10 @@ export default {
         this.search = false;
       }
     },
+    closeFilter() {
+      this.keyword = '';
+      this.search = false;
+    }
   },
 };
 </script>

@@ -117,8 +117,9 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, icon
   if (nodeId) {
     formData.append('nodeId', nodeId);
   }
-  
-  formData.append('icon', icon);
+  if (icon) {
+    formData.append('icon', icon);
+  }
 
   formData.append('isVisible', isVisible);
 
@@ -165,8 +166,10 @@ export function updateNode(nodeId, nodeLabel, pageRef, isVisible, isScheduled, s
   if (nodeLabel) {
     formData.append('nodeLabel', nodeLabel);
   }
-  formData.append('icon', icon);
-
+  if (icon) {
+    formData.append('icon', icon);
+  }
+  
   formData.append('pageRef', pageRef);
 
   formData.append('isVisible', isVisible);
