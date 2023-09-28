@@ -23,7 +23,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     allow-expand
     @closed="close">
     <template slot="title">
-      <span>{{ $t('siteNavigation.drawer.title') }}</span>
+      <span>{{ $t('siteNavigation.drawer.title') }}<v-chip
+        v-if="site && site.metaSite"
+        class="ms-4 primary">
+        {{ siteName }}
+      </v-chip></span> 
     </template>
     <template slot="content">
       <div :class="$refs.siteNavigationDrawer?.expand ? 'singlePageApplication' : ' ' ">
@@ -31,7 +35,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           color="white"
           flat
           dense>
+          <v-btn
+            v-if="site && site.metaSite"
+            @click="$root.$emit('open-site-navigation-add-node-drawer', site.rootNode)"
+            class="btn btn-primary ms-2">
+            {{ $t('siteNavigation.btn.createNode.title') }}
+          </v-btn>
           <v-chip
+            v-else
             class="ms-4 mt-3 mb-4 primary">
             {{ siteName }}
           </v-chip>
@@ -70,6 +81,7 @@ export default {
       includeGlobal: false,
       loading: false,
       filter: 'ALL',
+      sites: [],
     };
   },
   computed: {
@@ -90,7 +102,10 @@ export default {
     },
     hideChildren(){
       return this.filter !== 'ALL';
-    }
+    },
+    site() {
+      return this.sites.filter(site => site.name === this.siteName)[0];
+    },
   },
   watch: {
     filter() {
@@ -108,6 +123,7 @@ export default {
       this.siteName = event?.siteName || eXo.env.portal.siteKeyName;
       this.siteType = event?.siteType || eXo.env.portal.siteKeyType;
       this.includeGlobal = event?.includeGlobal || false;
+      this.retrieveSites();
       this.getNavigationNodes();
       this.$refs.siteNavigationDrawer.open();
       this.$nextTick().then(() =>  this.$root.$emit('site-navigation-drawer-opened'));
@@ -129,6 +145,10 @@ export default {
           this.filterNavigationNodes();
         })
         .finally(() => this.loading = false);
+    },
+    retrieveSites(){
+      return this.$siteService.getSites('PORTAL', null, 'global', true, true, false, true, true, true, true)
+        .then(data => this.sites = data || []);
     },
     filterNavigationNodes(){
       this.navigationNodesToDisplay = [];

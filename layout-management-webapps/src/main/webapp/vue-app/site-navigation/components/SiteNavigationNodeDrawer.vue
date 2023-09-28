@@ -387,7 +387,7 @@ export default {
         endScheduleDate.setMinutes(new Date(this.endScheduleTime).getMinutes());
         endScheduleDate.setSeconds(0);
       }
-      const nodeChildrenLength = this.navigationNode.children.length;
+      const nodeChildrenLength = this.navigationNode.children?.length;
       const previousNodeId = nodeChildrenLength ? this.navigationNode.children[nodeChildrenLength -1].id : null;
       if (this.labels == null) {
         this.labels = {
