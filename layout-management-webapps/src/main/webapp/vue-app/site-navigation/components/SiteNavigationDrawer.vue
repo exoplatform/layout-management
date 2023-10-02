@@ -77,7 +77,6 @@ export default {
       navigationNodes: [],
       navigationNodesToDisplay: [],
       siteName: null,
-      siteType: null,
       siteId: null,
       includeGlobal: false,
       loading: false,
@@ -122,7 +121,6 @@ export default {
   methods: {
     open(event) {
       this.siteName = event?.siteName || eXo.env.portal.siteKeyName;
-      this.siteType = event?.siteType || eXo.env.portal.siteKeyType;
       this.siteId = event?.siteId || eXo.env.portal.siteId;
       this.includeGlobal = event?.includeGlobal || false;
       this.getNavigationNodes();
@@ -131,7 +129,6 @@ export default {
     },
     close() {
       this.siteName = null;
-      this.siteType = null;
       this.siteId = null;
       this.site = null;
       this.includeGlobal = false;

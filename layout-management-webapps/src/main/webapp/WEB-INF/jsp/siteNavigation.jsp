@@ -18,7 +18,6 @@
 <div class="VuetifyApp">
   <div id="siteNavigation">
     <script type="text/javascript">
-        eXo.env.portal.siteKeyType = '<%=siteType%>';
         eXo.env.portal.siteKeyName = '<%=siteName%>';
         eXo.env.portal.siteId = '<%=siteId%>';
         eXo.env.portal.isAdministrator = <%=isAdministrator%>;
