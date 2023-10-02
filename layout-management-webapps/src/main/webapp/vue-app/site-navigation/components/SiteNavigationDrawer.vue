@@ -23,7 +23,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     allow-expand
     @closed="close">
     <template slot="title">
-      <span>{{ $t('siteNavigation.drawer.title') }}</span>
+      <span>{{ $t('siteNavigation.drawer.title') }}<v-chip
+        v-if="isMetaSite"
+        class="ms-4 primary">
+        {{ siteName }}
+      </v-chip></span> 
     </template>
     <template slot="content">
       <div :class="$refs.siteNavigationDrawer?.expand ? 'singlePageApplication' : ' ' ">
@@ -31,7 +35,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           color="white"
           flat
           dense>
+          <v-btn
+            v-if="isMetaSite"
+            @click="createNode"
+            class="btn btn-primary ms-2">
+            {{ $t('siteNavigation.label.btn.createNode') }}
+          </v-btn>
           <v-chip
+            v-else
             class="ms-4 mt-3 mb-4 primary">
             {{ siteName }}
           </v-chip>
@@ -66,10 +77,11 @@ export default {
       navigationNodes: [],
       navigationNodesToDisplay: [],
       siteName: null,
-      siteType: null,
+      siteId: null,
       includeGlobal: false,
       loading: false,
       filter: 'ALL',
+      site: null,
     };
   },
   computed: {
@@ -90,6 +102,9 @@ export default {
     },
     hideChildren(){
       return this.filter !== 'ALL';
+    },
+    isMetaSite() {
+      return this.site?.metaSite;
     }
   },
   watch: {
@@ -106,7 +121,7 @@ export default {
   methods: {
     open(event) {
       this.siteName = event?.siteName || eXo.env.portal.siteKeyName;
-      this.siteType = event?.siteType || eXo.env.portal.siteKeyType;
+      this.siteId = event?.siteId || eXo.env.portal.siteId;
       this.includeGlobal = event?.includeGlobal || false;
       this.getNavigationNodes();
       this.$refs.siteNavigationDrawer.open();
@@ -114,7 +129,8 @@ export default {
     },
     close() {
       this.siteName = null;
-      this.siteType = null;
+      this.siteId = null;
+      this.site = null;
       this.includeGlobal = false;
       this.navigationNodes = [];
       this.navigationNodesToDisplay = [];
@@ -123,12 +139,16 @@ export default {
     },
     getNavigationNodes() {
       this.loading = true;
-      return this.$siteNavigationService.getNavigationNodes(this.siteType, this.siteName, this.includeGlobal, true)
-        .then(navigationNodes => {
-          this.navigationNodes = navigationNodes || [];
+      return this.$siteService.getSiteById(this.siteId, true, true, eXo.env.portal.language)
+        .then(site => {
+          this.site = site;
+          this.navigationNodes = site.siteNavigations || [];
           this.filterNavigationNodes();
         })
         .finally(() => this.loading = false);
+    },
+    createNode() {
+      this.$root.$emit('open-site-navigation-add-node-drawer', this.site.rootNode);
     },
     filterNavigationNodes(){
       this.navigationNodesToDisplay = [];
