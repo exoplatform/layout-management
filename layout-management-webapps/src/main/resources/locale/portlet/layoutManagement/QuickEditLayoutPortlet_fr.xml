@@ -2,7 +2,7 @@
 <bundle>
    <UIAdminToolbarPortlet>
       <title>
-        <EditAdministration>Edit Administration</EditAdministration>
+        <EditAdministration>Modifier l'administration</EditAdministration>
       </title>
       <action>
          <AddPage>Ajouter</AddPage>
