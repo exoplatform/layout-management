@@ -231,9 +231,10 @@ export default {
       this.displayed = site.displayed;
       this.displayOrder = site.displayOrder;
       this.siteBannerUrl = site.bannerUrl;
-      this.defaultSiteBannerUrl = this.siteBannerUrl.replace('isDefault=false', 'isDefault=true');
-      this.isDefaultBanner = this.siteBannerUrl?.includes('&isDefault=true') ;
+      this.defaultSiteBannerUrl = `/portal/rest/v1/social/sites/${site.name}/banner?isDefault=true`;
+      this.isDefaultBanner = site.bannerFileId === 0 ;
       this.hasDefaultBanner = this.isDefaultBanner;
+      this.bannerUploadId = null;
       this.$nextTick().then(() => {
         this.$refs.siteCardPropertiesDrawer.open();
       });
