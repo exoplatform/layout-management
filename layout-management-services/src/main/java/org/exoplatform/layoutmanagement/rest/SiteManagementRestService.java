@@ -142,10 +142,10 @@ public class SiteManagementRestService implements ResourceContainer {
       portalConfig.setLabel(siteLabel);
       portalConfig.setDisplayed(displayed);
       portalConfig.setDisplayOrder(displayed ? displayOrder : 0);
-      if (bannerRemoved) {
-       layoutService.removeSiteBanner(siteName);
-       portalConfig.setBannerFileId(0);
-      } else {
+      if (bannerRemoved && portalConfig.getBannerFileId() != 0) {
+        layoutService.removeSiteBanner(siteName);
+        portalConfig.setBannerFileId(0);
+      } else if (StringUtils.isNotBlank(bannerUploadId)) {
         portalConfig.setBannerUploadId(bannerUploadId);
       }
       layoutService.save(portalConfig);
