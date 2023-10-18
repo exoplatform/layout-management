@@ -28,17 +28,6 @@
       <label>#{portal.administration.home}</label>
       <icon>fas fa-cog</icon>
       <node>
-        <name>organisation</name>
-        <label>#{portal.administration.organisation}</label>
-        <icon>fas fa-building</icon>
-        <node>
-          <name>sites</name>
-          <label>#{portal.administration.sites}</label>
-          <icon>fas fa-sitemap</icon>
-          <page-reference>portal::administration::siteManagement</page-reference>
-        </node>
-      </node>
-      <node>
         <name>legacy</name>
         <label>#{portal.administration.legacy}</label>
         <icon>fas fa-archive</icon>
