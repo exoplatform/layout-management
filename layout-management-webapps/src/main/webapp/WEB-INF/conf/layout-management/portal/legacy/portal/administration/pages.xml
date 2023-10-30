@@ -25,7 +25,7 @@
     <access-permissions>manager:/platform/administrators</access-permissions>
     <edit-permission>manager:/platform/administrators</edit-permission>
     <container id="singlePageApplicationContainer" template="system:/groovy/portal/webui/container/UIContainer.gtmpl" cssClass="singlePageApplication">
-      <access-permissions>*:/platform/users</access-permissions>
+      <access-permissions>everyone</access-permissions>
       <portlet-application>
         <portlet>
           <application-ref>exoadmin</application-ref>
@@ -38,7 +38,7 @@
           </preferences>
         </portlet>
         <title>Application Registry</title>
-        <access-permissions>manager:/platform/administrators</access-permissions>
+        <access-permissions>everyone</access-permissions>
         <show-info-bar>false</show-info-bar>
       </portlet-application>
     </container>
