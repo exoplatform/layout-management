@@ -151,14 +151,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-btn
           class="btn ms-2"
           @click="close">
-          {{ $t('siteNavigation.label.btn.cancel') }}
+          {{ $t('siteManagement.label.btn.cancel') }}
         </v-btn>
         <v-btn
           :disabled="saveDisabled"
           :loading="loading"
           @click="updateSite"
           class="btn btn-primary ms-2">
-          {{ $t('siteNavigation.label.btn.save') }}
+          {{ $t('siteManagement.label.btn.save') }}
         </v-btn>
       </div>
     </template>

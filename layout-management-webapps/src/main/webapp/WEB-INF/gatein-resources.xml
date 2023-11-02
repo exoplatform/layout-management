@@ -64,6 +64,13 @@
     <css-path>/skin/css/imagesPortlet.css</css-path>
   </portlet-skin>
 
+  <portal-skin>
+    <skin-name>Enterprise</skin-name>
+    <skin-module>commonLayoutComponents</skin-module>
+    <css-path>/skin/css/common/Style.css</css-path>
+    <css-priority>11</css-priority>
+  </portal-skin>
+
   <portlet>
     <name>QuickEditLayoutPortlet</name>
     <module>
@@ -186,6 +193,9 @@
       <depends>
         <module>cropper</module>
         <as>Cropper</as>
+      </depends>
+      <depends>
+        <module>siteNavigationComponents</module>
       </depends>
       <depends>
         <module>commonLayoutComponents</module>

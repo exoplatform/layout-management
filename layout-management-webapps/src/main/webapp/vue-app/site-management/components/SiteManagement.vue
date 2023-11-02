@@ -29,6 +29,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <site-card-properties-drawer />
     <manage-permissions-drawer />
     <layout-notification-alerts />
+    <site-navigation can-manage-site-navigation :display-button="false" />
   </v-app>
 </template>
 
