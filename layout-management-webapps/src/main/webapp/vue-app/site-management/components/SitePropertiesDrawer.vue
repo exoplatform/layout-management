@@ -16,9 +16,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <exo-drawer
-    id="siteCardPropertiesDrawer"
-    ref="siteCardPropertiesDrawer"
-    v-model="siteCardPropertiesDrawer"
+    id="sitePropertiesDrawer"
+    ref="sitePropertiesDrawer"
+    v-model="sitePropertiesDrawer"
     :right="!$vuetify.rtl"
     :allow-expand="!$root.isMobile"
     eager
@@ -169,7 +169,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 export default {
   data() {
     return {
-      siteCardPropertiesDrawer: false,
+      sitePropertiesDrawer: false,
       site: null,
       siteName: '',
       siteLabel: '',
@@ -194,7 +194,7 @@ export default {
     };
   },
   created() {
-    this.$root.$on('open-site-card-properties-drawer', this.open);
+    this.$root.$on('open-site-properties-drawer', this.open);
   },
   watch: {
     siteDescription() {
@@ -211,14 +211,14 @@ export default {
       return this.site?.metaSite;
     },
     showDrawerContent() {
-      return this.siteCardPropertiesDrawer && !!this.site;
+      return this.sitePropertiesDrawer && !!this.site;
     },
   },
   methods: {
     open(site, freshInstance) {
       this.siteTitleTranslations = {};
       if (site && !freshInstance) {
-        this.$refs.siteCardPropertiesDrawer.open();
+        this.$refs.sitePropertiesDrawer.open();
         return this.$siteService.getSiteById(parseInt(site.siteId), false, false, 'en')
           .then(freshSite => this.open(freshSite, true));
       }
@@ -236,13 +236,13 @@ export default {
       this.hasDefaultBanner = this.isDefaultBanner;
       this.bannerUploadId = null;
       this.$nextTick().then(() => {
-        this.$refs.siteCardPropertiesDrawer.open();
+        this.$refs.sitePropertiesDrawer.open();
       });
     },
     close() {
       this.site = null;
       this.reset();
-      this.$refs.siteCardPropertiesDrawer.close();
+      this.$refs.sitePropertiesDrawer.close();
     },
     updateBannerUploadId(bannerUploadId) {
       this.bannerUploadId = bannerUploadId;
@@ -253,7 +253,7 @@ export default {
       this.isDefaultBanner = true;
     },
     reset() {
-      this.siteCardPropertiesDrawer = false;
+      this.sitePropertiesDrawer = false;
       this.isDefaultBanner = true;
       this.siteBannerUrl = null;
       this.defaultSiteBannerUrl = null;
@@ -281,7 +281,7 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          this.$refs.siteCardPropertiesDrawer.endLoading();
+          this.$refs.sitePropertiesDrawer.endLoading();
         });
     }
   }

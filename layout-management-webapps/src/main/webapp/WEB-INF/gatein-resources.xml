@@ -195,9 +195,6 @@
         <as>Cropper</as>
       </depends>
       <depends>
-        <module>siteNavigationComponents</module>
-      </depends>
-      <depends>
         <module>commonLayoutComponents</module>
       </depends>
       <depends>
