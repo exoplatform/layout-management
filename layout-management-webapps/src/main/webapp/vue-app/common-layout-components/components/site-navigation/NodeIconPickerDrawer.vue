@@ -128,7 +128,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 <script>
-import fontLibrary from '../../../js/icons.js';
+import fontLibrary from '../../../../js/icons.js';
 export default {
   props: {
     expanded: {

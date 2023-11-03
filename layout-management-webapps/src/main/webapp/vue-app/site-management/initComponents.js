@@ -19,7 +19,7 @@ import SiteManagement from './components/SiteManagement.vue';
 import SitesList from './components/SitesList.vue';
 import SiteCard from './components/SiteCard.vue';
 import SiteCardMenu from './components/SiteCardMenu.vue';
-import SiteCardPropertiesDrawer from './components/SiteCardPropertiesDrawer.vue';
+import SitePropertiesDrawer from './components/SitePropertiesDrawer.vue';
 import SiteBannerSelector from './components/SiteBannerSelector.vue';
 
 
@@ -28,7 +28,7 @@ const components = {
   'site-management-sites-list': SitesList,
   'site-management-site-card': SiteCard,
   'site-management-site-card-menu': SiteCardMenu,
-  'site-card-properties-drawer': SiteCardPropertiesDrawer ,
+  'site-properties-drawer': SitePropertiesDrawer ,
   'site-management-banner-selector': SiteBannerSelector ,
 };
 
