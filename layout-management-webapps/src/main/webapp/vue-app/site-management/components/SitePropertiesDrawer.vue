@@ -109,9 +109,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <span class="text-color caption px-1 text-capitalize"> {{ $t('siteManagement.label.caption') }}</span>
           </v-label>
           <site-management-banner-selector
-            v-if="siteBannerSelectorKey"
             ref="siteBannerSelector"
-            :key="siteBannerSelectorKey"
             :src="siteBannerUrl"
             :default-src="defaultSiteBannerUrl"
             :is-default="isDefaultBanner"
@@ -187,7 +185,6 @@ export default {
       hasDefaultBanner: true,
       isDefaultBanner: true,
       defaultSiteBannerUrl: '',
-      siteBannerSelectorKey: null,
       rules: {
         value: (v) => (v > 0 && v<= 9999) || this.$t('siteManagement.displayOrder.error')
       },
@@ -222,7 +219,6 @@ export default {
         return this.$siteService.getSiteById(parseInt(site.siteId), false, false, 'en')
           .then(freshSite => this.open(freshSite, true));
       }
-      this.siteBannerSelectorKey = `siteBannerSelector${parseInt(Math.random() * 10000).toString()}`;
       this.site = site;
       this.siteName = site.name;
       this.siteId = site.siteId;

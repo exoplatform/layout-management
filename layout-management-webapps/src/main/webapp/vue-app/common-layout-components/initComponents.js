@@ -62,12 +62,7 @@ for (const key in components) {
   Vue.component(key, components[key]);
 }
 
-import * as commonLayoutService from './js/commonLayoutService.js';
 import * as siteNavigationService from './js/siteNavigationService.js';
-
-window.Object.defineProperty(Vue.prototype, '$commonLayoutService', {
-  value: commonLayoutService,
-});
 
 if (!Vue.prototype.$siteNavigationService) {
   window.Object.defineProperty(Vue.prototype, '$siteNavigationService', {
