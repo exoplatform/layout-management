@@ -26,7 +26,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       :ok-label="$t('siteManagement.label.confirm')"
       :cancel-label="$t('siteManagement.label.cancel')"
       @ok="deleteSite" />
-    <site-card-properties-drawer />
+    <site-properties-drawer />
+    <site-navigation-drawer />
+    <site-navigation-node-drawer />
+    <site-navigation-element-drawer />
     <manage-permissions-drawer />
     <layout-notification-alerts />
   </v-app>

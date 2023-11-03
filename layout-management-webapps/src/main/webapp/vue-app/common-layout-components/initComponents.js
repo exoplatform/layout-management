@@ -21,6 +21,19 @@ import ManagePermissionItem from './components/manage-permissions/ManagePermissi
 import PermissionTypeSelector from './components/manage-permissions/PermissionTypeSelector.vue';
 import NotificationAlert from './components/snackbar/NotificationAlert.vue';
 import NotificationAlerts from './components/snackbar/NotificationAlerts.vue';
+import SiteNavigationDrawer from './components/site-navigation/SiteNavigationDrawer.vue';
+import SiteNavigationNodesList from './components/site-navigation/NodesList.vue';
+import SiteNavigationNodeItem from './components/site-navigation/NodeItem.vue';
+import SiteNavigationNodeItemMenu from './components/site-navigation/NodeItemMenu.vue';
+import SiteNavigationNodeDrawer from './components/site-navigation/SiteNavigationNodeDrawer.vue';
+import SiteNavigationElementDrawer from './components/site-navigation/SiteNavigationElementDrawer.vue';
+import SiteNavigationPageElement from './components/site-navigation/SiteNavigationPageElement.vue';
+import SiteNavigationNewPageElement from './components/site-navigation/SiteNavigationNewPageElement.vue';
+import SiteNavigationScheduleDatePickers from './components/site-navigation/SiteNavigationScheduleDatePickers.vue';
+import SiteNavigationExistingPageElement from './components/site-navigation/SiteNavigationExistingPageElement.vue';
+import SiteNavigationPageSuggester from './components/site-navigation/SiteNavigationPageSuggester.vue';
+import SiteNavigationSiteSuggester from './components/site-navigation/SiteNavigationSiteSuggester.vue';
+import NodeIconPickerDrawer from './components/site-navigation/NodeIconPickerDrawer.vue';
 
 const components = {
   'manage-permissions-drawer': ManagePermissionsDrawer,
@@ -30,14 +43,29 @@ const components = {
   'permission-type-selector': PermissionTypeSelector,
   'layout-notification-alert': NotificationAlert,
   'layout-notification-alerts': NotificationAlerts,
+  'site-navigation-drawer': SiteNavigationDrawer,
+  'site-navigation-nodes-list': SiteNavigationNodesList,
+  'site-navigation-node-item': SiteNavigationNodeItem,
+  'site-navigation-node-item-menu': SiteNavigationNodeItemMenu,
+  'site-navigation-node-drawer': SiteNavigationNodeDrawer,
+  'site-navigation-element-drawer': SiteNavigationElementDrawer,
+  'site-navigation-page-element': SiteNavigationPageElement,
+  'site-navigation-new-page-element': SiteNavigationNewPageElement,
+  'site-navigation-schedule-date-pickers': SiteNavigationScheduleDatePickers,
+  'site-navigation-existing-page-element': SiteNavigationExistingPageElement,
+  'site-navigation-page-suggester': SiteNavigationPageSuggester,
+  'site-navigation-site-suggester': SiteNavigationSiteSuggester,
+  'node-icon-picker-drawer': NodeIconPickerDrawer,
 };
 
 for (const key in components) {
   Vue.component(key, components[key]);
 }
 
-import * as commonLayoutService from './commonLayoutService.js';
+import * as siteNavigationService from './js/siteNavigationService.js';
 
-window.Object.defineProperty(Vue.prototype, '$commonLayoutService', {
-  value: commonLayoutService,
-});
+if (!Vue.prototype.$siteNavigationService) {
+  window.Object.defineProperty(Vue.prototype, '$siteNavigationService', {
+    value: siteNavigationService,
+  });
+}

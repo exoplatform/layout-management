@@ -35,7 +35,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       <v-list-item
         v-if="isPortalSite && !isGlobalSite"
         class="subtitle-2 px-3"
-        @click="openSiteCardPropertiesDrawer">
+        @click="openSitePropertiesDrawer">
         <v-icon
           size="16"
           class="me-2 ms-0"
@@ -161,10 +161,10 @@ export default {
         siteId: this.site.siteId,
         includeGlobal: this.site.name.toLowerCase() === eXo.env.portal.globalPortalName.toLowerCase()
       };
-      document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));
+      this.$root.$emit('open-site-navigation-drawer', params);
     },
-    openSiteCardPropertiesDrawer() {
-      this.$root.$emit('open-site-card-properties-drawer', this.site);
+    openSitePropertiesDrawer() {
+      this.$root.$emit('open-site-properties-drawer', this.site);
     },
     editSiteLayout() {
       this.$siteManagementService.editSiteLayout(this.site.name);
