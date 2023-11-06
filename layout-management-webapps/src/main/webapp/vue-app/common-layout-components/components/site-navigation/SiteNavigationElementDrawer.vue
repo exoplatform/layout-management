@@ -106,8 +106,8 @@ export default {
       elementType: 'PAGE',
       target: 'SAME_TAB',
       link: '',
-      linkRules: [url => !!(url && url.match(/^((https?:\/\/)?(www\.)?[a-zA-Z0-9]+\.[^\s]{2,})|(javascript:)|(\/portal\/)/))
-              || ( !url.length && this.$t('siteNavigation.required.error.message') || this.$t('siteNavigation.label.invalidLink'))],
+      linkRules: [url => !!(url?.match(/^((https?:\/\/)?(www\.)?[a-zA-Z0-9]+\.[^\s]{2,})|(javascript:)|(\/portal\/)/))
+              || ( !url?.length && this.$t('siteNavigation.required.error.message') || this.$t('siteNavigation.label.invalidLink'))],
       navigationNode: null,
       elementName: null,
       elementTitle: null,

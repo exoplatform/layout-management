@@ -31,7 +31,7 @@ export function getNavigationNodes(siteType, siteName, includeGlobal, expand) {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
-    if (!resp || !resp.ok) {
+    if (!resp?.ok) {
       throw new Error(resp.status);
     } else {
       return resp.json();
@@ -45,7 +45,7 @@ export function deleteNode(nodeId, delay) {
     credentials: 'include',
     method: 'DELETE'
   }).then((resp) => {
-    if (resp && !resp.ok) {
+    if (!resp?.ok) {
       throw new Error('Error when deleting navigation node');
     }
   });
@@ -56,7 +56,7 @@ export function undoDeleteNode(nodeId) {
     method: 'POST',
     credentials: 'include',
   }).then((resp) => {
-    if (resp && resp.ok) {
+    if (resp?.ok) {
       localStorage.removeItem('deletedNode');
     } else {
       throw new Error('Error when undoing deleting navigation node');
@@ -69,7 +69,7 @@ export function editLayout(uiPageId, pageName, pageSiteType, pageSiteName, nodeU
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
-    if (!resp || !resp.ok) {
+    if (!resp?.ok) {
       throw new Error(resp.status);
     } else {
       const targetPageUrl = `/portal${nodeSiteType === 'group' ? '/g' : ''}/${nodeSiteName.replaceAll('/', ':')}/${nodeUri}`;
@@ -95,7 +95,7 @@ export function moveNode(nodeId, destinationParentId, previousNodeId) {
     credentials: 'include',
     method: 'PATCH',
   }).then((resp) => {
-    if (resp && resp.ok) {
+    if (resp?.ok) {
       return resp.ok;
     } else {
       throw resp;
@@ -150,7 +150,7 @@ export function createNode(parentNodeId, previousNodeId, nodeLabel, nodeId, icon
     },
     body: JSON.stringify(nodeLabels),
   }).then((resp) => {
-    if (resp && resp.ok) {
+    if (resp?.ok) {
       return resp.json();
     } else {
       throw resp;
@@ -209,7 +209,7 @@ export function getNodeLabels(nodeId) {
     credentials: 'include',
     method: 'GET'
   }).then(resp => {
-    if (resp && resp.ok) {
+    if (resp?.ok) {
       return resp.json();
     } else {
       throw new Error('Error when retrieving node labels');
@@ -233,7 +233,7 @@ export function updateNodePagePermission(pageRef, editPermission, accessPermissi
     method: 'PATCH',
     credentials: 'include',
   }).then((resp) => {
-    if (resp && !resp.ok) {
+    if (!resp?.ok) {
       throw new Error(resp.status);
     }
   });
@@ -244,7 +244,7 @@ export function getMembershipTypes() {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
-    if (!resp || !resp.ok) {
+    if (!resp?.ok) {
       throw new Error('Error when retrieving membership types');
     } else {
       return resp.json();
@@ -260,7 +260,7 @@ export function getPageTemplates() {
       'Content-Type': 'application/json'
     },
   }).then(resp => {
-    if (!resp || !resp.ok) {
+    if (!resp?.ok) {
       throw new Error('Error when retrieving page templates');
     } else {
       return resp.json();
@@ -288,7 +288,7 @@ export function getPages(siteType, siteName, pageDisplayName) {
       'Content-Type': 'application/json'
     },
   }).then(resp => {
-    if (resp && resp.ok) {
+    if (resp?.ok) {
       return resp.json();
     } else {
       throw new Error('Error when retrieving pages');
@@ -301,7 +301,7 @@ export function getSiteNavigations() {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
-    if (resp && resp.ok) {
+    if (resp?.ok) {
       return resp.json();
     } else {
       throw new Error('Error when retrieving site navigations');
@@ -337,7 +337,7 @@ export function createPage(pageName, pageTitle, pageSiteName, pageSiteType, page
     credentials: 'include',
     method: 'POST',
   }).then((resp) => {
-    if (resp && resp.ok) {
+    if (resp?.ok) {
       return resp.json();
     } else {
       throw new Error('Error when creating page');
@@ -350,7 +350,7 @@ export function getPageByRef(pageRef) {
     method: 'GET',
     credentials: 'include',
   }).then(resp => {
-    if (!resp || !resp.ok) {
+    if (!resp?.ok) {
       throw new Error('Error when retrieving page');
     } else {
       return resp.json();
@@ -375,8 +375,32 @@ export function updatePageLink(pageRef, link) {
       'Content-Type': 'application/json'
     },
   }).then(resp => {
-    if (!resp || !resp.ok) {
+    if (!resp?.ok) {
       throw new Error('Error when updating page link');
+    }
+  });
+}
+
+export function updateSitePermissions(siteType, siteName, editPermission, accessPermissions) {
+  const formData = new FormData();
+  formData.append('siteType', siteType);
+  formData.append('siteName', siteName);
+  if (editPermission) {
+    formData.append('editPermission', editPermission);
+  }
+  if (accessPermissions) {
+    formData.append('accessPermissions', accessPermissions);
+  }
+  formData.append('lang', eXo.env.portal.language);
+
+  const params = new URLSearchParams(formData).toString();
+
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites/permissions?${params}`, {
+    method: 'PATCH',
+    credentials: 'include',
+  }).then((resp) => {
+    if (!resp?.ok) {
+      throw new Error(resp.status);
     }
   });
 }
