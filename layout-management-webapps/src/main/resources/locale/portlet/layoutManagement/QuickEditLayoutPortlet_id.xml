@@ -2,7 +2,7 @@
 <bundle>
    <UIAdminToolbarPortlet>
       <title>
-        <EditAdministration>Edit Administration</EditAdministration>
+        <EditAdministration>Ubah administrasi</EditAdministration>
       </title>
       <action>
          <AddPage>Tambahkan Halaman</AddPage>
@@ -19,8 +19,8 @@
          <AddSite>Tambahkan Situs</AddSite>
       </action>
       <ManageSites>Mengelola Situs</ManageSites>
-      <ManageGroupSites>Group Sites</ManageGroupSites>
-      <TopbarTooltip>Edit layout</TopbarTooltip>
+      <ManageGroupSites>Situs grup</ManageGroupSites>
+      <TopbarTooltip>Ubah tata letak</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
