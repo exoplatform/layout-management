@@ -107,13 +107,13 @@
                 <value>
                   <object type="org.exoplatform.webui.core.model.SelectItemOption">
                     <field name="label">
-                      <string>scopePage.scopeLayout</string>
+                      <string>sectionPage.sectionLayout</string>
                     </field>
                     <field name="value">
-                      <string>scope</string>
+                      <string>section</string>
                     </field>
                     <field name="icon">
-                      <string>scopeLayout</string>
+                      <string>sectionLayout</string>
                     </field>
                   </object>
                 </value>

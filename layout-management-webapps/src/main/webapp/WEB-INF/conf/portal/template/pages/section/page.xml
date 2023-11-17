@@ -20,12 +20,12 @@
 
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.exoplatform.org/xml/ns/gatein_objects_1_8 http://www.exoplatform.org/xml/ns/gatein_objects_1_8"
-      xmlns="http://www.exoplatform.org/xml/ns/gatein_objects_1_8">
+    xsi:schemaLocation="http://www.exoplatform.org/xml/ns/gatein_objects_1_8 http://www.exoplatform.org/xml/ns/gatein_objects_1_8"
+    xmlns="http://www.exoplatform.org/xml/ns/gatein_objects_1_8">
     <name></name>
-  <container id="scopePageSimpleTableContainer" template='system:/groovy/portal/webui/container/UISimpleTableContainer.gtmpl' cssClass="VuetifyApp">
+  <container id="sectionPageSimpleTableContainer" template='system:/groovy/portal/webui/container/UISimpleTableContainer.gtmpl' cssClass="VuetifyApp">
     <access-permissions>Everyone</access-permissions>
-    <container id="scopePageSimpleRowContainer" template='system:/groovy/portal/webui/container/UISimpleRowContainer.gtmpl'>
+    <container id="sectionPageSimpleRowContainer" template='system:/groovy/portal/webui/container/UISimpleRowContainer.gtmpl'>
       <access-permissions>Everyone</access-permissions>
       <portlet-application>
         <portlet>
@@ -36,7 +36,7 @@
         <show-info-bar>false</show-info-bar>
       </portlet-application>
     </container>
-    <container id="scopePageSimpleRowContainer" template='system:/groovy/portal/webui/container/UISimpleRowContainer.gtmpl' cssClass="v-application v-application--is-ltr v-application--wrap">
+    <container id="sectionPageSimpleRowContainer" template='system:/groovy/portal/webui/container/UISimpleRowContainer.gtmpl' cssClass="v-application v-application--is-ltr v-application--wrap">
       <access-permissions>Everyone</access-permissions>
       <container template="system:/groovy/portal/webui/container/UIResponsiveColumnGroupContainer.gtmpl">
         <access-permissions>Everyone</access-permissions>
@@ -57,12 +57,6 @@
             <portlet>
               <application-ref>notes</application-ref>
               <portlet-ref>NotePageView</portlet-ref>
-              <preferences>
-                <preference>
-                  <name>name</name>
-                  <value>publicHubSummary</value>
-                </preference>
-              </preferences>
             </portlet>
             <access-permissions>Everyone</access-permissions>
             <show-info-bar>false</show-info-bar>
@@ -78,12 +72,6 @@
               <portlet>
                 <application-ref>notes</application-ref>
                 <portlet-ref>NotePageView</portlet-ref>
-                <preferences>
-                  <preference>
-                    <name>name</name>
-                    <value>publicHubSummary</value>
-                  </preference>
-                </preferences>
               </portlet>
               <access-permissions>Everyone</access-permissions>
               <show-info-bar>false</show-info-bar>
@@ -96,12 +84,6 @@
               <portlet>
                 <application-ref>social-portlet</application-ref>
                 <portlet-ref>Links</portlet-ref>
-                <preferences>
-                  <preference>
-                    <name>name</name>
-                    <value>publicLinks</value>
-                  </preference>
-                </preferences>
               </portlet>
               <access-permissions>Everyone</access-permissions>
               <show-info-bar>false</show-info-bar>
