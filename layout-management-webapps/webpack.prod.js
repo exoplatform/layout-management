@@ -37,7 +37,6 @@ const config = {
     siteNavigation: './src/main/webapp/vue-app/site-navigation/main.js',
     siteManagement: './src/main/webapp/vue-app/site-management/main.js',
     commonLayoutComponents: './src/main/webapp/vue-app/common-layout-components/main.js',
-    images: './src/main/webapp/vue-app/images/main.js'
   },
   output: {
     path: path.join(__dirname, 'target/layout-management/'),

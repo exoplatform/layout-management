@@ -104,7 +104,6 @@
               <includes>
                 <include>siteNavigation.less</include>
                 <include>siteManagement.less</include>
-                <include>imagesPortlet.less</include>
                 <include>common/Style.less</include>
               </includes>
             </configuration>
