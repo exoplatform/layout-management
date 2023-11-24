@@ -139,7 +139,11 @@ export default {
     },
     getNavigationNodes() {
       this.loading = true;
-      return this.$siteService.getSiteById(this.siteId, true, true, eXo.env.portal.language)
+      return this.$siteService.getSiteById(this.siteId, {
+        expandNavigations: true,
+        excludeEmptyNavigationSites: true,
+        lang: eXo.env.portal.language,
+      })
         .then(site => {
           this.site = site;
           this.navigationNodes = site.siteNavigations || [];
