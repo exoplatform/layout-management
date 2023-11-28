@@ -19,8 +19,6 @@ import ManageEditPermission from './components/manage-permissions/ManageEditPerm
 import ManageAccessPermission from './components/manage-permissions/ManageAccessPermission.vue';
 import ManagePermissionItem from './components/manage-permissions/ManagePermissionItem.vue';
 import PermissionTypeSelector from './components/manage-permissions/PermissionTypeSelector.vue';
-import NotificationAlert from './components/snackbar/NotificationAlert.vue';
-import NotificationAlerts from './components/snackbar/NotificationAlerts.vue';
 import SiteNavigationDrawer from './components/site-navigation/SiteNavigationDrawer.vue';
 import SiteNavigationNodesList from './components/site-navigation/NodesList.vue';
 import SiteNavigationNodeItem from './components/site-navigation/NodeItem.vue';
@@ -41,8 +39,6 @@ const components = {
   'manage-access-permission': ManageAccessPermission,
   'manage-permission-item': ManagePermissionItem,
   'permission-type-selector': PermissionTypeSelector,
-  'layout-notification-alert': NotificationAlert,
-  'layout-notification-alerts': NotificationAlerts,
   'site-navigation-drawer': SiteNavigationDrawer,
   'site-navigation-nodes-list': SiteNavigationNodesList,
   'site-navigation-node-item': SiteNavigationNodeItem,
