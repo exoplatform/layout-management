@@ -32,7 +32,7 @@
 	<properties>
 		<!-- 3rd party libraries versions -->
 		<org.exoplatform.commons-exo.version>6.5.x-SNAPSHOT</org.exoplatform.commons-exo.version>
-		<org.exoplatform.social.version>6.5.x-SNAPSHOT</org.exoplatform.social.version>
+		<org.exoplatform.social.version>6.5.x-exo-SNAPSHOT</org.exoplatform.social.version>
 		<!-- Sonar properties -->
 		<sonar.organization>exoplatform</sonar.organization>
 	</properties>
