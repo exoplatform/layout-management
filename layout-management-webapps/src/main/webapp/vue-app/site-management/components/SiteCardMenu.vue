@@ -138,7 +138,7 @@ export default {
       return this.site.siteType === 'PORTAL';
     },
     canEditLayout() {
-      return !(this.isGlobalSite || this.isGroupSite);
+      return !(this.isGlobalSite || this.isGroupSite) && (this.site?.metaSite || !this.site.displayed);
     },
     canEditSite() {
       return this.site.canEdit;
