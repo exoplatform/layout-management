@@ -245,13 +245,14 @@ export default {
       const deleteDelay = 6;
       const message = this.$t('siteNavigation.label.deleteSuccess');
       const undoMessage = this.$t('siteNavigation.label.undoDelete');
+      const undoMessageSuccess = this.$t('siteNavigation.deleteCanceled');
       this.$siteNavigationService.deleteNode(this.navigationNode.id, deleteDelay)
         .then(() => {
           document.dispatchEvent(new CustomEvent('alert-message', {detail: {
             alertType: 'success',
             alertMessage: message ,
             alertLinkText: undoMessage ,
-            alertLinkCallback: () => this.undoDeleteNode(this.navigationNode.id),
+            alertLinkCallback: () => this.undoDeleteNode(this.navigationNode.id, undoMessageSuccess),
           }}));
         });
       const redirectionTime = 6100;
@@ -322,12 +323,12 @@ export default {
         });
 
     },
-    undoDeleteNode(nodeId) {
+    undoDeleteNode(nodeId, successMsg) {
       return this.$siteNavigationService.undoDeleteNode(nodeId)
         .then(() => {
           this.$root.$emit('refresh-navigation-nodes');
           this.$root.$emit('close-alert-message');
-          this.$root.$emit('alert-message', this.$t('siteNavigation.deleteCanceled'), 'success');
+          this.$root.$emit('alert-message', successMsg, 'success');
         });
     }
   }
