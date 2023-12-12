@@ -243,9 +243,17 @@ export default {
     deleteNode() {
       this.$root.$emit('delete-node', this.navigationNode.id);
       const deleteDelay = 6;
+      const message = this.$t('siteNavigation.label.deleteSuccess');
+      const undoMessage = this.$t('siteNavigation.label.undoDelete');
+      const undoMessageSuccess = this.$t('siteNavigation.deleteCanceled');
       this.$siteNavigationService.deleteNode(this.navigationNode.id, deleteDelay)
         .then(() => {
-          this.$root.$emit('confirm-node-deletion', this.navigationNode);
+          document.dispatchEvent(new CustomEvent('alert-message', {detail: {
+            alertType: 'success',
+            alertMessage: message ,
+            alertLinkText: undoMessage ,
+            alertLinkCallback: () => this.undoDeleteNode(this.navigationNode.id, undoMessageSuccess),
+          }}));
         });
       const redirectionTime = 6100;
       setTimeout(() => {
@@ -272,11 +280,7 @@ export default {
       if (this.navigationNode.children.length) {
         const index = this.navigationNode.children.findIndex(navNode => navNode.name === this.nodeToPaste.name);
         if (index !== -1) {
-          const message = this.$t('siteNavigation.label.pasteNode.error');
-          this.$root.$emit('notification-alert', {
-            message,
-            type: 'error',
-          });
+          this.$root.$emit('alert-message', this.$t('siteNavigation.label.pasteNode.error'), 'error');
           return;
         } 
       }
@@ -318,6 +322,14 @@ export default {
             });
         });
 
+    },
+    undoDeleteNode(nodeId, successMsg) {
+      return this.$siteNavigationService.undoDeleteNode(nodeId)
+        .then(() => {
+          this.$root.$emit('refresh-navigation-nodes');
+          this.$root.$emit('close-alert-message');
+          this.$root.$emit('alert-message', successMsg, 'success');
+        });
     }
   }
 };

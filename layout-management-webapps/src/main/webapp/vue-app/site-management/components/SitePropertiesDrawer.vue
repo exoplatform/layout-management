@@ -256,7 +256,6 @@ export default {
       this.isDefaultBanner = true;
       this.siteBannerUrl = null;
       this.defaultSiteBannerUrl = null;
-      this.siteBannerSelectorKey = null;
       this.$refs.siteBannerSelector.reset();
     },
     updateSite() {
@@ -264,19 +263,12 @@ export default {
         .then(() => this.$translationService.saveTranslations('site', this.siteId, 'label', this.siteTitleTranslations))
         .then(() => this.$translationService.saveTranslations('site', this.siteId, 'description', this.siteDescriptionTranslations))
         .then(() => {
-          const message = this.$t('siteManagement.label.updateSite.success');
-          this.$root.$emit('layout-notification-alert', {
-            message,
-            type: 'success',
-          });
+          this.$root.$emit('alert-message', this.$t('siteManagement.label.updateSite.success'), 'success');
           this.$root.$emit('refresh-sites');
           this.close();
         }).catch((e) => {
           const message = e.message ==='401' &&  this.$t('siteManagement.label.updateSite.unauthorized') || this.$t('siteManagement.label.updateSite.error');
-          this.$root.$emit('layout-notification-alert', {
-            message,
-            type: 'error',
-          });
+          this.$root.$emit('alert-message', message, 'error');
         })
         .finally(() => {
           this.loading = false;
