@@ -245,11 +245,7 @@ export default {
               'openEditLayout': this.pageTemplate === 'empty' || this.pageTemplate === 'analytics' || this.pageTemplate === 'normal'
             });
           }).catch(() => {
-            const message = this.$t('siteNavigation.label.pageCreation.error');
-            this.$root.$emit('notification-alert', {
-              message,
-              type: 'error',
-            });
+            this.$root.$emit('alert-message', this.$t('siteNavigation.label.pageCreation.error'), 'error');
           });
       }
       this.loading = false;
@@ -282,11 +278,7 @@ export default {
             'pageType': this.elementType
           });
         }).catch(() => {
-          const message = this.$t('siteNavigation.label.pageUpdate.error');
-          this.$root.$emit('notification-alert', {
-            message,
-            type: 'error',
-          });
+          this.$root.$emit('alert-message', this.$t('siteNavigation.label.pageUpdate.error'), 'error');
         });
     }
   }
