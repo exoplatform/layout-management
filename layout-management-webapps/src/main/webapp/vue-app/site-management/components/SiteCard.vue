@@ -80,7 +80,7 @@ export default {
           siteId: this.site.siteId,
           includeGlobal: this.site.name.toLowerCase() === eXo.env.portal.globalPortalName.toLowerCase()
         };
-        document.dispatchEvent(new CustomEvent('open-site-navigation-drawer', {detail: params}));
+        this.$root.$emit('open-site-navigation-drawer', params);
       }
     },
   }
