@@ -17,7 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <template>
   <v-app class="siteManagementApplication">
     <v-main class="white pa-5 card-border-radius">
-      <site-management-sites-list :sites="sites" class="mt-7" />
+      <site-management-toolbar />
+      <site-management-sites-list :sites="sites" />
     </v-main>
     <exo-confirm-dialog
       ref="deleteSiteConfirmDialog"
@@ -27,6 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
       :cancel-label="$t('siteManagement.label.cancel')"
       @ok="deleteSite" />
     <site-properties-drawer />
+    <site-template-drawer />
     <site-navigation-drawer />
     <site-navigation-node-drawer />
     <site-navigation-element-drawer />
