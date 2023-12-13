@@ -80,21 +80,15 @@ export function updateSite(siteName, siteType, siteLabel, siteDescription, displ
 
 export function createSite(siteName, siteTemplate, siteLabel, siteDescription, displayed, displayOrder, bannerUploadId) {
   const formData = new FormData();
-  formData.append('siteName', siteName);
   formData.append('siteTemplate', siteTemplate);
-  if (siteLabel) {
-    formData.append('siteLabel', siteLabel);
-  }
-  if (siteDescription) {
-    formData.append('siteDescription', siteDescription);
-  }
-  if (displayOrder) {
-    formData.append('displayOrder', displayOrder);
-  }
-  formData.append('displayed', displayed);
-  if (bannerUploadId) {
-    formData.append('bannerUploadId', bannerUploadId);
-  }
+  const portalConfig = {
+    name: siteName,
+    label: siteLabel,
+    description: siteDescription,
+    displayed: displayed,
+    displayOrder: displayOrder,
+    bannerUploadId: bannerUploadId,
+  };
   const params = new URLSearchParams(formData).toString();
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {
     credentials: 'include',
@@ -102,6 +96,7 @@ export function createSite(siteName, siteTemplate, siteLabel, siteDescription, d
     headers: {
       'Content-Type': 'application/json'
     },
+    body: JSON.stringify(portalConfig),
   }).then((resp) => {
     if (resp?.ok) {
       return resp.json();

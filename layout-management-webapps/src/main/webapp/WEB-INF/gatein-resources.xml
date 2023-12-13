@@ -64,7 +64,7 @@
   </portal-skin>
   <portal-skin>
     <skin-name>Enterprise</skin-name>
-    <skin-module>commonLayoutComponents</skin-module>
+    <skin-module>navigationWebsiteLayout</skin-module>
     <css-path>/skin/css/site/Style.css</css-path>
     <css-priority>11</css-priority>
   </portal-skin>
