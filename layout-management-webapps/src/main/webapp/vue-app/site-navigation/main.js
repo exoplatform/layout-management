@@ -29,7 +29,7 @@ if (extensionRegistry) {
 
 extensionRegistry.registerComponent('manageSpaceActions', 'manage-space-actions', {
   id: 'manage-space-actions',
-  vueComponent: Vue.options.components['site-navigation-button'],
+  vueComponent: Vue.options.components['site-navigation'],
   rank: 20,
 });
 
