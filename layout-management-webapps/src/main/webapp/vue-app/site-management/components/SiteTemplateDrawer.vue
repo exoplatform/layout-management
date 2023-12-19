@@ -26,7 +26,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-icon
           size="16"
           class="clickable"
-          @click="back">
+          @click="close">
           fas fa-arrow-left
         </v-icon>
         <span class="ms-2"> {{ $t('siteManagement.label.siteTemplate.drawer.title') }} </span>
@@ -102,9 +102,13 @@ export default {
       this.$refs.siteTemplateDrawer.open();
     },
     close() {
+      this.loading = false;
       this.$refs.siteTemplateDrawer.close();
+      this.$refs.siteTemplateDrawer.endLoading();
     },
     saveSite() {
+      this.loading = true;
+      this.$refs.siteTemplateDrawer.startLoading();
       this.$root.$emit('create-site', this.template);
     }
   }
