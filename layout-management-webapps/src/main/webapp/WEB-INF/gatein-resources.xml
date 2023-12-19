@@ -141,7 +141,7 @@
   </module>
 
   <module>
-    <name>NavigationManageSpaceActions</name>
+    <name>ManageSpacesExtension</name>
     <load-group>ManageSpaceGRP</load-group>
      <script>
         <path>/js/siteNavigation.bundle.js</path>
