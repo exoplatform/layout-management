@@ -171,7 +171,7 @@ export default {
       this.$refs.managePermissionsDrawer.startLoading();
       const pageEditPermission = this.convertPermission(this.editPermission);
       let pageAccessPermissions = ['Everyone'];
-      if (this.accessPermissions[0] !== 'Everyone') {
+      if (this.accessPermissions[0] !== 'Everyone' && this.accessPermissionType !== 'Everyone') {
         pageAccessPermissions = [];
         this.accessPermissions.forEach(permission => {
           if (permission.group?.id) {
