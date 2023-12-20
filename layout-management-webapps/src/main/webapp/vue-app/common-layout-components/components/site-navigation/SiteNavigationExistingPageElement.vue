@@ -16,8 +16,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <div>
-    <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectExistingPage') }}</span>
-    <v-flex class="mt-4">
+    <span class="font-weight-bold text-start text-truncate-2 text-color body-2 mt-8">{{ $t('siteNavigation.label.selectExistingPage') }}</span>
+    <v-flex class="mt-4 text-left">
       <v-chip
         :class="allSitesChipClass"
         @click="allSites = true">

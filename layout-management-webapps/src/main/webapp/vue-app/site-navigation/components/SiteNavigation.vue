@@ -16,7 +16,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <v-app v-if="canManageSiteNavigation && !isMobile">
-    <site-navigation-button icon-class="text-color" />
+    <site-navigation-button
+      icon-class="text-color" 
+      :icon-color="iconColor"
+      :disabled="disabled"
+      :site-name="siteName"
+      :site-type="siteType" />
     <site-navigation-drawer v-if="siteNavigationDrawerOpened" />
     <manage-permissions-drawer v-if="siteNavigationDrawerOpened" />
     <site-navigation-node-drawer v-if="siteNavigationDrawerOpened" />
@@ -29,6 +34,22 @@ export default {
     canManageSiteNavigation: {
       type: Boolean,
       default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    iconColor: {
+      type: String,
+      default: null,
+    },
+    siteName: {
+      type: String,
+      default: null,
+    },
+    siteType: {
+      type: String,
+      default: null,
     },
   },
   data () {
