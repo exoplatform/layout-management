@@ -38,7 +38,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
         <v-form
           v-model="isValidForm">
           <template>
-            <span class="font-weight-bold text-start text-color body-2">{{ $t('siteNavigation.label.selectElementType') }}</span>
+            <span class="font-weight-bold text-start text-truncate-2 text-color body-2">{{ $t('siteNavigation.label.selectElementType') }}</span>
             <v-select
               v-model="elementType"
               :items="elementTypes"
@@ -49,7 +49,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
               outlined />
           </template>
           <template>
-            <span class="font-weight-bold text-start text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
+            <span class="font-weight-bold text-start text-truncate-2 text-color body-2 mt-8">{{ $t('siteNavigation.label.selectOpenType') }}</span>
             <v-select
               v-model="target"
               :items="targetTypes"
