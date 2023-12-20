@@ -20,9 +20,11 @@
 package org.exoplatform.navigation.webui.component;
 
 import java.lang.reflect.Method;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,7 +32,11 @@ import org.exoplatform.commons.utils.LazyPageList;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.navigation.webui.TreeNode;
 import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.config.*;
+import org.exoplatform.portal.config.DataStorage;
+import org.exoplatform.portal.config.Query;
+import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.portal.config.UserPortalConfig;
+import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.navigation.Scope;
@@ -41,19 +47,27 @@ import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.portal.UIPortalComposer;
 import org.exoplatform.portal.webui.util.PortalDataMapper;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.portal.webui.workspace.*;
+import org.exoplatform.portal.webui.workspace.UIEditInlineWorkspace;
+import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication.ComponentTab;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication.EditLevel;
+import org.exoplatform.portal.webui.workspace.UIWorkingWorkspace;
 import org.exoplatform.util.ReflectionUtil;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.login.LogoutControl;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.config.annotation.*;
-import org.exoplatform.webui.core.*;
+import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.ComponentConfigs;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @ComponentConfigs({
         @ComponentConfig(template = "app:/groovy/navigation/webui/component/UISiteManagement.gtmpl", events = {

@@ -21,13 +21,12 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -46,13 +45,14 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.http.PATCH;
 import org.exoplatform.services.rest.resource.ResourceContainer;
+import org.exoplatform.social.rest.api.EntityBuilder;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.exoplatform.social.rest.api.EntityBuilder;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Path("v1/sites")
 @Tag(name = "v1/sites", description = "Managing sites")
