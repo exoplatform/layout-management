@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
   <div>
-    <span class="font-weight-bold text-start text-color body-2">{{ whoCanView }}</span>
+    <p class="font-weight-bold text-start text-color body-2">{{ whoCanView }}</p>
     <v-select
       v-model="type"
       :items="typeLabel"

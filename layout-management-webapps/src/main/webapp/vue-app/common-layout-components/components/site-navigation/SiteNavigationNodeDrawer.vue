@@ -39,7 +39,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           v-model="isValidInputs">
           <v-card-text class="d-flex pb-2">
             <v-label>
-              <span class="text-color font-weight-bold">
+              <span class="text-color font-weight-bold text-start text-truncate-2">
                 {{ $t('siteNavigation.label.nodeLabel.title') }} *              
               </span>
               <p class="caption">{{ $t('siteNavigation.label.nodeLabel.description') }} </p>
@@ -67,12 +67,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-card-text>
           <v-card-text class="d-flex flex-grow-1 pb-2">
             <v-label>
-              <span class="text-color font-weight-bold mr-6">
+              <span class="text-color font-weight-bold text-start mr-6 text-truncate-2">
                 {{ $t('siteNavigation.label.nodeId.title') }} *              
               </span>
               <p
                 v-if="nodeId && nodeId.length"
-                class="caption text-break">
+                class="caption text-break mx-auto text-wrap text-left">
                 {{ nodeUrl }}
               </p>
             </v-label>
@@ -90,7 +90,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           </v-card-text>
           <v-card-text class="d-flex flex-grow-1 pb-2">
             <v-label>
-              <span class="text-color font-weight-bold mr-6">
+              <span class="text-color font-weight-bold text-start mr-6 text-truncate-2">
                 {{ $t('siteNavigation.label.icon.title') }}             
               </span>
               <p class="caption"> {{ $t('siteNavigation.label.icon.description') }}  </p>
@@ -209,7 +209,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                     {{ $t('siteNavigation.label.editElement') }}
                   </a>
                 </div>
-                <p class="caption text-light-color ms-8 me-2">
+                <p class="caption text-light-color ms-8 me-2 text-wrap text-break text-truncate-2">
                   {{ $t('siteNavigation.label.nodeType.pageOrLink.caption') }}
                 </p>
               </v-radio-group>
