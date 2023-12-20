@@ -29,7 +29,7 @@ if (extensionRegistry) {
 
 extensionRegistry.registerComponent('manageSpaceActions', 'manage-space-actions', {
   id: 'manage-space-actions',
-  vueComponent: Vue.options.components['site-navigation-button'],
+  vueComponent: Vue.options.components['site-navigation'],
   rank: 20,
 });
 
@@ -43,6 +43,8 @@ const lang = eXo && eXo.env.portal.language || 'en';
 
 //should expose the locale ressources as REST API
 const urls = [`${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.portlet.layoutManagement.SiteNavigationPortlet-${lang}.json`];
+
+exoi18n.loadLanguageAsync(lang, urls);
 
 export function init(canManageSiteNavigation) {
   exoi18n.loadLanguageAsync(lang, urls).then(i18n => {
