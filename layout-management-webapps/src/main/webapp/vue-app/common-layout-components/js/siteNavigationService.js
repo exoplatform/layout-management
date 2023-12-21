@@ -15,30 +15,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getNavigationNodes(siteType, siteName, includeGlobal, expand) {
-  const formData = new FormData();
-  if (siteName) {
-    formData.append('siteName', siteName);
-  }
-  formData.append('includeGlobal', includeGlobal);
-
-  formData.append('expand', expand);
-
-  formData.append('temporalCheck', false);
-
-  const params = new URLSearchParams(formData).toString();
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/navigations/${siteType || 'portal'}?${params}`, {
-    method: 'GET',
-    credentials: 'include',
-  }).then(resp => {
-    if (!resp?.ok) {
-      throw new Error(resp.status);
-    } else {
-      return resp.json();
-    }
-  });
-}
-
 export function deleteNode(nodeId, delay) {
   localStorage.setItem('deletedNode', nodeId);
   return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/siteNavigation/node/${nodeId}?delay=${delay || 0}`, {
@@ -292,19 +268,6 @@ export function getPages(siteType, siteName, pageDisplayName) {
       return resp.json();
     } else {
       throw new Error('Error when retrieving pages');
-    }
-  });
-}
-
-export function getSiteNavigations() {
-  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/navigations`, {
-    method: 'GET',
-    credentials: 'include',
-  }).then(resp => {
-    if (resp?.ok) {
-      return resp.json();
-    } else {
-      throw new Error('Error when retrieving site navigations');
     }
   });
 }
