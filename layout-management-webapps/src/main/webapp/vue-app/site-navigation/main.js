@@ -27,9 +27,15 @@ if (extensionRegistry) {
   }
 }
 
-extensionRegistry.registerComponent('manageSpaceActions', 'manage-space-actions', {
-  id: 'manage-space-actions',
-  vueComponent: Vue.options.components['site-navigation'],
+extensionRegistry.registerComponent('buttonManageSpaceActions', 'button-manage-space-actions', {
+  id: 'button-manage-space-actions',
+  vueComponent: Vue.options.components['site-navigation-button'],
+  rank: 20,
+});
+
+extensionRegistry.registerComponent('drawersManageSpaceActions', 'drawers-manage-space-actions', {
+  id: 'drawers-manage-space-actions',
+  vueComponent: Vue.options.components['site-navigation-drawers-actions'],
   rank: 20,
 });
 
