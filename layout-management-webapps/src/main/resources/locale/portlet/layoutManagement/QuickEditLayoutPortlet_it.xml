@@ -2,7 +2,7 @@
 <bundle>
    <UIAdminToolbarPortlet>
       <title>
-        <EditAdministration>Edit Administration</EditAdministration>
+        <EditAdministration>Modificare l'Amministrazione</EditAdministration>
       </title>
       <action>
          <AddPage>Aggiungere Pagina</AddPage>
@@ -19,8 +19,8 @@
          <AddSite>Aggiungere sito</AddSite>
       </action>
       <ManageSites>Gestire siti</ManageSites>
-      <ManageGroupSites>Group Sites</ManageGroupSites>
-      <TopbarTooltip>Edit layout</TopbarTooltip>
+      <ManageGroupSites>Siti di Gruppo</ManageGroupSites>
+      <TopbarTooltip>Modificare il layout</TopbarTooltip>
    </UIAdminToolbarPortlet>
 
   <UISEOForm>
