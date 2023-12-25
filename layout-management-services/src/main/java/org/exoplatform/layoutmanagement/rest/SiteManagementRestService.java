@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -32,7 +33,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.portal.config.UserPortalConfigService;
 import org.gatein.api.Portal;
 import org.gatein.api.Util;
 import org.gatein.api.site.Site;
@@ -60,13 +63,19 @@ public class SiteManagementRestService implements ResourceContainer {
 
   private static final Log LOG = ExoLogger.getLogger(SiteManagementRestService.class);
 
+  private static final String[] DEFAULT_PORTAL_ACCESS_PERMISSIONS = {"*:/platform/administrators"};
+
+  private static final String DEFAULT_PORTAL_EDIT_PERMISSIONS = "manager:/platform/administrators";
+
   private Portal           portal;
 
   private LayoutService    layoutService;
+  private UserPortalConfigService userPortalConfigService;
 
-  public SiteManagementRestService(Portal portal, LayoutService layoutService) {
+  public SiteManagementRestService(Portal portal, LayoutService layoutService, UserPortalConfigService userPortalConfigService) {
     this.portal = portal;
     this.layoutService = layoutService;
+    this.userPortalConfigService = userPortalConfigService;
   }
 
   @DELETE
@@ -212,6 +221,50 @@ public class SiteManagementRestService implements ResourceContainer {
       return Response.serverError().build();
     }
   }
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("administrators")
+  @Operation(summary = "create a site", method = "POST", description = "This create a new site")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error"), })
+  public Response createSite(@Context
+  HttpServletRequest request, @Parameter(description = "site to create", required = true)
+  PortalConfig portalConfig,
+                             @Parameter(description = "site layout template", required = true)
+                             @QueryParam("siteTemplate")
+                             String siteTemplate,
+                             @Parameter(description = "Used to retrieve the site label and description in the requested language")
+                             @QueryParam("lang")
+                             String lang) {
+    try {
+      userPortalConfigService.createUserPortalConfig(PortalConfig.PORTAL_TYPE, portalConfig.getName(), siteTemplate);
+      PortalConfig createdPortalConfig = layoutService.getPortalConfig(portalConfig.getName());
+      createdPortalConfig.setDescription(portalConfig.getDescription());
+      createdPortalConfig.setLabel(portalConfig.getLabel());
+      createdPortalConfig.setDisplayed(portalConfig.isDisplayed());
+      createdPortalConfig.setDisplayOrder(portalConfig.isDisplayed() ? portalConfig.getDisplayOrder() : 0);
+      createdPortalConfig.setAccessPermissions(DEFAULT_PORTAL_ACCESS_PERMISSIONS);
+      createdPortalConfig.setEditPermission(DEFAULT_PORTAL_EDIT_PERMISSIONS);
+      if (StringUtils.isNotBlank(portalConfig.getBannerUploadId())) {
+        createdPortalConfig.setBannerUploadId(portalConfig.getBannerUploadId());
+      }
+      layoutService.save(createdPortalConfig);
+      return Response.ok(EntityBuilder.buildSiteEntity(layoutService.getPortalConfig(portalConfig.getName()),
+                                                       request,
+                                                       false,
+                                                       null,
+                                                       false,
+                                                       false,
+                                                       false,
+                                                       getLocale(lang)))
+                     .build();
+    } catch (Exception e) {
+      LOG.error("Error when creating the site with name {} and type {}", portalConfig.getName(), e);
+      return Response.serverError().build();
+    }
+  }
+
     private Locale getLocale(String lang) {
         return StringUtils.isBlank(lang) ? null : Locale.forLanguageTag(lang);
     }

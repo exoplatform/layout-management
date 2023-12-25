@@ -20,14 +20,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     ref="sitePropertiesDrawer"
     v-model="sitePropertiesDrawer"
     :right="!$vuetify.rtl"
-    :allow-expand="!$root.isMobile"
+    :allow-expand="!$root.isMobile && editMode"
     eager
     @expand-updated="expanded = $event"
     @closed="close">
     <template slot="title">
       <span>{{ $t('siteManagement.drawer.properties.title') }}</span>
     </template>
-    <template v-if="showDrawerContent" slot="content">
+    <template v-if="initialized" slot="content">
       <v-form>
         <v-card-text class="d-flex pb-2">
           <translation-text-field
@@ -44,7 +44,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             class="width-auto flex-grow-1 pt-4"
             back-icon
             autofocus
-            required>
+            required
+            @blur="convertSiteName">
             <template #title>
               <v-label>
                 <span class="text-color font-weight-bold">
@@ -67,7 +68,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             class="pt-0"
             type="text"
             required="required"
-            :disabled="disableSiteName"
+            :disabled="editMode"
             outlined
             dense />
         </v-card-text>
@@ -152,11 +153,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           {{ $t('siteManagement.label.btn.cancel') }}
         </v-btn>
         <v-btn
-          :disabled="saveDisabled"
+          v-if="editMode"
           :loading="loading"
           @click="updateSite"
           class="btn btn-primary ms-2">
           {{ $t('siteManagement.label.btn.save') }}
+        </v-btn>
+        <v-btn
+          v-else
+          :disabled="saveDisabled"
+          :loading="loading"
+          @click="$root.$emit('open-site-template-drawer')"
+          class="btn btn-primary ms-2">
+          {{ $t('siteManagement.label.btn.next') }}
         </v-btn>
       </div>
     </template>
@@ -173,7 +182,6 @@ export default {
       siteLabel: '',
       siteDescription: '',
       maxDescriptionLength: 1300,
-      disableSiteName: true,
       displayOrder: 0,
       displayed: true,
       siteTitleTranslations: {},
@@ -188,10 +196,14 @@ export default {
       rules: {
         value: (v) => (v > 0 && v<= 9999) || this.$t('siteManagement.displayOrder.error')
       },
+      editMode: false,
+      loading: false,
+      initialized: false,
     };
   },
   created() {
     this.$root.$on('open-site-properties-drawer', this.open);
+    this.$root.$on('create-site', this.createSite);
   },
   watch: {
     siteDescription() {
@@ -207,33 +219,42 @@ export default {
     displayedDisabled(){
       return this.site?.metaSite;
     },
-    showDrawerContent() {
-      return this.sitePropertiesDrawer && !!this.site;
-    },
   },
   methods: {
     open(site, freshInstance) {
-      this.siteTitleTranslations = {};
-      if (site && !freshInstance) {
-        this.$refs.sitePropertiesDrawer.open();
-        return this.$siteService.getSiteById(parseInt(site.siteId), {
-          expandNavigations: false,
-          excludeEmptyNavigationSites: false,
-          lang: 'en' })
-          .then(freshSite => this.open(freshSite, true));
+      if (site) {
+        this.editMode = true;
+        if (!freshInstance) {
+          this.$refs.sitePropertiesDrawer.open();
+          return this.$siteService.getSiteById(parseInt(site.siteId), {
+            expandNavigations: false,
+            excludeEmptyNavigationSites: false,
+            lang: 'en' })
+            .then(freshSite => this.open(freshSite, true));
+        }
+        this.site = site;
+        this.siteName = site.name;
+        this.siteId = site.siteId;
+        this.siteLabel = site.displayName || site.name ;
+        this.siteDescription = site.description;
+        this.displayed = site.displayed;
+        this.displayOrder = site.displayOrder;
+        this.siteBannerUrl = site.bannerUrl;
+        this.defaultSiteBannerUrl = `/portal/rest/v1/social/sites/${site.name}/banner?bannerId=0`;
+        this.isDefaultBanner = site.bannerFileId === 0 ;
+        this.hasDefaultBanner = this.isDefaultBanner;
+        this.bannerUploadId = null;
+      } else {
+        this.displayed = false;
+        this.displayOrder = 0;
+        this.defaultSiteBannerUrl = '/portal/rest/v1/social/sites/default/banner?bannerId=0';
+        this.isDefaultBanner = true ;
+        this.hasDefaultBanner = true;
+        this.bannerUploadId = null;
       }
-      this.site = site;
-      this.siteName = site.name;
-      this.siteId = site.siteId;
-      this.siteLabel = site.displayName || site.name ;
-      this.siteDescription = site.description;
-      this.displayed = site.displayed;
-      this.displayOrder = site.displayOrder;
-      this.siteBannerUrl = site.bannerUrl;
-      this.defaultSiteBannerUrl = `/portal/rest/v1/social/sites/${site.name}/banner?isDefault=true`;
-      this.isDefaultBanner = site.bannerFileId === 0 ;
-      this.hasDefaultBanner = this.isDefaultBanner;
-      this.bannerUploadId = null;
+      this.siteTitleTranslations = {};
+      this.siteDescriptionTranslations = {};
+      this.initialized = true;
       this.$nextTick().then(() => {
         this.$refs.sitePropertiesDrawer.open();
       });
@@ -252,6 +273,16 @@ export default {
       this.isDefaultBanner = true;
     },
     reset() {
+      this.siteId = null;
+      this.siteName = '';
+      this.siteLabel = '';
+      this.siteDescription = '';
+      this.displayed = false;
+      this.displayOrder = 0;
+      this.editMode = false;
+      this.siteTitleTranslations = {};
+      this.siteDescriptionTranslations = {};
+      this.initialized = false;
       this.sitePropertiesDrawer = false;
       this.isDefaultBanner = true;
       this.siteBannerUrl = null;
@@ -259,6 +290,8 @@ export default {
       this.$refs.siteBannerSelector.reset();
     },
     updateSite() {
+      this.loading = true;
+      this.$refs.sitePropertiesDrawer.startLoading();
       return this.$siteManagementService.updateSite(this.site.name, this.site.siteType, this.siteLabel, this.siteDescription, this.site.metaSite || this.displayed, this.displayed && this.displayOrder || 0, this.bannerUploadId !== '0' && this.bannerUploadId || null, !this.hasDefaultBanner && this.bannerUploadId === '0')
         .then(() => this.$translationService.saveTranslations('site', this.siteId, 'label', this.siteTitleTranslations))
         .then(() => this.$translationService.saveTranslations('site', this.siteId, 'description', this.siteDescriptionTranslations))
@@ -274,7 +307,46 @@ export default {
           this.loading = false;
           this.$refs.sitePropertiesDrawer.endLoading();
         });
-    }
+    },
+    createSite(template) {
+      if (!template) {
+        const message = this.$t('siteManagement.label.template.mandatory');
+        this.$root.$emit('alert-message', message, 'error');
+        return ;
+      }
+      this.siteName = this.normalizeText(this.siteName);
+      this.loading = true;
+      this.$refs.sitePropertiesDrawer.startLoading();
+      return this.$siteManagementService.createSite(this.siteName, template, this.siteLabel, this.siteDescription, this.displayed, this.displayOrder || 0, this.bannerUploadId !== '0' && this.bannerUploadId || null,)
+        .then((site) =>{
+          this.siteId = site.siteId;
+          if (this.siteTitleTranslations.length) {
+            this.$translationService.saveTranslations('site',  site.siteId, 'label', this.siteTitleTranslations);
+          }
+        })
+        .then(() => this.siteDescriptionTranslations?.length && this.$translationService.saveTranslations('site', this.siteId, 'description', this.siteDescriptionTranslations))
+        .then(() => {
+          this.$root.$emit('alert-message', this.$t('siteManagement.label.createSite.success'), 'success');
+          this.$root.$emit('refresh-sites');
+          this.$root.$emit('close-site-template-drawer', this.close);
+          this.close();
+        }).catch(() => {
+          const message = this.$t('siteManagement.label.createSite.error');
+          this.$root.$emit('alert-message', message, 'error');
+        })
+        .finally(() => {
+          this.loading = false;
+          this.$refs.sitePropertiesDrawer.endLoading();
+        });
+    },
+    convertSiteName() {
+      if (!this.editMode && !this.siteName) {
+        this.siteName = this.normalizeText(this.siteLabel);
+      }
+    },
+    normalizeText(text) {
+      return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]/g, '').replace(/\s+/g, '').toLowerCase();
+    },
   }
 };
 </script>

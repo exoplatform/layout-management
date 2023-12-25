@@ -77,3 +77,31 @@ export function updateSite(siteName, siteType, siteLabel, siteDescription, displ
     }
   });
 }
+
+export function createSite(siteName, siteTemplate, siteLabel, siteDescription, displayed, displayOrder, bannerUploadId) {
+  const formData = new FormData();
+  formData.append('siteTemplate', siteTemplate);
+  const portalConfig = {
+    name: siteName,
+    label: siteLabel,
+    description: siteDescription,
+    displayed: displayed,
+    displayOrder: displayOrder,
+    bannerUploadId: bannerUploadId,
+  };
+  const params = new URLSearchParams(formData).toString();
+  return fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/v1/sites?${params}`, {
+    credentials: 'include',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(portalConfig),
+  }).then((resp) => {
+    if (resp?.ok) {
+      return resp.json();
+    } else {
+      throw new Error('Error when creating site');
+    }
+  });
+}
