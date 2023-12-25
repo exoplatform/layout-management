@@ -62,6 +62,12 @@
     <css-path>/skin/css/common/Style.css</css-path>
     <css-priority>11</css-priority>
   </portal-skin>
+  <portal-skin>
+    <skin-name>Enterprise</skin-name>
+    <skin-module>navigationWebsiteLayout</skin-module>
+    <css-path>/skin/css/navigationWebsiteLayout.css</css-path>
+    <css-priority>11</css-priority>
+  </portal-skin>
 
   <portlet>
     <name>QuickEditLayoutPortlet</name>
