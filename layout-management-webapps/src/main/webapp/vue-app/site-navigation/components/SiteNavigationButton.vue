@@ -62,6 +62,10 @@ export default {
       type: String,
       default: null,
     },
+    siteId: {
+      type: String,
+      default: null,
+    },
   },
   methods: {
     openSiteNavigationDrawer() {
@@ -70,6 +74,7 @@ export default {
         params = {
           siteName: this.siteName,
           siteType: this.siteType,
+          siteId: this.siteId,
         };
       }
       document.dispatchEvent(new CustomEvent('open-site-navigation-drawer',{detail: params}));

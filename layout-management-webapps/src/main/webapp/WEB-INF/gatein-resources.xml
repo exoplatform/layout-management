@@ -144,7 +144,7 @@
     <name>ManageSpacesExtension</name>
     <load-group>ManageSpaceGRP</load-group>
      <script>
-        <path>/js/siteNavigation.bundle.js</path>
+      <path>/js/siteNavigation.bundle.js</path>
      </script>
      <depends>
       <module>extensionRegistry</module>
