@@ -16,10 +16,12 @@
  */
 import SiteNavigation from './components/SiteNavigation.vue';
 import SiteNavigationButton from './components/SiteNavigationButton.vue';
+import SiteNavigationDrawersActions from './components/SiteNavigationDrawersActions.vue';
 
 const components = {
   'site-navigation': SiteNavigation,
   'site-navigation-button': SiteNavigationButton,
+  'site-navigation-drawers-actions': SiteNavigationDrawersActions
 };
 
 for (const key in components) {
