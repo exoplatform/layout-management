@@ -15,11 +15,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 -->
 <template>
-  <div>
-    <site-navigation-drawer v-if="siteNavigationDrawerOpened" />
-    <manage-permissions-drawer v-if="siteNavigationDrawerOpened" />
-    <site-navigation-node-drawer v-if="siteNavigationDrawerOpened" />
-    <site-navigation-element-drawer v-if="siteNavigationDrawerOpened" />
+  <div v-if="siteNavigationDrawerOpened">
+    <site-navigation-drawer />
+    <manage-permissions-drawer />
+    <site-navigation-node-drawer />
+    <site-navigation-element-drawer />
   </div>
 </template>
 <script>
