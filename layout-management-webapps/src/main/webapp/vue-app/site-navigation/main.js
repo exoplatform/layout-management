@@ -33,6 +33,12 @@ extensionRegistry.registerComponent('manageSpaceActions', 'manage-space-actions'
   rank: 20,
 });
 
+extensionRegistry.registerComponent('manageSpaceDrawers', 'manage-space-drawers', {
+  id: 'manage-space-drawers',
+  vueComponent: Vue.options.components['site-navigation-drawers-actions'],
+  rank: 20,
+});
+
 Vue.use(Vuetify);
 const vuetify = new Vuetify(eXo.env.portal.vuetifyPreset);
 
@@ -43,6 +49,8 @@ const lang = eXo && eXo.env.portal.language || 'en';
 
 //should expose the locale ressources as REST API
 const urls = [`${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.portlet.layoutManagement.SiteNavigationPortlet-${lang}.json`];
+
+exoi18n.loadLanguageAsync(lang, urls);
 
 export function init(canManageSiteNavigation) {
   exoi18n.loadLanguageAsync(lang, urls).then(i18n => {
