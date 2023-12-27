@@ -36,18 +36,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <site-navigation-site-suggester
       v-if="!allSites"
       v-model="selectedSiteNavigation"
+      :all-sites="allSites"
       class="mb-6" />
-    <span v-if="!allSites && !selectedSiteNavigation" class="caption mt-n6 mx-2 position-absolute error-color">
-      {{ $t('siteNavigation.required.error.message') }}
-    </span>
     <site-navigation-page-suggester
       v-model="selectedPage"
       :all-sites="allSites"
-      :site-type="selectedSiteNavigation && selectedSiteNavigation.key.type"
-      :site-name="selectedSiteNavigation && selectedSiteNavigation.key.name" />
-    <span v-if="!selectedPage" class="caption mt-n3 mx-2 position-absolute error-color">
-      {{ $t('siteNavigation.required.error.message') }}
-    </span>
+      :site-type="selectedSiteNavigation?.siteType"
+      :site-name="selectedSiteNavigation?.name" />
   </div>
 </template>
 
@@ -76,7 +71,10 @@ export default {
   watch: {
     selectedPage(){
       this.$root.$emit('existing-page-selected', this.selectedPage);
-    }
+    },
+    allSites(){
+      this.selectedSiteNavigation = null;
+    },
   },
 };
 </script>
