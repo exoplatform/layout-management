@@ -29,7 +29,13 @@ if (extensionRegistry) {
 
 extensionRegistry.registerComponent('manageSpaceActions', 'manage-space-actions', {
   id: 'manage-space-actions',
-  vueComponent: Vue.options.components['site-navigation'],
+  vueComponent: Vue.options.components['site-navigation-button'],
+  rank: 20,
+});
+
+extensionRegistry.registerComponent('manageSpaceDrawers', 'manage-space-drawers', {
+  id: 'manage-space-drawers',
+  vueComponent: Vue.options.components['site-navigation-drawers-actions'],
   rank: 20,
 });
 
