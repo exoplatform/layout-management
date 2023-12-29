@@ -64,6 +64,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           v-text="data.item.displayName" />
       </template>
     </v-autocomplete>
+    <span v-if="!allSites && !selectedSiteNavigation" class="caption mt-n3 mx-2 position-absolute error-color">
+      {{ $t('siteNavigation.required.error.message') }}
+    </span>
   </v-flex>
 </template>
 
@@ -77,7 +80,11 @@ export default {
     selectedSiteNavigation: {
       type: Object,
       default: null,
-    }
+    },
+    allSites: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
