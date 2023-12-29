@@ -139,6 +139,11 @@ export default {
       this.page = null;
       this.searchTerm = ' ';
     },
+    siteName() {
+      this.page = null;
+      this.pages = [];
+      this.searchTerm = ' ';
+    },
   },
   mounted() {
     $('#siteNavigationsPagesSuggesterAutoComplete input').on('blur', () => {
