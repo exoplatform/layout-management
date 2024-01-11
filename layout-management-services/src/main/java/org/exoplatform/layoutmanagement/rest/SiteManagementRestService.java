@@ -32,8 +32,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.gatein.api.Portal;
 import org.gatein.api.Util;

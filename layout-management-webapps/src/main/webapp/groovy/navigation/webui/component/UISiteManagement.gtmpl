@@ -6,7 +6,7 @@
   import org.gatein.common.text.EntityEncoder;
   import org.exoplatform.commons.utils.HTMLEntityEncoder;
   
-  import org.apache.commons.lang.StringUtils;
+  import org.apache.commons.lang3.StringUtils;
 
   String[] actions =  uicomponent.getActions();
   uicomponent.loadPortalConfigs();
