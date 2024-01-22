@@ -156,6 +156,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
           v-if="editMode"
           :loading="loading"
           @click="updateSite"
+          :disabled="saveDisabled"
           class="btn btn-primary ms-2">
           {{ $t('siteManagement.label.btn.save') }}
         </v-btn>
