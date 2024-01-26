@@ -32,5 +32,11 @@
       <icon>fas fa-home</icon>
       <page-reference>portal::@owner@::home</page-reference>
     </node>
+    <node>
+      <name>news-detail</name>
+      <label>newsDetail</label>
+      <visibility>SYSTEM</visibility>
+      <page-reference>portal::@owner@::newsDetail</page-reference>
+    </node>
   </page-nodes>
 </node-navigation>
