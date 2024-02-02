@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
- Copyright (C) 2023 eXo Platform SAS.
+ Copyright (C) 2024 eXo Platform SAS.
 
  This is free software; you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public License as
@@ -108,6 +108,25 @@
         <show-info-bar>false</show-info-bar>
         <show-application-state>false</show-application-state>
         <show-application-mode>false</show-application-mode>
+      </portlet-application>
+    </container>
+  </page>
+  <page>
+    <name>oeditor</name>
+    <title>Onlyoffice Editor Page</title>
+    <access-permissions>Everyone</access-permissions>
+    <edit-permission>manager:/platform/administrators</edit-permission>
+    <container id="OnlyofficeEditorPage" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <access-permissions>Everyone</access-permissions>
+      <portlet-application>
+        <portlet>
+          <application-ref>onlyoffice</application-ref>
+          <portlet-ref>OnlyofficeEditorPortlet</portlet-ref>
+        </portlet>
+        <title>Onlyoffice Editor</title>
+        <access-permissions>Everyone</access-permissions>
+        <show-info-bar>false</show-info-bar>
+        <show-application-state>true</show-application-state>
       </portlet-application>
     </container>
   </page>
