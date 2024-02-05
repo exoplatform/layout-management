@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
- Copyright (C) 2023 eXo Platform SAS.
+ Copyright (C) 2024 eXo Platform SAS.
 
  This is free software; you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public License as
@@ -31,6 +31,18 @@
       <label>Home</label>
       <icon>fas fa-home</icon>
       <page-reference>portal::@owner@::home</page-reference>
+    </node>
+    <node>
+      <name>news-detail</name>
+      <label>newsDetail</label>
+      <visibility>SYSTEM</visibility>
+      <page-reference>portal::@owner@::newsDetail</page-reference>
+    </node>
+    <node>
+      <name>oeditor</name>
+      <label>oeditor</label>
+      <visibility>SYSTEM</visibility>
+      <page-reference>portal::@owner@::oeditor</page-reference>
     </node>
   </page-nodes>
 </node-navigation>
