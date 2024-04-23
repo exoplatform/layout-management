@@ -1,94 +1,80 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bundle>
-   <UIAdminToolbarPortlet>
-      <title>
-        <EditAdministration>Ubah administrasi</EditAdministration>
-      </title>
-      <action>
-         <AddPage>Tambahkan Halaman</AddPage>
-         <EditNavigation>Sunting Navigasi</EditNavigation>
-         <Content>Sunting Inline</Content>
-         <Editor>Sunting</Editor>
-         <Page>Halaman</Page>
-         <Site>Situs</Site>
-         <Layout>Sunting Tata Letak</Layout>
-         <siteLayout>Sunting Tata Letak</siteLayout>
-         <ManagePages>Mengelola Halaman</ManagePages>
-         <GroupSite>Situs Grup</GroupSite>
-         <Properties>#{UISEOToolbarForm.label.seo}</Properties>
-         <AddSite>Tambahkan Situs</AddSite>
-      </action>
-      <ManageSites>Mengelola Situs</ManageSites>
-      <ManageGroupSites>Situs grup</ManageGroupSites>
-      <TopbarTooltip>Ubah tata letak</TopbarTooltip>
-   </UIAdminToolbarPortlet>
+<?xml version\="1.0" encoding\="UTF-8"?>
+<bundle>=
+<UIAdminToolbarPortlet>=
+<title>=
+<EditAdministration>Edit Administration</EditAdministration>
+</title>=
+<action>=
+<AddPage>Add Page</AddPage>
+<EditNavigation>Edit Navigation</EditNavigation>
+<Content>Inline Edit</Content>
+<Editor>Edit</Editor>=
+<Page>Page</Page>=
+<Site>Site</Site>=
+<Layout>Edit Layout</Layout>
+<siteLayout>Edit Layout</siteLayout>
+<ManagePages>Manage Pages</ManagePages>
+<GroupSite>Group Site</GroupSite>
+<Properties>\#{UISEOToolbarForm.label.seo}</Properties>=
+<AddSite>Add Site</AddSite>
+</action>=
+<ManageSites>Manage Sites</ManageSites>
+<ManageGroupSites>Group Sites</ManageGroupSites>
+<TopbarTooltip>Edit layout</TopbarTooltip>
+</UIAdminToolbarPortlet>=
 
-  <UISEOForm>
-    <label>
-      <title>Judul:</title>  
-      <description>Penjelasan:</description>
-      <keywords>Kata kunci:</keywords>
-      <language>Bahasa:</language>
-      <robots>Robot:</robots>
-      <sitemap>Sitemap:</sitemap>
-      <sitemapvisible>Nampak di sitemap</sitemapvisible>
-      <isInherited>Mewarisi dari halaman utama</isInherited>
-      <priority>Prioritas:</priority>
-      <frequency>Frekuensi:</frequency>
-      <select-language>Pilih Bahasa</select-language>
-      <option>
-        <Always>Selalu</Always>
-        <Hourly>Per jam</Hourly>
-        <Daily>Harian</Daily>
-        <Weekly>Mingguan</Weekly>
-        <Monthly>Bulanan</Monthly>
-        <Yearly>Tahunan</Yearly>
-        <Never>Tidak pernah</Never>
-      </option> 
-    </label>
- 
-    <action>
-      <Save>#{word.save}</Save>
-      <Cancel>#{word.cancel}</Cancel>
-    </action>
-    <msg>
-      <repository-exception>Terjadi kesalahan tidak terduga. Tidak dapat menyimpan metadata halaman.</repository-exception>
-      <confirm-delete>Apakah anda yakin ingin untuk menghapus data SEO?</confirm-delete>
-    </msg>
-    <title>
-    <seo-delete>Hapus</seo-delete>
-    </title>
+<UISEOForm>=
+<label>      
+<title>Title:</title>  
+<description>Description:</description>
+<keywords>Keywords:</keywords>
+<language>Language:</language>
+<robots>Robots:</robots>
+<sitemap>Sitemap:</sitemap>
+<sitemapvisible>Visible in sitemap</sitemapvisible>
+<isInherited>Inherited from parent page</isInherited>
+<priority>Priority:</priority>
+<frequency>Frequency:</frequency>
+<select-language>Select Language</select-language>
+<option>=
+<Always>Always</Always>=
+<Hourly>Hourly</Hourly>=
+<Daily>Daily</Daily>=
+<Weekly>Weekly</Weekly>=
+<Monthly>Monthly</Monthly>=
+<Yearly>Yearly</Yearly>=
+<Never>Never</Never>=
+</option> 
+</label>=
+
+<Save>\#{word.save}</Save>=
+<Cancel>\#{word.cancel}</Cancel>=
+<msg>=
+<repository-exception>An unexpected error occurred. Cannot save page metadata.</repository-exception>
+<confirm-delete>Are you sure you want to delete these SEO data?</confirm-delete>
+</msg>=
+<seo-delete>Delete</seo-delete>=
 <help> 
-  <priority>Nilai yang valid berkisar dari 0.0 ke 1.0.</priority>
-  <description>Pencarian bantuan: beritahu kepada mereka bahwa laman berikut memiliki tautan dengan apa yang mereka cari.</description>
-  <keywords>Istilah yang paling penting dari halaman harus dipisahkan dengan sebuah koma.</keywords>  
-    </help>  
-  </UISEOForm>
-  <UISEOPopupWindow>
-  <title>
-      <UISEOForm>#{UISEOToolbarForm.title.seo}</UISEOForm>
-  </title>
-  </UISEOPopupWindow>    
-  <UISEOToolbarForm>
-  <title>
-      <seo>Manajemen SEO</seo>
-  </title>
-  <label>
-    <seo>SEO</seo>
-  </label>
-  </UISEOToolbarForm>  
-  <FloatNumberValidator>
-    <msg>
-      <Invalid-number>Bidang prioritas memiliki nilai yang tidak valid. Silahkan masukkan sebuah angka antara 0.0 dan 1.0.</Invalid-number>
-    </msg>
-  </FloatNumberValidator>
-  
-  <Locale>
-    <label>      
-      <it>Italia</it>      
-      <fr>Prancis</fr>
-      <en>Inggris</en>      
-    </label>
-  </Locale>
-  
-</bundle>
+<priority>Valid values range from 0.0 to 1.0.</priority>
+<description>Help searchers\: let them know that the following page has a link with what they are looking for.</description>
+<keywords>Most important terms in the page must be separated by a comma.</keywords>  
+</help>  
+</UISEOForm>=
+<UISEOPopupWindow>=
+<UISEOForm>\#{UISEOToolbarForm.title.seo}</UISEOForm>=
+</UISEOPopupWindow>    
+<UISEOToolbarForm>=
+<seo>SEO Management</seo>
+<seo>SEO</seo>=
+</UISEOToolbarForm>  
+<FloatNumberValidator>=
+<Invalid-number>Priority field has an invalid value. Please enter a number between 0.0 and 1.0.</Invalid-number>
+</FloatNumberValidator>=
+
+<Locale>=
+<it>Italian</it>      
+<fr>French</fr>=
+<en>English</en>      
+</Locale>=
+
+</bundle>=
