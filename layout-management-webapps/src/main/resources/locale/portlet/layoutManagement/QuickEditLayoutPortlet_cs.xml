@@ -1,80 +1,94 @@
-<?xml version\="1.0" encoding\="UTF-8"?>
-<bundle>=
-<UIAdminToolbarPortlet>=
-<title>=
-<EditAdministration>Edit Administration</EditAdministration>
-</title>=
-<action>=
-<AddPage>Add Page</AddPage>
-<EditNavigation>Edit Navigation</EditNavigation>
-<Content>Inline Edit</Content>
-<Editor>Edit</Editor>=
-<Page>Page</Page>=
-<Site>Site</Site>=
-<Layout>Edit Layout</Layout>
-<siteLayout>Edit Layout</siteLayout>
-<ManagePages>Manage Pages</ManagePages>
-<GroupSite>Group Site</GroupSite>
-<Properties>\#{UISEOToolbarForm.label.seo}</Properties>=
-<AddSite>Add Site</AddSite>
-</action>=
-<ManageSites>Manage Sites</ManageSites>
-<ManageGroupSites>Group Sites</ManageGroupSites>
-<TopbarTooltip>Edit layout</TopbarTooltip>
-</UIAdminToolbarPortlet>=
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle>
+   <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
+      <action>
+         <AddPage>Přidat stránku</AddPage>
+         <EditNavigation>Navigace</EditNavigation>
+         <Content>Obsah</Content>
+         <Editor>Upravit</Editor>
+         <Page>Stránka</Page>
+         <Site>Web</Site>
+         <Layout>Upravit rozvržení</Layout>
+         <siteLayout>Rozvržení</siteLayout>
+         <ManagePages>Spravovat stránky</ManagePages>
+         <GroupSite>Stránky skupiny</GroupSite>
+         <Properties>#{UISEOToolbarForm.label.seo}</Properties>
+         <AddSite>Přidat web</AddSite>
+      </action>
+      <ManageSites>Správa webů</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
+   </UIAdminToolbarPortlet>
 
-<UISEOForm>=
-<label>      
-<title>Title:</title>  
-<description>Description:</description>
-<keywords>Keywords:</keywords>
-<language>Language:</language>
-<robots>Robots:</robots>
-<sitemap>Sitemap:</sitemap>
-<sitemapvisible>Visible in sitemap</sitemapvisible>
-<isInherited>Inherited from parent page</isInherited>
-<priority>Priority:</priority>
-<frequency>Frequency:</frequency>
-<select-language>Select Language</select-language>
-<option>=
-<Always>Always</Always>=
-<Hourly>Hourly</Hourly>=
-<Daily>Daily</Daily>=
-<Weekly>Weekly</Weekly>=
-<Monthly>Monthly</Monthly>=
-<Yearly>Yearly</Yearly>=
-<Never>Never</Never>=
-</option> 
-</label>=
-
-<Save>\#{word.save}</Save>=
-<Cancel>\#{word.cancel}</Cancel>=
-<msg>=
-<repository-exception>An unexpected error occurred. Cannot save page metadata.</repository-exception>
-<confirm-delete>Are you sure you want to delete these SEO data?</confirm-delete>
-</msg>=
-<seo-delete>Delete</seo-delete>=
+  <UISEOForm>
+    <label>
+      <title>Nadpis:</title>  
+      <description>Popis:</description>
+      <keywords>Klíčová slova:</keywords>
+      <language>Jazyk:</language>
+      <robots>Roboti:</robots>
+      <sitemap>Mapa stránek:</sitemap>
+      <sitemapvisible>Viditelné v mapě stránek</sitemapvisible>
+      <isInherited>Zděděno z nadřazené stránky</isInherited>
+      <priority>Priorita:</priority>
+      <frequency>Frekvence:</frequency>
+      <select-language>Vybrat jazyk</select-language>
+      <option>
+        <Always>Vždy</Always>
+        <Hourly>Každou hodinu</Hourly>
+        <Daily>Denně</Daily>
+        <Weekly>Týdně</Weekly>
+        <Monthly>Měsíčně</Monthly>
+        <Yearly>Ročně</Yearly>
+        <Never>Nikdy</Never>
+      </option> 
+    </label>
+ 
+    <action>
+      <Save>#{word.save}</Save>
+      <Cancel>#{word.cancel}</Cancel>
+    </action>
+    <msg>
+      <repository-exception>Došlo k neočekávané chybě. Metadata stránky nelze uložit.</repository-exception>
+      <confirm-delete>Jste si jisti, že chcete odstranit tyto údaje SEO?</confirm-delete>
+    </msg>
+    <title>
+    <seo-delete>Odstranit</seo-delete>
+    </title>
 <help> 
-<priority>Valid values range from 0.0 to 1.0.</priority>
-<description>Help searchers\: let them know that the following page has a link with what they are looking for.</description>
-<keywords>Most important terms in the page must be separated by a comma.</keywords>  
-</help>  
-</UISEOForm>=
-<UISEOPopupWindow>=
-<UISEOForm>\#{UISEOToolbarForm.title.seo}</UISEOForm>=
-</UISEOPopupWindow>    
-<UISEOToolbarForm>=
-<seo>SEO Management</seo>
-<seo>SEO</seo>=
-</UISEOToolbarForm>  
-<FloatNumberValidator>=
-<Invalid-number>Priority field has an invalid value. Please enter a number between 0.0 and 1.0.</Invalid-number>
-</FloatNumberValidator>=
-
-<Locale>=
-<it>Italian</it>      
-<fr>French</fr>=
-<en>English</en>      
-</Locale>=
-
-</bundle>=
+  <priority>Platné hodnoty jsou v rozsahu od 0.0 do 1.0.</priority>
+  <description>Pomozte hledajícím: ať vědí, že na následující stránce se nachází odkaz na stránku, kterou hledají.</description>
+  <keywords>Nejdůležitější termíny na stránce musí být odděleny čárkou.</keywords>  
+    </help>  
+  </UISEOForm>
+  <UISEOPopupWindow>
+  <title>
+      <UISEOForm>#{UISEOToolbarForm.title.seo}</UISEOForm>
+  </title>
+  </UISEOPopupWindow>    
+  <UISEOToolbarForm>
+  <title>
+      <seo>Správa SEO</seo>
+  </title>
+  <label>
+    <seo>SEO</seo>
+  </label>
+  </UISEOToolbarForm>  
+  <FloatNumberValidator>
+    <msg>
+      <Invalid-number>Pole Priorita má neplatnou hodnotu. Zadejte číslo od 0,0 do 1,0.</Invalid-number>
+    </msg>
+  </FloatNumberValidator>
+  
+  <Locale>
+    <label>      
+      <it>Italština</it>      
+      <fr>Francouzština</fr>
+      <en>Angličtina</en>      
+    </label>
+  </Locale>
+  
+</bundle>

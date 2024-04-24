@@ -1,80 +1,94 @@
-<?xml version\="1.0" encoding\="UTF-8"?>
-<bundle>=
-<UIAdminToolbarPortlet>=
-<title>=
-<EditAdministration>Edit Administration</EditAdministration>
-</title>=
-<action>=
-<AddPage>Add Page</AddPage>
-<EditNavigation>Edit Navigation</EditNavigation>
-<Content>Inline Edit</Content>
-<Editor>Edit</Editor>=
-<Page>Page</Page>=
-<Site>Site</Site>=
-<Layout>Edit Layout</Layout>
-<siteLayout>Edit Layout</siteLayout>
-<ManagePages>Manage Pages</ManagePages>
-<GroupSite>Group Site</GroupSite>
-<Properties>\#{UISEOToolbarForm.label.seo}</Properties>=
-<AddSite>Add Site</AddSite>
-</action>=
-<ManageSites>Manage Sites</ManageSites>
-<ManageGroupSites>Group Sites</ManageGroupSites>
-<TopbarTooltip>Edit layout</TopbarTooltip>
-</UIAdminToolbarPortlet>=
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle>
+   <UIAdminToolbarPortlet>
+      <title>
+        <EditAdministration>Edit Administration</EditAdministration>
+      </title>
+      <action>
+         <AddPage>Legg til side</AddPage>
+         <EditNavigation>Edit Navigation</EditNavigation>
+         <Content>Inline Edit</Content>
+         <Editor>Rediger</Editor>
+         <Page>Side</Page>
+         <Site>Nettsted</Site>
+         <Layout>Rediger layout</Layout>
+         <siteLayout>Edit Layout</siteLayout>
+         <ManagePages>Administrere sider</ManagePages>
+         <GroupSite>Gruppe nettsider</GroupSite>
+         <Properties>#{UISEOToolbarForm.label.seo}</Properties>
+         <AddSite>Legge til nettsted</AddSite>
+      </action>
+      <ManageSites>Administrer nettsteder</ManageSites>
+      <ManageGroupSites>Group Sites</ManageGroupSites>
+      <TopbarTooltip>Edit layout</TopbarTooltip>
+   </UIAdminToolbarPortlet>
 
-<UISEOForm>=
-<label>      
-<title>Title:</title>  
-<description>Description:</description>
-<keywords>Keywords:</keywords>
-<language>Language:</language>
-<robots>Robots:</robots>
-<sitemap>Sitemap:</sitemap>
-<sitemapvisible>Visible in sitemap</sitemapvisible>
-<isInherited>Inherited from parent page</isInherited>
-<priority>Priority:</priority>
-<frequency>Frequency:</frequency>
-<select-language>Select Language</select-language>
-<option>=
-<Always>Always</Always>=
-<Hourly>Hourly</Hourly>=
-<Daily>Daily</Daily>=
-<Weekly>Weekly</Weekly>=
-<Monthly>Monthly</Monthly>=
-<Yearly>Yearly</Yearly>=
-<Never>Never</Never>=
-</option> 
-</label>=
-
-<Save>\#{word.save}</Save>=
-<Cancel>\#{word.cancel}</Cancel>=
-<msg>=
-<repository-exception>An unexpected error occurred. Cannot save page metadata.</repository-exception>
-<confirm-delete>Are you sure you want to delete these SEO data?</confirm-delete>
-</msg>=
-<seo-delete>Delete</seo-delete>=
+  <UISEOForm>
+    <label>
+      <title>Title:</title>  
+      <description>Description:</description>
+      <keywords>Keywords:</keywords>
+      <language>Language:</language>
+      <robots>Robots:</robots>
+      <sitemap>Sitemap:</sitemap>
+      <sitemapvisible>Synlig i nettstedskartet</sitemapvisible>
+      <isInherited>Arvet fra overordnet side</isInherited>
+      <priority>Priority:</priority>
+      <frequency>Frequency:</frequency>
+      <select-language>Velg språk</select-language>
+      <option>
+        <Always>Alltid</Always>
+        <Hourly>Hver time</Hourly>
+        <Daily>Daglig</Daily>
+        <Weekly>Ukentlig</Weekly>
+        <Monthly>Månedlig</Monthly>
+        <Yearly>Årlig</Yearly>
+        <Never>Aldri</Never>
+      </option> 
+    </label>
+ 
+    <action>
+      <Save>#{word.save}</Save>
+      <Cancel>#{word.cancel}</Cancel>
+    </action>
+    <msg>
+      <repository-exception>Det oppstod en uventet feil. Kan ikke lagre sidens metadata.</repository-exception>
+      <confirm-delete>Er du sikker på at du vil slette disse SEO data?</confirm-delete>
+    </msg>
+    <title>
+    <seo-delete>Slette</seo-delete>
+    </title>
 <help> 
-<priority>Valid values range from 0.0 to 1.0.</priority>
-<description>Help searchers\: let them know that the following page has a link with what they are looking for.</description>
-<keywords>Most important terms in the page must be separated by a comma.</keywords>  
-</help>  
-</UISEOForm>=
-<UISEOPopupWindow>=
-<UISEOForm>\#{UISEOToolbarForm.title.seo}</UISEOForm>=
-</UISEOPopupWindow>    
-<UISEOToolbarForm>=
-<seo>SEO Management</seo>
-<seo>SEO</seo>=
-</UISEOToolbarForm>  
-<FloatNumberValidator>=
-<Invalid-number>Priority field has an invalid value. Please enter a number between 0.0 and 1.0.</Invalid-number>
-</FloatNumberValidator>=
-
-<Locale>=
-<it>Italian</it>      
-<fr>French</fr>=
-<en>English</en>      
-</Locale>=
-
-</bundle>=
+  <priority>Gyldige verdier er  fra 0,0 til 1,0.</priority>
+  <description>Hjelp de som søker: la dem få vite at denne side har en link med det de leter etter.</description>
+  <keywords>De viktigste ordene og uttrykkene på siden må være atskilt med semikolon.</keywords>  
+    </help>  
+  </UISEOForm>
+  <UISEOPopupWindow>
+  <title>
+      <UISEOForm>#{UISEOToolbarForm.title.seo}</UISEOForm>
+  </title>
+  </UISEOPopupWindow>    
+  <UISEOToolbarForm>
+  <title>
+      <seo>SEO Management</seo>
+  </title>
+  <label>
+    <seo>SEO</seo>
+  </label>
+  </UISEOToolbarForm>  
+  <FloatNumberValidator>
+    <msg>
+      <Invalid-number>Feltet prioritet har en ugyldig verdi. Angi et nummer mellom 0.0 og 1.0.</Invalid-number>
+    </msg>
+  </FloatNumberValidator>
+  
+  <Locale>
+    <label>      
+      <it>Italiensk</it>      
+      <fr>Fransk</fr>
+      <en>Engelsk</en>      
+    </label>
+  </Locale>
+  
+</bundle>
