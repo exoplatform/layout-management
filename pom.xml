@@ -31,8 +31,8 @@
 	</modules>
 	<properties>
 		<!-- 3rd party libraries versions -->
-		<org.exoplatform.commons-exo.version>7.0.x-SNAPSHOT</org.exoplatform.commons-exo.version>
-		<org.exoplatform.social.version>7.0.x-exo-SNAPSHOT</org.exoplatform.social.version>
+		<org.exoplatform.commons-exo.version>7.0.0-M14</org.exoplatform.commons-exo.version>
+		<org.exoplatform.social.version>7.0.0-exo-M14</org.exoplatform.social.version>
 		<!-- Sonar properties -->
 		<sonar.organization>exoplatform</sonar.organization>
 	</properties>
