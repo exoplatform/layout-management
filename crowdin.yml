@@ -16,7 +16,7 @@
 #
 files: [
   {
-    "source" : "/layout-management-webapps/src/main/resources/locale/portlet/layoutManagement/QuickEditLayoutPortlet_en.xml",
+    "source" : "/layout-management-webapps/src/main/resources/locale/portlet/layoutManagement/QuickEditLayoutPortlet_en.properties",
 
     "translation" : "%original_path%/%file_name%!_%locale_with_underscore%.%file_extension%",
     "translation_replace" : {
