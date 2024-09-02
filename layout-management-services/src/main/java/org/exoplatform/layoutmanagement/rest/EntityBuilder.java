@@ -31,7 +31,6 @@ import org.exoplatform.layoutmanagement.rest.model.NodeLabelRestEntity;
 import org.exoplatform.layoutmanagement.rest.model.PageTemplateRestEntity;
 import org.exoplatform.layoutmanagement.utils.SiteNavigationUtils;
 import org.exoplatform.portal.mop.State;
-import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.webui.core.model.SelectItemOption;
 
@@ -51,22 +50,24 @@ public class EntityBuilder {
                                                                                                      .getLocale();
     String defaultLanguage = defaultLocale.getLanguage();
     Map<String, String> supportedLanguages =
-                                           localeConfigService.getLocalConfigs() == null ? Collections.singletonMap(defaultLocale.getLanguage(),
-                                                                                                                    defaultLocale.getDisplayName())
-                                                                                         : localeConfigService.getLocalConfigs()
-                                                                                                              .stream()
-                                                                                                              .filter(localeConfig -> !StringUtils.equals(localeConfig.getLocaleName(),
-                                                                                                                                                          "ma"))
-                                                                                                              .collect(Collectors.toMap(LocaleConfig::getLocaleName,
-                                                                                                                                        localeConfig -> localeConfig.getLocale()
-                                                                                                                                                                    .getDisplayName()));
+            (localeConfigService.getLocalConfigs() == null) ? Collections.singletonMap(defaultLocale.getLanguage(),
+                    defaultLocale.getDisplayName())
+                    : localeConfigService.getLocalConfigs()
+                    .stream()
+                    .filter(localeConfig -> !StringUtils.equals(localeConfig.getLocaleName(),
+                            "ma"))
+                    .collect(Collectors.toMap(localeConfig -> I18N.toTagIdentifier(localeConfig.getLocale()),
+                            localeConfig -> localeConfig.getLocale()
+                                    .getDisplayName()));
     Map<String, String> localized = new HashMap<>();
     NodeLabelRestEntity nodeLabelRestEntity = new NodeLabelRestEntity();
     if (nodeLabels != null && nodeLabels.size() != 0) {
       for (Map.Entry<Locale, State> entry : nodeLabels.entrySet()) {
         Locale locale = entry.getKey();
-        State state = entry.getValue();
-        localized.put(I18N.toTagIdentifier(locale), state.getName());
+        if (!"ma".equals(locale.getLanguage())) {
+          State state = entry.getValue();
+          localized.put(I18N.toTagIdentifier(locale), state.getName());
+        }
       }
       if (!nodeLabels.containsKey(defaultLocale)) {
         localized.put(I18N.toTagIdentifier(defaultLocale), null);
