@@ -30,11 +30,6 @@
   <packaging>jar</packaging>
   <name>eXo Add-on:: Layout management - Services</name>
   <description>Layout Management Services</description>
-  <properties>
-    <rest.api.doc.title>Layout Management Rest APIs</rest.api.doc.title>
-    <rest.api.doc.version>1.0</rest.api.doc.version>
-    <rest.api.doc.description>Layout Management addon used Rest endpoints</rest.api.doc.description>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
